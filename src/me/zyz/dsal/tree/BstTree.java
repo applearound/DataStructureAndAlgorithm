@@ -1,4 +1,4 @@
-package tree;
+package me.zyz.dsal.tree;
 
 /**
  * @author zyz

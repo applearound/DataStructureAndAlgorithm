@@ -1,3 +1,5 @@
+package me.zyz.dsal;
+
 /**
  * @author zyz
  */
