@@ -209,4 +209,76 @@ public class BstTree<E extends Comparable<E>> {
             }
         }
     }
+
+    public E minimum() {
+        if (size == 0) {
+            throw new IllegalArgumentException("BST is empty");
+        }
+
+        return _minimumNode(root).e;
+    }
+
+    private Node _minimumNode(Node node) {
+        if (node.left == null) {
+            return node;
+        }
+
+        return _minimumNode(node.left);
+    }
+
+    public E maximum() {
+        if (size == 0) {
+            throw new IllegalArgumentException("BST is empty");
+        }
+
+        return _maximumNode(root).e;
+    }
+
+    private Node _maximumNode(Node node) {
+        if (node.right == null) {
+            return node;
+        }
+
+        return _maximumNode(node.right);
+    }
+
+    public E removeMin() {
+        E ret = minimum();
+
+        _removeMin(root);
+
+        return ret;
+    }
+
+    private Node _removeMin(Node node) {
+        if (node.left == null) {
+            Node rightNode = node.right;
+            node.right = null;
+            size--;
+            return rightNode;
+        }
+
+        node.left = _removeMin(node.left);
+        return node;
+    }
+
+    public E removeMax() {
+        E ret = maximum();
+
+        _removeMax(root);
+
+        return ret;
+    }
+
+    private Node _removeMax(Node node) {
+        if (node.right == null) {
+            Node leftNode = node.left;
+            node.left = null;
+            size--;
+            return leftNode;
+        }
+
+        node.right = _removeMax(node.right);
+        return node;
+    }
 }

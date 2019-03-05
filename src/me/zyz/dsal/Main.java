@@ -13,6 +13,12 @@ public class Main {
         for (int num : nums) {
             bst.add(num);
         }
-        bst.levelOrder();
+        bst.inOrder();
+        bst.removeMax();
+        bst.removeMin();
+        bst.removeMax();
+        bst.removeMin();
+        System.out.println();
+        bst.inOrder();
     }
 }
