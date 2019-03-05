@@ -13,8 +13,6 @@ public class Main {
         for (int num : nums) {
             bst.add(num);
         }
-        bst.preOrder();
-
-        bst.preOrderNoRecursive();
+        bst.levelOrder();
     }
 }

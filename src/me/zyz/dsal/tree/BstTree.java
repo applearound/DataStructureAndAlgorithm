@@ -1,6 +1,9 @@
 package me.zyz.dsal.tree;
 
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -189,5 +192,21 @@ public class BstTree<E extends Comparable<E>> {
         _postOrder(node.right);
 
         System.out.println(node.e);
+    }
+
+    public void levelOrder() {
+        Queue<Node> levelOrderQueue = new LinkedList<>();
+        levelOrderQueue.add(root);
+        while (!levelOrderQueue.isEmpty()) {
+            Node current = levelOrderQueue.remove();
+            System.out.println(current.e);
+
+            if (current.left != null) {
+                levelOrderQueue.add(current.left);
+            }
+            if (current.right != null) {
+                levelOrderQueue.add(current.right);
+            }
+        }
     }
 }
