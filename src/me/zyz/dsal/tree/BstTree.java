@@ -1,12 +1,9 @@
 package me.zyz.dsal.tree;
 
-
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 /**
- * @author zyz
+ * @author yz
  */
 public class BstTree<E extends Comparable<E>> {
     private class Node {
@@ -137,6 +134,37 @@ public class BstTree<E extends Comparable<E>> {
         } else {
             return _contains(node.right, e);
         }
+    }
+
+    private void _anyOrderNoRecursiveBase(Node node) {
+        Stack<Node> stack = new Stack<>();
+        Set<Node> set = new HashSet<>();
+        Set<Node> accessed = new HashSet<>();
+
+        stack.push(node);
+
+        while (!stack.empty()) {
+            Node head = stack.peek();
+            if (head.left != null && set.add(head.left)) {
+                stack.push(head.left);
+                continue;
+            }
+
+            if (accessed.add(head)) {
+                System.out.println(head.e);
+            }
+
+            if (head.right != null && set.add(head.right)) {
+                stack.push(head.right);
+                continue;
+            }
+
+            stack.pop();
+        }
+    }
+
+    public void inOrderNoRecursive() {
+        _anyOrderNoRecursiveBase(root);
     }
 
     public void preOrder() {

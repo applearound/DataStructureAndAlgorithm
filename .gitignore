@@ -1,5 +1,4 @@
-.idea
+.idea/
 *.iml
-out
 .DS_Store
-target
+target/

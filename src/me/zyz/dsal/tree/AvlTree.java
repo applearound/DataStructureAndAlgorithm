@@ -2,7 +2,7 @@ package me.zyz.dsal.tree;
 
 
 /**
- * @author zyz
+ * @author yz
  */
 public class AvlTree<K extends Comparable<K>, V> {
     private class Node {
