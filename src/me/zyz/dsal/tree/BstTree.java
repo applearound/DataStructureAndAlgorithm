@@ -59,16 +59,23 @@ public class BstTree<E extends Comparable<E>> {
     }
 
     public boolean isEmpty() {
-        return size == 0;
+        return getSize() == 0;
+    }
+
+    public int getSize() {
+        return size;
     }
 
     public void add(E e) {
-//        if (root == null) {
-//            root = new Node(e);
-//        } else {
-//            _add1(root, e);
-//        }
         root = _add2(root, e);
+    }
+
+    public void addLessAssign(E e) {
+        if (root == null) {
+            root = new Node(e);
+        } else {
+            _add1(root, e);
+        }
     }
 
     private void _add1(Node node, E e) {
@@ -148,7 +155,7 @@ public class BstTree<E extends Comparable<E>> {
                 preOrderStack.push(current.right);
             }
 
-            if (current.left != null) {
+             if (current.left != null) {
                 preOrderStack.push(current.left);
             }
         }
@@ -211,7 +218,7 @@ public class BstTree<E extends Comparable<E>> {
     }
 
     public E minimum() {
-        if (size == 0) {
+        if (isEmpty()) {
             throw new IllegalArgumentException("BST is empty");
         }
 
@@ -227,7 +234,7 @@ public class BstTree<E extends Comparable<E>> {
     }
 
     public E maximum() {
-        if (size == 0) {
+        if (isEmpty()) {
             throw new IllegalArgumentException("BST is empty");
         }
 
@@ -280,5 +287,52 @@ public class BstTree<E extends Comparable<E>> {
 
         node.right = _removeMax(node.right);
         return node;
+    }
+
+    public void remove(E e) {
+        if (e == null) {
+            throw new IllegalArgumentException("null value is not acceptable.");
+        }
+        root = _remove(root, e);
+    }
+
+    private Node _remove(Node node, E e) {
+        // 空树返回空
+        if (node == null) {
+            return null;
+        }
+
+        int compareNumber = e.compareTo(node.e);
+
+        if (compareNumber < 0) {
+            node.left = _remove(node.left, e);
+            return node;
+        } else if (compareNumber > 0) {
+            node.right = _remove(node.right, e);
+            return node;
+        } else {
+            if (node.left == null) {
+                Node rightNode = node.right;
+                node.right = null;
+                size--;
+                return rightNode;
+            }
+
+            if (node.right == null) {
+                Node leftNode = node.left;
+                node.left = null;
+                size--;
+                return leftNode;
+            }
+
+            Node successor = _minimumNode(node.right);
+            successor.right = _removeMin(node.right);
+            successor.left = node.left;
+
+            node.left = null;
+            node.right = null;
+
+            return successor;
+        }
     }
 }

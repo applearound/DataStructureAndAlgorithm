@@ -1,6 +1,7 @@
 package me.zyz.dsal;
 
-import me.zyz.dsal.tree.BstTree;
+import me.zyz.dsal.list.LinkedList;
+
 
 /**
  * @author zyz
@@ -8,17 +9,12 @@ import me.zyz.dsal.tree.BstTree;
 public class Main {
 
     public static void main(String[] args) {
-        BstTree<Integer> bst = new BstTree<>();
-        int[] nums = {5, 3, 6, 8, 4, 2};
-        for (int num : nums) {
-            bst.add(num);
+        LinkedList<Integer> arrayList = new LinkedList<>();
+        for (int i = 0; i < 10; ++i) {
+            arrayList.add(i);
         }
-        bst.inOrder();
-        bst.removeMax();
-        bst.removeMin();
-        bst.removeMax();
-        bst.removeMin();
-        System.out.println();
-        bst.inOrder();
+        for (int i = 0; i < 10; ++i) {
+            System.out.println(arrayList.get(i));
+        }
     }
 }
