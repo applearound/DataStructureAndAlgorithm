@@ -28,6 +28,7 @@ public class LinkedList<E> {
     public void add(E e) {
         Node newNode = new Node(e);
         newNode.previous = this.tail;
+
         tail.next = newNode;
         tail = newNode;
         size++;

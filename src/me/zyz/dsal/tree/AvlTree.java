@@ -6,11 +6,11 @@ package me.zyz.dsal.tree;
  */
 public class AvlTree<K extends Comparable<K>, V> {
     private class Node {
-        public K key;
-        public V value;
-        public Node left;
-        public Node right;
-        public int height;
+        private K key;
+        private V value;
+        private Node left;
+        private Node right;
+        private int height;
 
         public Node(K key, V value) {
             this.key = key;
