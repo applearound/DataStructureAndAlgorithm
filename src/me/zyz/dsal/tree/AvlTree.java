@@ -50,7 +50,7 @@ public class AvlTree<K extends Comparable<K>, V> {
     }
 
     public boolean isEmpty() {
-        return size == 0;
+        return getSize() == 0;
     }
 
     public void add(K key, V value) {
@@ -72,14 +72,55 @@ public class AvlTree<K extends Comparable<K>, V> {
             node.value = value;
         }
 
-        node.height = Math.max(getHeight(node.left), getHeight(node.right));
+        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
 
         int balanceFactor = getBalanceFactor(node);
         if (Math.abs(balanceFactor) > 1) {
             System.out.println("unbalanced: " + balanceFactor);
         }
 
+        // LL 旋转
+        if (balanceFactor > 1 && getBalanceFactor(node.left) >= 0) {
+            return llRotate(node);
+        }
+        // RR 旋转
+        else if (balanceFactor < -1 && getBalanceFactor(node.right) <= 0) {
+            return rrRotate(node);
+        }
+        // LR、RL旋转
+        else {
+
+        }
+
         return node;
+    }
+
+    private Node llRotate(Node root) {
+        Node newRoot = root.left;
+        Node tree = newRoot.right;
+
+        newRoot.right = root;
+        root.left = tree;
+
+        return newRoot;
+    }
+
+    private Node rrRotate(Node root) {
+        Node newRoot = root.right;
+        Node tree = newRoot.left;
+
+        newRoot.left = root;
+        root.right = tree;
+
+        return newRoot;
+    }
+
+    private Node lrRotate() {
+        return null;
+    }
+
+    private Node rlRotate() {
+        return null;
     }
 
     private Node getNode(Node node, K key) {
