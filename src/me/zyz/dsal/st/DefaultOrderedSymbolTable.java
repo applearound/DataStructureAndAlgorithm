@@ -107,7 +107,7 @@ public class DefaultOrderedSymbolTable<K extends Comparable<K>, V> implements Or
 
     @Override
     public int rank(K key) {
-        return treeMap.;
+        return 0;
     }
 
     @Override
