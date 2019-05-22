@@ -14,11 +14,12 @@ public class InsertionSort extends AbstractSort {
         int length = arr.length;
 
         for (int i = 1; i < length; ++i) {
-            for (int j = i; j > 0; --j) {
-                if (arr[j].compareTo(arr[j - 1]) < 0) {
-                    swap(arr, j, j - 1);
-                }
+            E value = arr[i];
+            int j = i;
+            for (; j >= 1 && value.compareTo(arr[j - 1]) < 0; --j) {
+                arr[j] = arr[j - 1];
             }
+            arr[j] = value;
         }
     }
 
@@ -28,10 +29,7 @@ public class InsertionSort extends AbstractSort {
         for (int i = 1; i < length; ++i) {
             E value = arr[i];
             int j = i - 1;
-            for (; j > -1; --j) {
-                if (value.compareTo(arr[j]) >= 0) {
-                    break;
-                }
+            for (; j > -1 && value.compareTo(arr[j]) < 0; --j) {
             }
             System.arraycopy(arr, j + 1, arr, j + 2, i - j - 1);
             arr[j + 1] = value;

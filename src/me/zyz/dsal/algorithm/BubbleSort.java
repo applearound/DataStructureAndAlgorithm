@@ -4,17 +4,22 @@ public class BubbleSort extends AbstractSort {
 
     @Override
     public <E extends Comparable> void sort(E[] arr) {
-        singleDirectionSort(arr);
+        doubleDirectionSort(arr);
     }
 
     public <E extends Comparable> void singleDirectionSort(E[] arr) {
 
         int length = arr.length;
         for (int i = 0; i < length - 1; ++i) {
+            boolean flag = false;
             for (int j = 0; j < length - i - 1; ++j) {
                 if (arr[j].compareTo(arr[j + 1]) > 0) {
                     swap(arr, j, j + 1);
+                    flag = true;
                 }
+            }
+            if (!flag) {
+                break;
             }
         }
     }
@@ -23,16 +28,26 @@ public class BubbleSort extends AbstractSort {
         int length = arr.length;
 
         for (int i = 0; i < length / 2; ++i) {
+            boolean flag = false;
             for (int j = i; j < length - i - 1; ++j) {
                 if (arr[j].compareTo(arr[j + 1]) > 0) {
                     swap(arr, j, j + 1);
+                    flag = true;
                 }
             }
+            if (!flag) {
+                break;
+            }
 
+            flag = false;
             for (int j = length - i - 2; j > i; --j) {
                 if (arr[j].compareTo(arr[j - 1]) < 0) {
                     swap(arr, j, j - 1);
+                    flag = true;
                 }
+            }
+            if (!flag) {
+                break;
             }
         }
     }

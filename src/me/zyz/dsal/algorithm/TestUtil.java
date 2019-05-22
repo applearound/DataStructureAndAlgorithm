@@ -1,5 +1,6 @@
 package me.zyz.dsal.algorithm;
 
+import java.util.Arrays;
 import java.util.Random;
 
 public class TestUtil {
@@ -27,6 +28,13 @@ public class TestUtil {
     public <E extends Comparable> void test(E[] arr, Sort sort) {
         long start = System.nanoTime();
         sort.sort(arr);
+        System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
+        assert testSorted(arr);
+    }
+
+    public <E extends Comparable> void testArraysSort(E[] arr) {
+        long start = System.nanoTime();
+        Arrays.sort(arr);
         System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
         assert testSorted(arr);
     }
