@@ -18,25 +18,29 @@ public class QuickSort extends AbstractSort {
     }
 
     private <E extends Comparable> int partition(E[] arr, int low, int high) {
-        int pivotIndex = low;
-        E pivot = arr[pivotIndex];
+        int lo = low;
+        int hi = high + 1;
 
-        int lo = low + 1;
-        int hi = high;
+        E pivot = arr[lo];
 
-        while (lo < hi) {
-            while (lo <= high && pivot.compareTo(arr[lo]) > 0) {
-                lo++;
+        while (true) {
+            while (pivot.compareTo(arr[++lo]) > 0) {
+                if (lo == high) {
+                    break;
+                }
             }
 
-            while (hi >= lo && pivot.compareTo(arr[hi]) < 0) {
-                hi--;
+            while (pivot.compareTo(arr[--hi]) < 0) {
+                if (hi == low) {
+                    break;
+                }
             }
-            if (lo < hi) {
-                swap(arr, lo, hi);
+            if (lo >= hi) {
+                break;
             }
+            swap(arr, lo, hi);
         }
-        swap(arr, pivotIndex, hi);
+        swap(arr, low, hi);
 
         return hi;
     }
@@ -44,9 +48,9 @@ public class QuickSort extends AbstractSort {
     public static void main(String[] args) {
         QuickSort quickSort = new QuickSort();
 
-        Integer[] integers = {1, 5, 2, 3, 4, 6, 7, 8, 1};
+        Integer[] integers = {9, 5, 2, 3, 4, 6, 7, 8, 1};
 
-        quickSort.recursionSort(integers, 0, 8);
+        quickSort.partition(integers, 0, 8);
 
         System.out.println(Arrays.toString(integers));
     }

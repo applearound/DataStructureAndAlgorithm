@@ -81,21 +81,28 @@ public class AvlTree<K extends Comparable<K>, V> {
 
         // LL 旋转
         if (balanceFactor > 1 && getBalanceFactor(node.left) >= 0) {
-            return llRotate(node);
+            return rightRotate(node);
         }
         // RR 旋转
-        else if (balanceFactor < -1 && getBalanceFactor(node.right) <= 0) {
-            return rrRotate(node);
+        if (balanceFactor < -1 && getBalanceFactor(node.right) <= 0) {
+            return leftRotate(node);
         }
-        // LR、RL旋转
-        else {
+        // LR 旋转
+        if (balanceFactor > 1 && getBalanceFactor(node.left) < 0) {
+            node.left = leftRotate(node.left);
+            return rightRotate(node);
+        }
 
+        // RL 旋转
+        if (balanceFactor > 1 && getBalanceFactor(node.right) > 0) {
+            node.right = rightRotate(node.right);
+            return leftRotate(node);
         }
 
         return node;
     }
 
-    private Node llRotate(Node root) {
+    private Node rightRotate(Node root) {
         Node newRoot = root.left;
         Node tree = newRoot.right;
 
@@ -105,7 +112,7 @@ public class AvlTree<K extends Comparable<K>, V> {
         return newRoot;
     }
 
-    private Node rrRotate(Node root) {
+    private Node leftRotate(Node root) {
         Node newRoot = root.right;
         Node tree = newRoot.left;
 
@@ -113,14 +120,6 @@ public class AvlTree<K extends Comparable<K>, V> {
         root.right = tree;
 
         return newRoot;
-    }
-
-    private Node lrRotate() {
-        return null;
-    }
-
-    private Node rlRotate() {
-        return null;
     }
 
     private Node getNode(Node node, K key) {
