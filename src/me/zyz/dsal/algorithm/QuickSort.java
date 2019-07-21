@@ -21,32 +21,50 @@ public class QuickSort extends AbstractSort {
         recursionSort(arr, p + 1, high);
     }
 
+    /**
+     * 将pivot归位
+     *
+     * @param arr  待排序数组
+     * @param low  下界（包含）
+     * @param high 上届（包含）
+     * @param <E>  Comparable
+     * @return pivot下标
+     */
     private <E extends Comparable<E>> int partition(E[] arr, int low, int high) {
-        int lo = low;
-        int hi = high + 1;
+//        int i = low;
+//        int j = high + 1;
 
-        E pivot = arr[lo];
+        E pivot = arr[low];
 
-        while (true) {
-            while (pivot.compareTo(arr[++lo]) > 0) {
-                if (lo == high) {
-                    break;
-                }
+//        while (true) {
+//            while (pivot.compareTo(arr[++i]) > 0) {
+//                if (i == high) {
+//                    break;
+//                }
+//            }
+//
+//            while (pivot.compareTo(arr[--j]) < 0) {
+//                if (j == low) {
+//                    break;
+//                }
+//            }
+//            if (i >= j) {
+//                break;
+//            }
+//            swap(arr, i, j);
+//        }
+//        swap(arr, low, j);
+        int j = low;
+        for (int i = low + 1; i <= high; ++i) {
+            if (arr[i].compareTo(pivot) < 0) {
+                swap(arr, j + 1, i);
+                j++;
             }
-
-            while (pivot.compareTo(arr[--hi]) < 0) {
-                if (hi == low) {
-                    break;
-                }
-            }
-            if (lo >= hi) {
-                break;
-            }
-            swap(arr, lo, hi);
         }
-        swap(arr, low, hi);
 
-        return hi;
+        swap(arr, low, j);
+
+        return j;
     }
 
     public static void main(String[] args) {

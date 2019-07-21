@@ -17,6 +17,8 @@ public class TestMain {
         testUtil.test(testIntegerListData.clone(), new ShellSort());
         System.out.println("归并排序");
         testUtil.test(testIntegerListData.clone(), new MergeSort());
+        System.out.println("快速排序");
+        testUtil.test(testIntegerListData.clone(), new QuickSort());
         System.out.println("Arrays.sort()");
         testUtil.testArraysSort(testIntegerListData.clone());
     }

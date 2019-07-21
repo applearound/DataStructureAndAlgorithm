@@ -1,11 +1,13 @@
 package me.zyz.dsal.algorithm;
 
-
+/**
+ * @author yz
+ */
 public class MergeSort extends AbstractSort {
 
     @Override
     public <E extends Comparable<E>> void sort(E[] arr) {
-        nonRecursionSort(arr);
+        recursionSort(arr);
     }
 
     /**
@@ -23,7 +25,7 @@ public class MergeSort extends AbstractSort {
     }
 
     public <E extends Comparable<E>> void nonRecursionSort0(E[] arr, int n) {
-        for (int sz = 11; sz <= n; sz += sz) {
+        for (int sz = 1; sz <= n; sz += sz) {
             for (int i = 0; i + sz < n; i += sz + sz) {
                 merge(arr, i, i + sz - 1, Math.min(i + sz + sz - 1, n - 1));
             }
