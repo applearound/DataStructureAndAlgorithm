@@ -7,17 +7,21 @@ import java.util.Arrays;
  */
 public class QuickSort extends AbstractSort {
     @Override
-    public <E extends Comparable> void sort(E[] arr) {
-
+    public <E extends Comparable<E>> void sort(E[] arr) {
+        recursionSort(arr, 0, arr.length - 1);
     }
 
-    public <E extends Comparable> void recursionSort(E[] arr, int low, int high) {
-        int p = partition(arr, 0, arr.length - 1);
-        recursionSort(arr, 0, p - 1);
-        recursionSort(arr, p + 1, arr.length - 1);
+    public <E extends Comparable<E>> void recursionSort(E[] arr, int low, int high) {
+        if (low >= high) {
+            return;
+        }
+
+        int p = partition(arr, low, high);
+        recursionSort(arr, low, p - 1);
+        recursionSort(arr, p + 1, high);
     }
 
-    private <E extends Comparable> int partition(E[] arr, int low, int high) {
+    private <E extends Comparable<E>> int partition(E[] arr, int low, int high) {
         int lo = low;
         int hi = high + 1;
 
@@ -50,7 +54,7 @@ public class QuickSort extends AbstractSort {
 
         Integer[] integers = {9, 5, 2, 3, 4, 6, 7, 8, 1};
 
-        quickSort.partition(integers, 0, 8);
+        quickSort.recursionSort(integers, 0, integers.length - 1);
 
         System.out.println(Arrays.toString(integers));
     }

@@ -6,11 +6,11 @@ package me.zyz.dsal.algorithm;
 public class SelectionSort extends AbstractSort {
 
     @Override
-    public <E extends Comparable> void sort(E[] arr) {
+    public <E extends Comparable<E>> void sort(E[] arr) {
         singleSelectionSort(arr);
     }
 
-    public <E extends Comparable> void singleSelectionSort(E[] arr) {
+    public <E extends Comparable<E>> void singleSelectionSort(E[] arr) {
         int length = arr.length;
 
         for (int i = 0; i < length - 1; ++i) {
@@ -24,7 +24,7 @@ public class SelectionSort extends AbstractSort {
         }
     }
 
-    public <E extends Comparable> void doubleSelectionSort(E[] arr) {
+    public <E extends Comparable<E>> void doubleSelectionSort(E[] arr) {
         int length = arr.length;
 
         for (int i = 0; i < length / 2; ++i) {
@@ -57,7 +57,7 @@ public class SelectionSort extends AbstractSort {
 
     public static void main(String[] args) {
         TestUtil testUtil = new TestUtil();
-        Integer[] ints = testUtil.randomIntArray(1000, 1000);
+        Integer[] ints = testUtil.randomIntegerArray(1000, 1000);
 
         SelectionSort selectionSort = new SelectionSort();
 
@@ -67,11 +67,11 @@ public class SelectionSort extends AbstractSort {
         long start = System.nanoTime();
         selectionSort.singleSelectionSort(clone1);
         System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        assert testUtil.testSorted(clone1);
+        assert testUtil.isSorted(clone1);
 
         start = System.nanoTime();
         selectionSort.doubleSelectionSort(clone2);
         System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        assert testUtil.testSorted(clone2);
+        assert testUtil.isSorted(clone2);
     }
 }

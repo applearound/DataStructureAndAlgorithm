@@ -1,7 +1,5 @@
 package me.zyz.dsal;
 
-import java.net.URL;
-
 /**
  * @author yz
  */

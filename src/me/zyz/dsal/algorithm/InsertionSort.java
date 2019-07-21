@@ -6,11 +6,11 @@ package me.zyz.dsal.algorithm;
 public class InsertionSort extends AbstractSort {
 
     @Override
-    public <E extends Comparable> void sort(E[] arr) {
+    public <E extends Comparable<E>> void sort(E[] arr) {
         copySort(arr);
     }
 
-    public <E extends Comparable> void swapSort(E[] arr) {
+    public <E extends Comparable<E>> void swapSort(E[] arr) {
         int length = arr.length;
 
         for (int i = 1; i < length; ++i) {
@@ -23,7 +23,7 @@ public class InsertionSort extends AbstractSort {
         }
     }
 
-    public <E extends Comparable> void copySort(E[] arr) {
+    public <E extends Comparable<E>> void copySort(E[] arr) {
         int length = arr.length;
 
         for (int i = 1; i < length; ++i) {
@@ -40,7 +40,7 @@ public class InsertionSort extends AbstractSort {
         TestUtil testUtil = new TestUtil();
         InsertionSort insertionSort = new InsertionSort();
 
-        Integer[] ints = testUtil.randomIntArray(1000, 1000);
+        Integer[] ints = testUtil.randomIntegerArray(1000, 1000);
 
         Integer[] clone1 = ints.clone();
         Integer[] clone2 = ints.clone();
@@ -48,11 +48,11 @@ public class InsertionSort extends AbstractSort {
         long start = System.nanoTime();
         insertionSort.swapSort(clone1);
         System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        assert testUtil.testSorted(clone1);
+        assert testUtil.isSorted(clone1);
 
         start = System.nanoTime();
         insertionSort.swapSort(clone2);
         System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        assert testUtil.testSorted(clone2);
+        assert testUtil.isSorted(clone2);
     }
 }

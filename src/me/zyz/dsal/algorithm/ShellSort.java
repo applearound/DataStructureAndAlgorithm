@@ -9,12 +9,12 @@ public class ShellSort extends AbstractSort {
 
 
     @Override
-    public <E extends Comparable> void sort(E[] arr) {
+    public <E extends Comparable<E>> void sort(E[] arr) {
         elementFirstSort(arr);
     }
 
 
-    private <E extends Comparable> void elementFirstSort(E[] arr) {
+    private <E extends Comparable<E>> void elementFirstSort(E[] arr) {
         int length = arr.length;
 
         for (int step : sequence) {
@@ -29,7 +29,7 @@ public class ShellSort extends AbstractSort {
         }
     }
 
-    private <E extends Comparable> void listFirstSort(E[] arr) {
+    private <E extends Comparable<E>> void listFirstSort(E[] arr) {
         int length = arr.length;
 
         for (int step : sequence) {
@@ -48,9 +48,9 @@ public class ShellSort extends AbstractSort {
 
     public static void main(String[] args) {
         TestUtil testUtil = new TestUtil();
-        Integer[] integers = testUtil.randomIntArray(1000, 100);
+        Integer[] integers = testUtil.randomIntegerArray(1000, 100);
 
         new ShellSort().sort(integers);
-        assert testUtil.testSorted(integers);
+        assert testUtil.isSorted(integers);
     }
 }

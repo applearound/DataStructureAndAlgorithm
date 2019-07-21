@@ -6,7 +6,7 @@ package me.zyz.dsal.algorithm;
 public abstract class AbstractSort implements Sort {
 
     @Override
-    public abstract <E extends Comparable> void sort(E[] arr);
+    public abstract <E extends Comparable<E>> void sort(E[] arr);
 
     protected <E extends Comparable> void swap(E[] arr, int index1, int index2) {
         if (index1 == index2) {
