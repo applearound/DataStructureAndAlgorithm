@@ -1,7 +1,5 @@
 package me.zyz.dsal.algorithm.sort;
 
-import java.lang.reflect.Array;
-
 /**
  * @author yezhou
  */
@@ -73,6 +71,10 @@ public class QuickSort extends AbstractSort {
         swap(arr, low, j);
 
         return j;
+    }
+
+    private <E extends Comparable<E>> int tripleWayPartition(E[] arr, int low, int high) {
+        return 1;
     }
 
     public static void main(String[] args) {
