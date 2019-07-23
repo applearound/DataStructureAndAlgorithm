@@ -5,7 +5,7 @@ package me.zyz.dsal.algorithm.sort;
  */
 public class ShellArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
 
-    private int[] sequence = new int[]{1750, 701, 301, 132, 57, 23, 10, 4, 1};
+    private static final int[] SEQUENCE = new int[]{1750, 701, 301, 132, 57, 23, 10, 4, 1};
 
     @Override
     public void sort(E[] arr) {
@@ -16,7 +16,7 @@ public class ShellArraySort<E extends Comparable<E>> extends AbstractArraySort<E
     private void elementFirstSort(E[] arr) {
         int length = arr.length;
 
-        for (int step : sequence) {
+        for (int step : SEQUENCE) {
             for (int i = step; i < length; ++i) {
                 E value = arr[i];
                 int j = i;
@@ -31,7 +31,7 @@ public class ShellArraySort<E extends Comparable<E>> extends AbstractArraySort<E
     private void listFirstSort(E[] arr) {
         int length = arr.length;
 
-        for (int step : sequence) {
+        for (int step : SEQUENCE) {
             for (int i = 0; i < step; ++i) {
                 for (int j = i + step; j < length; j += step) {
                     E value = arr[j];
@@ -43,13 +43,5 @@ public class ShellArraySort<E extends Comparable<E>> extends AbstractArraySort<E
                 }
             }
         }
-    }
-
-    public static void main(String[] args) {
-        TestUtil testUtil = TestUtil.getInstance();
-        Integer[] integers = testUtil.randomIntegerArray(1000, 100);
-
-        new ShellArraySort().sort(integers);
-        assert testUtil.isSorted(integers);
     }
 }

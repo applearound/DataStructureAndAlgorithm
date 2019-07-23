@@ -1,10 +1,7 @@
 package me.zyz.dsal.algorithm.sort;
 
-import me.zyz.dsal.list.ArrayList;
-
 import java.util.Arrays;
 import java.util.Random;
-import java.util.function.IntSupplier;
 import java.util.stream.IntStream;
 
 public class TestUtil {

@@ -5,8 +5,7 @@ public class TestMain {
     public static void main(String[] args) {
         TestUtil testUtil = TestUtil.getInstance();
 
-//        Integer[] testIntegerListData = testUtil.randomIntegerArray(20000, 2000);
-        Integer[] testIntegerListData = testUtil.randomIntegerArray(20000, 5000);
+        Integer[] testIntegerListData = testUtil.randomIntegerArray(20000, 2000);
 
         System.out.println("冒泡排序");
         testUtil.test(testIntegerListData.clone(), new BubbleArraySort<>());
