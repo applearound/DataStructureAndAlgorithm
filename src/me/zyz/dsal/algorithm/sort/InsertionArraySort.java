@@ -3,14 +3,14 @@ package me.zyz.dsal.algorithm.sort;
 /**
  * @author yezhou
  */
-public class InsertionSort extends AbstractSort {
+public class InsertionArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
 
     @Override
-    public <E extends Comparable<E>> void sort(E[] arr) {
+    public void sort(E[] arr) {
         copySort(arr);
     }
 
-    public <E extends Comparable<E>> void swapSort(E[] arr) {
+    public void swapSort(E[] arr) {
         for (int i = 1; i < arr.length; ++i) {
             E value = arr[i];
             int j = i;
@@ -21,7 +21,7 @@ public class InsertionSort extends AbstractSort {
         }
     }
 
-    public <E extends Comparable<E>> void copySort(E[] arr) {
+    public void copySort(E[] arr) {
         int length = arr.length;
 
         for (int i = 1; i < length; ++i) {
@@ -36,7 +36,7 @@ public class InsertionSort extends AbstractSort {
 
     public static void main(String[] args) {
         TestUtil testUtil = TestUtil.getInstance();
-        InsertionSort insertionSort = new InsertionSort();
+        InsertionArraySort insertionSort = new InsertionArraySort();
 
         Integer[] ints = testUtil.randomIntegerArray(1000, 1000);
 

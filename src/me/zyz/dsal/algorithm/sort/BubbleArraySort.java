@@ -1,14 +1,13 @@
 package me.zyz.dsal.algorithm.sort;
 
-public class BubbleSort extends AbstractSort {
+public class BubbleArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
 
     @Override
-    public <E extends Comparable<E>> void sort(E[] arr) {
+    public void sort(E[] arr) {
         doubleDirectionSort(arr);
     }
 
-    public <E extends Comparable<E>> void singleDirectionSort(E[] arr) {
-
+    public void singleDirectionSort(E[] arr) {
         int length = arr.length;
         for (int i = 0; i < length - 1; ++i) {
             boolean flag = false;
@@ -24,7 +23,7 @@ public class BubbleSort extends AbstractSort {
         }
     }
 
-    public <E extends Comparable<E>> void doubleDirectionSort(E[] arr) {
+    public void doubleDirectionSort(E[] arr) {
         int length = arr.length;
 
         for (int i = 0; i < length / 2; ++i) {
@@ -54,7 +53,7 @@ public class BubbleSort extends AbstractSort {
 
     public static void main(String[] args) {
         TestUtil testUtil = TestUtil.getInstance();
-        BubbleSort bubbleSort = new BubbleSort();
+        BubbleArraySort bubbleSort = new BubbleArraySort();
 
         Integer[] ints = testUtil.randomIntegerArray(1000, 1000);
 

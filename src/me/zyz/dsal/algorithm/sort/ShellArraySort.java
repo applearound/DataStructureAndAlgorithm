@@ -3,18 +3,17 @@ package me.zyz.dsal.algorithm.sort;
 /**
  * @author yezhou
  */
-public class ShellSort extends AbstractSort {
+public class ShellArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
 
     private int[] sequence = new int[]{1750, 701, 301, 132, 57, 23, 10, 4, 1};
 
-
     @Override
-    public <E extends Comparable<E>> void sort(E[] arr) {
+    public void sort(E[] arr) {
         elementFirstSort(arr);
     }
 
 
-    private <E extends Comparable<E>> void elementFirstSort(E[] arr) {
+    private void elementFirstSort(E[] arr) {
         int length = arr.length;
 
         for (int step : sequence) {
@@ -29,7 +28,7 @@ public class ShellSort extends AbstractSort {
         }
     }
 
-    private <E extends Comparable<E>> void listFirstSort(E[] arr) {
+    private void listFirstSort(E[] arr) {
         int length = arr.length;
 
         for (int step : sequence) {
@@ -50,7 +49,7 @@ public class ShellSort extends AbstractSort {
         TestUtil testUtil = TestUtil.getInstance();
         Integer[] integers = testUtil.randomIntegerArray(1000, 100);
 
-        new ShellSort().sort(integers);
+        new ShellArraySort().sort(integers);
         assert testUtil.isSorted(integers);
     }
 }

@@ -1,5 +1,7 @@
 package me.zyz.dsal.algorithm.sort;
 
+import me.zyz.dsal.list.ArrayList;
+
 import java.util.Arrays;
 import java.util.Random;
 import java.util.function.IntSupplier;
@@ -53,7 +55,7 @@ public class TestUtil {
         }
 
         Integer[] integerArray = IntStream.rangeClosed(low, high).boxed().toArray(Integer[]::new);
-        for (int i = 0; i < (integerArray.length / 100) + 1; i++) {
+        for (int i = 0; i < (integerArray.length / 1000) + 1; i++) {
             int index1 = random.nextInt(integerArray.length);
             int index2 = random.nextInt(integerArray.length);
 

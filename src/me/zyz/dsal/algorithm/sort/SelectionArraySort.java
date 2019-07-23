@@ -3,14 +3,14 @@ package me.zyz.dsal.algorithm.sort;
 /**
  * @author yezhou
  */
-public class SelectionSort extends AbstractSort {
+public class SelectionArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
 
     @Override
-    public <E extends Comparable<E>> void sort(E[] arr) {
+    public void sort(E[] arr) {
         singleSelectionSort(arr);
     }
 
-    public <E extends Comparable<E>> void singleSelectionSort(E[] arr) {
+    public void singleSelectionSort(E[] arr) {
         int length = arr.length;
 
         for (int i = 0; i < length - 1; ++i) {
@@ -24,7 +24,7 @@ public class SelectionSort extends AbstractSort {
         }
     }
 
-    public <E extends Comparable<E>> void doubleSelectionSort(E[] arr) {
+    public void doubleSelectionSort(E[] arr) {
         int length = arr.length;
 
         for (int i = 0; i < length / 2; ++i) {
@@ -59,7 +59,7 @@ public class SelectionSort extends AbstractSort {
         TestUtil testUtil = TestUtil.getInstance();
         Integer[] ints = testUtil.randomIntegerArray(1000, 1000);
 
-        SelectionSort selectionSort = new SelectionSort();
+        SelectionArraySort selectionSort = new SelectionArraySort();
 
         Integer[] clone1 = ints.clone();
         Integer[] clone2 = ints.clone();
