@@ -159,9 +159,10 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
 
     public static void main(String[] args) {
         TestUtil testUtil = TestUtil.getInstance();
-        Integer[] integers = testUtil.randomIntegerArray(50000, 1000);
 
-        testUtil.test(integers.clone(), new QuickArraySort(Partitions.SINGLE_WAY));
-        testUtil.test(integers.clone(), new QuickArraySort(Partitions.DOUBLE_WAY));
+        for (int i = 0; i < 10000; i++) {
+            Integer[] integers = testUtil.randomIntegerArray(50000, 1000);
+            testUtil.test(integers.clone(), new QuickArraySort());
+        }
     }
 }

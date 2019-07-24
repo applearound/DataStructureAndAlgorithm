@@ -91,10 +91,10 @@ public class MergeArraySort<E extends Comparable<E>> extends AbstractArraySort<E
             // 比较两个数组对应位置下标，填入k
             if (aux[i - l].compareTo(aux[j - l]) <= 0) {
                 arr[k] = aux[i - l];
-                j++;
+                i++;
             } else {
                 arr[k] = aux[j - l];
-                i++;
+                j++;
             }
         }
     }
@@ -119,9 +119,10 @@ public class MergeArraySort<E extends Comparable<E>> extends AbstractArraySort<E
 
     public static void main(String[] args) {
         TestUtil testUtil = TestUtil.getInstance();
-        for (int i = 0; i < 100; i++) {
-            Integer[] integers = testUtil.randomIntegerArray(1000, 1000);
-            testUtil.test(integers, new MergeArraySort());
+
+        for (int i = 0; i < 10000; i++) {
+            Integer[] integers = testUtil.randomIntegerArray(10, 10);
+            testUtil.test(integers.clone(), new MergeArraySort<>());
         }
     }
 }

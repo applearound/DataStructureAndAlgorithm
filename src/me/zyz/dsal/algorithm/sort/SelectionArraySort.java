@@ -56,22 +56,5 @@ public class SelectionArraySort<E extends Comparable<E>> extends AbstractArraySo
     }
 
     public static void main(String[] args) {
-        TestUtil testUtil = TestUtil.getInstance();
-        Integer[] ints = testUtil.randomIntegerArray(1000, 1000);
-
-        SelectionArraySort selectionSort = new SelectionArraySort();
-
-        Integer[] clone1 = ints.clone();
-        Integer[] clone2 = ints.clone();
-
-        long start = System.nanoTime();
-        selectionSort.singleSelectionSort(clone1);
-        System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        assert testUtil.isSorted(clone1);
-
-        start = System.nanoTime();
-        selectionSort.doubleSelectionSort(clone2);
-        System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        assert testUtil.isSorted(clone2);
     }
 }

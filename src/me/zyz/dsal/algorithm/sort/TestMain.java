@@ -1,11 +1,13 @@
 package me.zyz.dsal.algorithm.sort;
 
 
+import java.util.Arrays;
+
 public class TestMain {
     public static void main(String[] args) {
         TestUtil testUtil = TestUtil.getInstance();
 
-        Integer[] testIntegerListData = testUtil.randomIntegerArray(20000, 2000);
+        Integer[] testIntegerListData = testUtil.randomIntegerArray(10, 100);
 
         System.out.println("冒泡排序");
         testUtil.test(testIntegerListData.clone(), new BubbleArraySort<>());
@@ -22,6 +24,6 @@ public class TestMain {
         System.out.println("堆排序");
         testUtil.test(testIntegerListData.clone(), new HeapSort<>());
         System.out.println("Arrays.sort()");
-        testUtil.arraysSort(testIntegerListData.clone());
+        testUtil.test(testIntegerListData.clone(), Arrays::sort);
     }
 }

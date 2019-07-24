@@ -15,41 +15,26 @@ public class HeapSort<E extends Comparable<E>> extends AbstractArraySort<E> {
 
         int currentSize = arr.length;
         while (currentSize >= 2) {
-            swap(arr, 0, currentSize - 1);
-
-            currentSize--;
-
-            diveDown(arr, 0, currentSize, lastNonLeafPos(currentSize));
+            swap(arr, 0, --currentSize);
+            diveDown(arr, 0, currentSize, (currentSize - 2) >> 1);
         }
     }
 
     private void heapify(E[] arr, int size) {
-        int lastNonLeafPos = lastNonLeafPos(size);
+        int lastNonLeafPos = (size - 2) >> 1;
         for (int currentAdjustPos = lastNonLeafPos; currentAdjustPos >= 0; --currentAdjustPos) {
             diveDown(arr, currentAdjustPos, size, lastNonLeafPos);
         }
-    }
-
-    private int leftChildPos(int parentPos) {
-        return (parentPos << 1) + 1;
-    }
-
-    private int rightChildPos(int parentPos) {
-        return (parentPos << 1) + 2;
-    }
-
-    private int lastNonLeafPos(int size) {
-        return (size - 2) >> 1;
     }
 
     private void diveDown(E[] arr, int pos, int size, int lastNonLeafPos) {
         while (pos <= lastNonLeafPos) {
             E parentValue = arr[pos];
 
-            int exchangePos = leftChildPos(pos);
+            int exchangePos = (pos << 1) + 1;
             E exchangeValue = arr[exchangePos];
 
-            int rightChildPos = rightChildPos(pos);
+            int rightChildPos = (pos << 1) + 2;
             if (rightChildPos < size) {
                 E rightChildValue = arr[rightChildPos];
                 if (rightChildValue.compareTo(exchangeValue) > 0) {
@@ -68,9 +53,9 @@ public class HeapSort<E extends Comparable<E>> extends AbstractArraySort<E> {
     }
 
     private void heapifySort(E[] arr) {
-        Heap<E> heap = MaxHeap.heapify(arr);
+        Heap<E> heap = MinHeap.heapify(arr);
 
-        for (int i = arr.length - 1; i >= 0; --i) {
+        for (int i = 0; i < arr.length; ++i) {
             arr[i] = heap.quit();
         }
     }
@@ -88,8 +73,8 @@ public class HeapSort<E extends Comparable<E>> extends AbstractArraySort<E> {
     }
 
     public static void main(String[] args) {
-        Integer[] integers = {5, 4, 3, 2, 1};
-        new HeapSort<Integer>().sort(integers);
+        Integer[] integers = {1, 2, 3, 4, 5};
+        new HeapSort<Integer>().heapifySort(integers);
 
         for (Integer integer : integers) {
             System.out.println(integer);

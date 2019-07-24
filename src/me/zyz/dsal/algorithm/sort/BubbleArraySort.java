@@ -52,22 +52,5 @@ public class BubbleArraySort<E extends Comparable<E>> extends AbstractArraySort<
     }
 
     public static void main(String[] args) {
-        TestUtil testUtil = TestUtil.getInstance();
-        BubbleArraySort bubbleSort = new BubbleArraySort();
-
-        Integer[] ints = testUtil.randomIntegerArray(1000, 1000);
-
-        Integer[] clone1 = ints.clone();
-        Integer[] clone2 = ints.clone();
-
-        long start = System.nanoTime();
-        bubbleSort.singleDirectionSort(clone1);
-        System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        assert testUtil.isSorted(clone1);
-
-        start = System.nanoTime();
-        bubbleSort.doubleDirectionSort(clone2);
-        System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        assert testUtil.isSorted(clone2);
     }
 }

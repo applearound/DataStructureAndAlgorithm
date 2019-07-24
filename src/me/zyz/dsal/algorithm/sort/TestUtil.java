@@ -1,7 +1,8 @@
 package me.zyz.dsal.algorithm.sort;
 
-import java.util.Arrays;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.stream.IntStream;
 
 public class TestUtil {
@@ -64,31 +65,36 @@ public class TestUtil {
         return integerArray;
     }
 
-    public <E extends Comparable<E>> boolean isSorted(E[] arr) {
-        for (int i = 0; i < arr.length - 1; i++) {
-            if (arr[i].compareTo(arr[i + 1]) > 0) {
-                return false;
+    public <E extends Comparable<E>> boolean isSorted(E[] origin, E[] arr) {
+        Map<E, Integer> countMap = new TreeMap<>();
+        for (E e : origin) {
+            if (countMap.containsKey(e)) {
+                countMap.put(e, countMap.get(e) + 1);
+            } else {
+                countMap.put(e, 1);
             }
+        }
+
+        int i = 0;
+        for (Map.Entry<E, Integer> eIntegerEntry : countMap.entrySet()) {
+            for (int j = 0; j < eIntegerEntry.getValue(); ++j) {
+                if (arr[i + j].compareTo(eIntegerEntry.getKey()) != 0) {
+                    return false;
+                }
+            }
+            i += eIntegerEntry.getValue();
         }
 
         return true;
     }
 
-    public <E extends Comparable<E>> void test(E[] arr, Sort sort) {
+    public <E extends Comparable<E>> void test(E[] arr, Sort<E> sort) {
+        E[] originArr = arr.clone();
         long start = System.nanoTime();
         sort.sort(arr);
-        System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        if (!isSorted(arr)) {
+        System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms ");
+        if (!isSorted(originArr, arr)) {
             throw new IllegalStateException("not sorted: " + sort.getClass().getSimpleName());
-        }
-    }
-
-    public <E extends Comparable<E>> void arraysSort(E[] arr) {
-        long start = System.nanoTime();
-        Arrays.sort(arr);
-        System.out.println((System.nanoTime() - start) / 1_000_000.0 + "ms");
-        if (!isSorted(arr)) {
-            throw new IllegalStateException("not sorted: Arrays.sort()");
         }
     }
 }
