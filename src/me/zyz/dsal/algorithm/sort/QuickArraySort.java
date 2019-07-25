@@ -134,7 +134,7 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
             swap(arr, low, low + random.nextInt(high - low + 1));
             E pivot = arr[low];
 
-            // [p][areaLP:<p][areaEQ:=p][i][areaUR:unread][areaGP:>p]
+            // [p][areaLP:<p][areaEQ:=p][i][areaU:wqR:unread][areaGP:>p]
             int ltHigh = low;
             int gtLow = high + 1;
 
