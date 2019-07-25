@@ -7,7 +7,7 @@ public class TestMain {
     public static void main(String[] args) {
         TestUtil testUtil = TestUtil.getInstance();
 
-        Integer[] testIntegerListData = testUtil.randomIntegerArray(10, 100);
+        Integer[] testIntegerListData = testUtil.randomIntegerArray(10000, 1000);
 
         System.out.println("冒泡排序");
         testUtil.test(testIntegerListData.clone(), new BubbleArraySort<>());

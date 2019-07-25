@@ -1,6 +1,7 @@
 package me.zyz.dsal.algorithm.sort;
 
 import java.util.Random;
+import java.util.stream.IntStream;
 
 /**
  * @author yezhou
@@ -48,9 +49,9 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
             return;
         }
 
-        int p = partition.partition(arr, low, high);
-        recursionSort(arr, low, p - 1);
-        recursionSort(arr, p + 1, high);
+        int p[] = partition.partition(arr, low, high);
+        recursionSort(arr, low, p[0] - 1);
+        recursionSort(arr, p[1] + 1, high);
     }
 
     private interface Partition<E extends Comparable<E>> {
@@ -62,7 +63,7 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
          * @param high 上届（包含）
          * @return pivot下标
          */
-        int partition(E[] arr, int low, int high);
+        int[] partition(E[] arr, int low, int high);
     }
 
     /**
@@ -73,7 +74,7 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
         private final Random random = new Random();
 
         @Override
-        public int partition(E[] arr, int low, int high) {
+        public int[] partition(E[] arr, int low, int high) {
             swap(arr, low, low + random.nextInt(high - low + 1));
             E pivot = arr[low];
 
@@ -92,7 +93,7 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
             // pivot需要和areaLP区的最高位互换，areaLP区的最高位是p的最终位置
             swap(arr, low, areaGtLow - 1);
 
-            return areaGtLow - 1;
+            return new int[]{areaGtLow - 1, areaGtLow - 1};
         }
     }
 
@@ -100,11 +101,11 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
         private final Random random = new Random();
 
         @Override
-        public int partition(E[] arr, int low, int high) {
+        public int[] partition(E[] arr, int low, int high) {
             swap(arr, low, low + random.nextInt(high - low + 1));
             E pivot = arr[low];
 
-            // [p][areaLP:<=p][areaUR:unread][areaGP:>=p]
+            // [p][areaLP:<=p][i][areaUR:unread][j][areaGP:>=p]
             int i = low;
             int j = high + 1;
 
@@ -121,7 +122,7 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
             }
             swap(arr, low, j);
 
-            return j;
+            return new int[]{j, j};
         }
     }
 
@@ -129,13 +130,27 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
         private final Random random = new Random();
 
         @Override
-        public int partition(E[] arr, int low, int high) {
+        public int[] partition(E[] arr, int low, int high) {
             swap(arr, low, low + random.nextInt(high - low + 1));
             E pivot = arr[low];
 
-            // [p][areaLP:<p][areaEQ:=p][areaGP:>p]
+            // [p][areaLP:<p][areaEQ:=p][i][areaUR:unread][areaGP:>p]
+            int ltHigh = low;
+            int gtLow = high + 1;
 
-            return 0;
+            int i = low + 1;
+            while (i < gtLow) {
+                if (arr[i].compareTo(pivot) < 0) {
+                    swap(arr, i++, ++ltHigh);
+                } else if (arr[i].compareTo(pivot) > 0) {
+                    swap(arr, i, --gtLow);
+                } else {
+                    i++;
+                }
+            }
+            swap(arr, low, ltHigh--);
+
+            return new int[]{ltHigh + 1, gtLow - 1};
         }
     }
 
@@ -160,9 +175,12 @@ public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E
     public static void main(String[] args) {
         TestUtil testUtil = TestUtil.getInstance();
 
-        for (int i = 0; i < 10000; i++) {
-            Integer[] integers = testUtil.randomIntegerArray(50000, 1000);
-            testUtil.test(integers.clone(), new QuickArraySort());
+        for (int i = 0; i < 100; i++) {
+            Integer[] integers = IntStream.generate(() -> 1).limit(1000000).boxed().toArray(Integer[]::new);
+//            testUtil.test(integers.clone(), new QuickArraySort<>(Partitions.SINGLE_WAY));
+            testUtil.test(integers.clone(), new QuickArraySort<>(Partitions.DOUBLE_WAY));
+            testUtil.test(integers.clone(), new QuickArraySort<>(Partitions.TRIPLE_WAY));
+            System.out.println("--------------------\n");
         }
     }
 }
