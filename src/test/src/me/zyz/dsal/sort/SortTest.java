@@ -18,7 +18,7 @@ public class SortTest {
     @BeforeAll
     public static void setUpAll() {
         testUtil = TestUtil.getInstance();
-        testIntegerListRawData = TestUtil.getInstance().randomIntegerArray(100000, 100000);
+        testIntegerListRawData = TestUtil.getInstance().randomIntegerArray(200000, 100000);
     }
 
     @BeforeEach

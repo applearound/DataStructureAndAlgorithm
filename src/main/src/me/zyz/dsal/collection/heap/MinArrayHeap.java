@@ -3,23 +3,13 @@ package me.zyz.dsal.collection.heap;
 /**
  * @author yz
  */
-public class MinHeap<E extends Comparable<E>> extends AbstractHeap<E> {
-    public MinHeap(int capacity) {
+public class MinArrayHeap<E extends Comparable<E>> extends AbstractArrayHeap<E> {
+    MinArrayHeap(int capacity) {
         super(capacity);
     }
 
-    public static <E extends Comparable<E>> MinHeap<E> heapify(E[] arr) {
-        MinHeap<E> minHeap = new MinHeap<>(arr.length);
-        for (int i = 0; i < arr.length; i++) {
-            minHeap.innerArray[i] = arr[i];
-        }
-        minHeap.size = arr.length;
-
-        for (int i = minHeap.lastNonLeafPos(); i >= TOP_INDEX; --i) {
-            minHeap.diveDown(i);
-        }
-
-        return minHeap;
+    MinArrayHeap(E[] arr) {
+        super(arr);
     }
 
     @Override
@@ -27,8 +17,8 @@ public class MinHeap<E extends Comparable<E>> extends AbstractHeap<E> {
         while (pos > 0) {
             int parentPos = parentPos(pos);
 
-            E currentValue = (E) innerArray[pos];
-            E parentValue = (E) innerArray[parentPos];
+            E currentValue = peek(pos);
+            E parentValue = peek(parentPos);
             if (currentValue.compareTo(parentValue) < 0) {
                 swap(pos, parentPos);
                 pos = parentPos;
@@ -40,15 +30,15 @@ public class MinHeap<E extends Comparable<E>> extends AbstractHeap<E> {
 
     @Override
     void diveDown(int pos) {
-        while (pos <= lastNonLeafPos()) {
-            E parentValue = (E) innerArray[pos];
+        while (pos <= lastNonLeafPos(size())) {
+            E parentValue = peek(pos);
 
             int exchangePos = leftChildPos(pos);
-            E exchangeValue = (E) innerArray[exchangePos];
+            E exchangeValue = peek(exchangePos);
 
             int rightChildPos = rightChildPos(pos);
             if (rightChildPos != -1) {
-                E rightChildValue = (E) innerArray[rightChildPos];
+                E rightChildValue = peek(rightChildPos);
                 if (rightChildValue.compareTo(exchangeValue) < 0) {
                     exchangePos = rightChildPos;
                     exchangeValue = rightChildValue;

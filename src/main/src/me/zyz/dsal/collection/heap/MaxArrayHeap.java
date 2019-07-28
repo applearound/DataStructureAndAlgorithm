@@ -3,25 +3,13 @@ package me.zyz.dsal.collection.heap;
 /**
  * @author yezhou
  */
-public final class MaxHeap<E extends Comparable<E>> extends AbstractHeap<E> {
-    private static final int TOP_INDEX = 0;
-
-    public MaxHeap(int capacity) {
+public final class MaxArrayHeap<E extends Comparable<E>> extends AbstractArrayHeap<E> {
+    MaxArrayHeap(int capacity) {
         super(capacity);
     }
 
-    public static <E extends Comparable<E>> MaxHeap<E> heapify(E[] arr) {
-        MaxHeap<E> maxHeap = new MaxHeap<>(arr.length);
-        for (int i = 0; i < arr.length; i++) {
-            maxHeap.innerArray[i] = arr[i];
-        }
-        maxHeap.size = arr.length;
-
-        for (int i = maxHeap.lastNonLeafPos(); i >= TOP_INDEX; --i) {
-            maxHeap.diveDown(i);
-        }
-
-        return maxHeap;
+    MaxArrayHeap(E[] arr) {
+        super(arr);
     }
 
     @Override
@@ -29,8 +17,8 @@ public final class MaxHeap<E extends Comparable<E>> extends AbstractHeap<E> {
         while (pos > 0) {
             int parentPos = parentPos(pos);
 
-            E currentValue = (E) innerArray[pos];
-            E parentValue = (E) innerArray[parentPos];
+            E currentValue = peek(pos);
+            E parentValue = peek(parentPos);
             if (currentValue.compareTo(parentValue) > 0) {
                 swap(pos, parentPos);
                 pos = parentPos;
@@ -42,16 +30,16 @@ public final class MaxHeap<E extends Comparable<E>> extends AbstractHeap<E> {
 
     @Override
     void diveDown(int pos) {
-        int lastNonLeafPos = lastNonLeafPos();
+        int lastNonLeafPos = lastNonLeafPos(size());
         while (pos <= lastNonLeafPos) {
-            E parentValue = (E) innerArray[pos];
+            E parentValue = peek(pos);
 
             int exchangePos = leftChildPos(pos);
-            E exchangeValue = (E) innerArray[exchangePos];
+            E exchangeValue = peek(exchangePos);
 
             int rightChildPos = rightChildPos(pos);
             if (rightChildPos != -1) {
-                E rightChildValue = (E) innerArray[rightChildPos];
+                E rightChildValue = peek(rightChildPos);
                 if (rightChildValue.compareTo(exchangeValue) > 0) {
                     exchangePos = rightChildPos;
                     exchangeValue = rightChildValue;

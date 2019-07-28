@@ -1,8 +1,8 @@
 package me.zyz.dsal.algorithm.sort;
 
 import me.zyz.dsal.collection.heap.Heap;
-import me.zyz.dsal.collection.heap.MaxHeap;
-import me.zyz.dsal.collection.heap.MinHeap;
+import me.zyz.dsal.collection.heap.MaxArrayHeap;
+import me.zyz.dsal.collection.heap.MinArrayHeap;
 
 /**
  * @author yz
@@ -57,7 +57,7 @@ public class HeapArraySort<E extends Comparable<E>> extends AbstractArraySort<E>
     }
 
     private void heapifySort(E[] arr) {
-        Heap<E> heap = MinHeap.heapify(arr);
+        Heap<E> heap = MinArrayHeap.heapify(arr);
 
         for (int i = 0; i < arr.length; ++i) {
             arr[i] = heap.quit();
@@ -65,7 +65,7 @@ public class HeapArraySort<E extends Comparable<E>> extends AbstractArraySort<E>
     }
 
     private void rawSort(E[] arr) {
-        Heap<E> heap = new MaxHeap<>(arr.length);
+        Heap<E> heap = new MaxArrayHeap<>(arr.length);
 
         for (E e : arr) {
             heap.enter(e);
