@@ -1,5 +1,7 @@
 package me.zyz.dsal.collection.heap;
 
+import java.util.Arrays;
+
 /**
  * @author yz
  */
@@ -15,9 +17,8 @@ public abstract class AbstractArrayHeap<E extends Comparable<E>> implements Heap
     }
 
     AbstractArrayHeap(E[] arr) {
-        this.innerArray = arr;
-        this.capacity = arr.length;
-        this.size = arr.length;
+        this.innerArray = Arrays.copyOf(arr, arr.length);
+        this.capacity = this.size = this.innerArray.length;
 
         for (int i = lastNonLeafPos(this.size); i >= 0; --i) {
             diveDown(i);

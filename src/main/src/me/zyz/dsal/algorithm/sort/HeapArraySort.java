@@ -57,21 +57,9 @@ public class HeapArraySort<E extends Comparable<E>> extends AbstractArraySort<E>
     }
 
     private void heapifySort(E[] arr) {
-        Heap<E> heap = MinArrayHeap.heapify(arr);
+        Heap<E> heap = Heap.minHeap(arr);
 
         for (int i = 0; i < arr.length; ++i) {
-            arr[i] = heap.quit();
-        }
-    }
-
-    private void rawSort(E[] arr) {
-        Heap<E> heap = new MaxArrayHeap<>(arr.length);
-
-        for (E e : arr) {
-            heap.enter(e);
-        }
-
-        for (int i = arr.length - 1; i >= 0; --i) {
             arr[i] = heap.quit();
         }
     }
