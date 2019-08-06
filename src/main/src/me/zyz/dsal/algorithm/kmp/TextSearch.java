@@ -47,4 +47,8 @@ public class TextSearch {
         }
         return -1;
     }
+
+    private CharSequence perfix(CharSequence text, int i) {
+        return text.subSequence(0, i - 1);
+    }
 }

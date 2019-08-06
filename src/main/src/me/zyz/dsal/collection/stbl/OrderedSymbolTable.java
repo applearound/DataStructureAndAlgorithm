@@ -1,4 +1,4 @@
-package me.zyz.dsal.collection.st;
+package me.zyz.dsal.collection.stbl;
 
 
 public interface OrderedSymbolTable<K extends Comparable<K>, V> extends SymbolTable<K, V> {

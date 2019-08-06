@@ -1,4 +1,4 @@
-package me.zyz.dsal.collection.st;
+package me.zyz.dsal.collection.stbl;
 
 /**
  * @author yz

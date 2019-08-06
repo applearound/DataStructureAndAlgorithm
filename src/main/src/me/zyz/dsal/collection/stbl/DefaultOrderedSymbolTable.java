@@ -1,4 +1,4 @@
-package me.zyz.dsal.collection.st;
+package me.zyz.dsal.collection.stbl;
 
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
