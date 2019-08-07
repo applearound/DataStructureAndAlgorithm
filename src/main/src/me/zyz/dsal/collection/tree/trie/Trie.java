@@ -26,9 +26,11 @@ public class Trie {
     }
 
     private Node root;
+    private int size;
 
     public Trie() {
         this.root = new Node();
+        this.size = 0;
     }
 
     public void add(CharSequence sequence) {
@@ -43,7 +45,10 @@ public class Trie {
             }
             currentNode = tempNode;
         }
-        currentNode.beWord();
+        if (!currentNode.isWord()) {
+            currentNode.beWord();
+            size++;
+        }
     }
 
     public boolean contains(CharSequence sequence) {
@@ -56,5 +61,17 @@ public class Trie {
         }
 
         return currentNode.isWord();
+    }
+
+    public boolean isPrefix(CharSequence prefix) {
+        Node currentNode = root;
+        for (int i = 0; i < prefix.length(); i++) {
+            currentNode = currentNode.nodeMap.get(prefix.charAt(i));
+            if (currentNode == null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
