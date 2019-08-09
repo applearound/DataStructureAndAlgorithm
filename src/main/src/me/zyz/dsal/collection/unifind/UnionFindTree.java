@@ -6,12 +6,15 @@ package me.zyz.dsal.collection.unifind;
 public class UnionFindTree implements UnionFind {
 
     private int[] parent;
+    private int[] ranks;
 
     public UnionFindTree(int size) {
         this.parent = new int[size];
+        this.ranks = new int[parent.length];
 
         for (int i = 0; i < parent.length; i++) {
             parent[i] = i;
+            ranks[i] = 1;
         }
     }
 
@@ -21,6 +24,10 @@ public class UnionFindTree implements UnionFind {
         }
 
         return p;
+    }
+
+    private int height(int p) {
+        return ranks[p];
     }
 
     @Override
@@ -42,6 +49,13 @@ public class UnionFindTree implements UnionFind {
             return;
         }
 
-        parent[pRoot] = qRoot;
+        if (height(pRoot) < height(qRoot)) {
+            parent[pRoot] = qRoot;
+        } else if (height(pRoot) > height(qRoot)) {
+            parent[qRoot] = pRoot;
+        } else {
+            parent[pRoot] = qRoot;
+            ranks[qRoot]++;
+        }
     }
 }

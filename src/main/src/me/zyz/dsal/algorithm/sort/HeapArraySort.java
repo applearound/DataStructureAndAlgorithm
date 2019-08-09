@@ -1,9 +1,5 @@
 package me.zyz.dsal.algorithm.sort;
 
-import me.zyz.dsal.collection.heap.Heap;
-import me.zyz.dsal.collection.heap.MaxArrayHeap;
-import me.zyz.dsal.collection.heap.MinArrayHeap;
-
 /**
  * @author yz
  */
@@ -53,23 +49,6 @@ public class HeapArraySort<E extends Comparable<E>> extends AbstractArraySort<E>
             } else {
                 break;
             }
-        }
-    }
-
-    private void heapifySort(E[] arr) {
-        Heap<E> heap = Heap.minHeap(arr);
-
-        for (int i = 0; i < arr.length; ++i) {
-            arr[i] = heap.quit();
-        }
-    }
-
-    public static void main(String[] args) {
-        Integer[] integers = {1, 2, 3, 4, 5};
-        new HeapArraySort<Integer>().heapifySort(integers);
-
-        for (Integer integer : integers) {
-            System.out.println(integer);
         }
     }
 }
