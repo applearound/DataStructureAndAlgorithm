@@ -1,13 +1,13 @@
 package me.zyz.dsal.sort;
 
 import me.zyz.dsal.algorithm.sort.*;
+import me.zyz.dsal.util.TestUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import me.zyz.dsal.util.TestUtil;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SortTest {
     private static TestUtil testUtil;

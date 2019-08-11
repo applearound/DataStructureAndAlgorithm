@@ -1,4 +1,4 @@
-package me.zyz.dsal.collection;
+package me.zyz.dsal.collection.set;
 
 import me.zyz.dsal.collection.tree.BstTree;
 
@@ -28,7 +28,7 @@ public class BstSet<E extends Comparable<E>> implements Set<E> {
     }
 
     @Override
-    public int getSize() {
+    public int size() {
         return bst.size();
     }
 

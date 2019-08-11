@@ -6,42 +6,6 @@ import java.util.*;
  * @author yz
  */
 public class BstTree<E extends Comparable<E>> {
-    private class Node {
-        private E e;
-        private Node left;
-        private Node right;
-
-        public Node(E e) {
-            this.e = e;
-            this.left = null;
-            this.right = null;
-        }
-
-        public E getE() {
-            return e;
-        }
-
-        public void setE(E e) {
-            this.e = e;
-        }
-
-        public Node getLeft() {
-            return left;
-        }
-
-        public void setLeft(Node left) {
-            this.left = left;
-        }
-
-        public Node getRight() {
-            return right;
-        }
-
-        public void setRight(Node right) {
-            this.right = right;
-        }
-    }
-
     private Node root;
     private int size;
 
@@ -360,6 +324,42 @@ public class BstTree<E extends Comparable<E>> {
             node.right = null;
 
             return successor;
+        }
+    }
+
+    private class Node {
+        private E e;
+        private Node left;
+        private Node right;
+
+        public Node(E e) {
+            this.e = e;
+            this.left = null;
+            this.right = null;
+        }
+
+        public E getE() {
+            return e;
+        }
+
+        public void setE(E e) {
+            this.e = e;
+        }
+
+        public Node getLeft() {
+            return left;
+        }
+
+        public void setLeft(Node left) {
+            this.left = left;
+        }
+
+        public Node getRight() {
+            return right;
+        }
+
+        public void setRight(Node right) {
+            this.right = right;
         }
     }
 }

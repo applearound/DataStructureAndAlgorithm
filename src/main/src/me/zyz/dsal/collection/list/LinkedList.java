@@ -1,7 +1,5 @@
 package me.zyz.dsal.collection.list;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * @author yezhou
  */

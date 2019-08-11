@@ -1,7 +1,6 @@
 package me.zyz.dsal.algorithm.sort;
 
 import java.util.Random;
-import java.util.stream.IntStream;
 
 /**
  * @author yezhou

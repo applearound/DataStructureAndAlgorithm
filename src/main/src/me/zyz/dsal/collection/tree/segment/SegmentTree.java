@@ -3,9 +3,6 @@ package me.zyz.dsal.collection.tree.segment;
 import me.zyz.dsal.util.NewMath;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * @author yz
