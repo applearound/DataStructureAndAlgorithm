@@ -231,6 +231,11 @@ public class LinkedList<E> implements List<E> {
         return indexOf(e) != -1;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private Node<E> node(int index) {
         Node<E> indexCurrentNode;
         // size = 6  012|345

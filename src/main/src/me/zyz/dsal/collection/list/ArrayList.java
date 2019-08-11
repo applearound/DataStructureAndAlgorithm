@@ -169,6 +169,11 @@ public class ArrayList<E> implements List<E> {
         return indexOf(e) >= 0;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
     private void grow() {
         //TODO 数据溢出
         int oldCapacity = innerArray.length;

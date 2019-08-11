@@ -23,4 +23,6 @@ public interface List<E> {
     int lastIndexOf(E e);
 
     public boolean contains(E e);
+
+    boolean isEmpty();
 }
