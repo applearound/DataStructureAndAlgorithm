@@ -5,8 +5,8 @@ import java.util.*;
 /**
  * @author yz
  */
-public class BstTree<E extends Comparable<E>> {
-    private Node root;
+public class BstTree<K extends Comparable<K>, V> implements Tree<K, V> {
+    private Node<K, V> root;
     private int size;
 
     public BstTree() {
@@ -14,32 +14,41 @@ public class BstTree<E extends Comparable<E>> {
         this.size = 0;
     }
 
+    @Override
     public int size() {
         return size;
     }
 
+    @Override
     public boolean isEmpty() {
-        return getSize() == 0;
+        return size == 0;
     }
 
-    public int getSize() {
-        return size;
+    @Override
+    public void add(K key, V value) {
+        root = _add2(root, key);
     }
 
-    public void add(E e) {
-        root = _add2(root, e);
+    @Override
+    public V get(K key) {
+        return null;
     }
 
-    public void addLessAssign(E e) {
+    @Override
+    public boolean contains(K k) {
+        return _contains(root, k);
+    }
+
+    public void addLessAssign(K k) {
         if (root == null) {
-            root = new Node(e);
+            root = new Node(k, null, null, null);
         } else {
-            _add1(root, e);
+            _add1(root, k);
         }
     }
 
-    private void _add1(Node node, E e) {
-        int compareNumber = e.compareTo(node.e);
+    private void _add1(Node<K, V> node, K k) {
+        int compareNumber = k.compareTo(node.key);
 
         if (compareNumber == 0) {
             return;
@@ -47,83 +56,52 @@ public class BstTree<E extends Comparable<E>> {
 
         if (compareNumber < 0) {
             if (node.left == null) {
-                node.left = new Node(e);
+                node.left = new Node<>(k, null, null, null);
                 size++;
                 return;
             }
 
-            _add1(node.left, e);
+            _add1(node.left, k);
         } else {
             if (node.right == null) {
-                node.right = new Node(e);
+                node.right = new Node<>(k, null, null, null);
                 size++;
                 return;
             }
 
-            _add1(node.right, e);
+            _add1(node.right, k);
         }
     }
 
-    private Node _add2(Node node, E e) {
+    private Node<K, V> _add2(Node<K, V> node, K k) {
         if (node == null) {
             size++;
-            return new Node(e);
+            return new Node<>(k, null, null, null);
         }
 
-        int compareNumber = e.compareTo(node.e);
+        int compareNumber = k.compareTo(node.key);
 
         if (compareNumber < 0) {
-            node.left = _add2(node.left, e);
+            node.left = _add2(node.left, k);
         } else if (compareNumber > 0) {
-            node.right = _add2(node.right, e);
+            node.right = _add2(node.right, k);
         }
 
         return node;
     }
 
-    public boolean contains(E e) {
-        return _contains(root, e);
-    }
-
-    private boolean _contains(Node node, E e) {
+    private boolean _contains(Node<K, V> node, K k) {
         if (node == null) {
             return false;
         }
 
-        int compareNumber = e.compareTo(node.e);
+        int compareNumber = k.compareTo(node.key);
         if (compareNumber == 0) {
             return true;
         } else if (compareNumber < 0) {
-            return _contains(node.left, e);
+            return _contains(node.left, k);
         } else {
-            return _contains(node.right, e);
-        }
-    }
-
-    private void _anyOrderNoRecursiveBase(Node node) {
-        Stack<Node> stack = new Stack<>();
-        Set<Node> set = new HashSet<>();
-        Set<Node> accessed = new HashSet<>();
-
-        stack.push(node);
-
-        while (!stack.empty()) {
-            Node head = stack.peek();
-            if (head.left != null && set.add(head.left)) {
-                stack.push(head.left);
-                continue;
-            }
-
-            if (accessed.add(head)) {
-                System.out.println(head.e);
-            }
-
-            if (head.right != null && set.add(head.right)) {
-                stack.push(head.right);
-                continue;
-            }
-
-            stack.pop();
+            return _contains(node.right, k);
         }
     }
 
@@ -140,41 +118,41 @@ public class BstTree<E extends Comparable<E>> {
         preOrderStack.push(root);
         while (!preOrderStack.empty()) {
             Node current = preOrderStack.pop();
-            System.out.println(current.e);
+            System.out.println(current.key);
 
             if (current.right != null) {
                 preOrderStack.push(current.right);
             }
 
-             if (current.left != null) {
+            if (current.left != null) {
                 preOrderStack.push(current.left);
             }
         }
     }
 
-    private void _preOrder(Node node) {
+    private void _preOrder(Node<K, V> node) {
         if (node == null) {
             return;
         }
 
-        System.out.println(node.e);
+        System.out.println(node.key);
 
         _preOrder(node.left);
         _preOrder(node.right);
     }
 
     public void inOrder() {
-        _inOrder(root);
+        inOrder0(root);
     }
 
-    private void _inOrder(Node node) {
+    private void inOrder0(Node node) {
         if (node == null) {
             return;
         }
 
-        _inOrder(node.left);
-        System.out.println(node.e);
-        _inOrder(node.right);
+        inOrder0(node.left);
+        System.out.println(node.key);
+        inOrder0(node.right);
     }
 
     public void postOrder() {
@@ -189,7 +167,7 @@ public class BstTree<E extends Comparable<E>> {
         _postOrder(node.left);
         _postOrder(node.right);
 
-        System.out.println(node.e);
+        System.out.println(node.key);
     }
 
     public void levelOrder() {
@@ -197,7 +175,7 @@ public class BstTree<E extends Comparable<E>> {
         levelOrderQueue.add(root);
         while (!levelOrderQueue.isEmpty()) {
             Node current = levelOrderQueue.remove();
-            System.out.println(current.e);
+            System.out.println(current.key);
 
             if (current.left != null) {
                 levelOrderQueue.add(current.left);
@@ -208,15 +186,15 @@ public class BstTree<E extends Comparable<E>> {
         }
     }
 
-    public E minimum() {
+    public K minimum() {
         if (isEmpty()) {
             throw new IllegalArgumentException("BST is empty");
         }
 
-        return _minimumNode(root).e;
+        return _minimumNode(root).key;
     }
 
-    private Node _minimumNode(Node node) {
+    private Node<K, V> _minimumNode(Node node) {
         if (node.left == null) {
             return node;
         }
@@ -224,15 +202,15 @@ public class BstTree<E extends Comparable<E>> {
         return _minimumNode(node.left);
     }
 
-    public E maximum() {
+    public K maximum() {
         if (isEmpty()) {
             throw new IllegalArgumentException("BST is empty");
         }
 
-        return _maximumNode(root).e;
+        return _maximumNode(root).key;
     }
 
-    private Node _maximumNode(Node node) {
+    private Node<K, V> _maximumNode(Node node) {
         if (node.right == null) {
             return node;
         }
@@ -240,8 +218,8 @@ public class BstTree<E extends Comparable<E>> {
         return _maximumNode(node.right);
     }
 
-    public E removeMin() {
-        E ret = minimum();
+    public K removeMin() {
+        K ret = minimum();
 
         _removeMin(root);
 
@@ -260,8 +238,8 @@ public class BstTree<E extends Comparable<E>> {
         return node;
     }
 
-    public E removeMax() {
-        E ret = maximum();
+    public K removeMax() {
+        K ret = maximum();
 
         _removeMax(root);
 
@@ -280,26 +258,26 @@ public class BstTree<E extends Comparable<E>> {
         return node;
     }
 
-    public void remove(E e) {
-        if (e == null) {
+    public void remove(K k) {
+        if (k == null) {
             throw new IllegalArgumentException("null value is not acceptable.");
         }
-        root = _remove(root, e);
+        root = _remove(root, k);
     }
 
-    private Node _remove(Node node, E e) {
+    private Node<K, V> _remove(Node<K, V> node, K k) {
         // 空树返回空
         if (node == null) {
             return null;
         }
 
-        int compareNumber = e.compareTo(node.e);
+        int compareNumber = k.compareTo(node.key);
 
         if (compareNumber < 0) {
-            node.left = _remove(node.left, e);
+            node.left = _remove(node.left, k);
             return node;
         } else if (compareNumber > 0) {
-            node.right = _remove(node.right, e);
+            node.right = _remove(node.right, k);
             return node;
         } else {
             if (node.left == null) {
@@ -327,39 +305,38 @@ public class BstTree<E extends Comparable<E>> {
         }
     }
 
-    private class Node {
-        private E e;
-        private Node left;
-        private Node right;
 
-        public Node(E e) {
-            this.e = e;
-            this.left = null;
-            this.right = null;
+    static class Node<K extends Comparable<K>, V> implements BinaryTree.BinaryNode<K, V> {
+        private K key;
+        private V value;
+        private Node<K, V> left;
+        private Node<K, V> right;
+
+        public Node(K k, V v, Node<K, V> left, Node<K, V> right) {
+            this.key = k;
+            this.value = v;
+            this.left = left;
+            this.right = right;
         }
 
-        public E getE() {
-            return e;
-        }
-
-        public void setE(E e) {
-            this.e = e;
-        }
-
-        public Node getLeft() {
+        @Override
+        public BinaryTree.BinaryNode<K, V> left() {
             return left;
         }
 
-        public void setLeft(Node left) {
-            this.left = left;
-        }
-
-        public Node getRight() {
+        @Override
+        public BinaryTree.BinaryNode<K, V> right() {
             return right;
         }
 
-        public void setRight(Node right) {
-            this.right = right;
+        @Override
+        public K key() {
+            return key;
+        }
+
+        @Override
+        public V value() {
+            return value;
         }
     }
 }

@@ -5,22 +5,6 @@ package me.zyz.dsal.collection.tree;
  * @author yz
  */
 public class AvlTree<K extends Comparable<K>, V> {
-    private class Node {
-        private K key;
-        private V value;
-        private Node left;
-        private Node right;
-        private int height;
-
-        public Node(K key, V value) {
-            this.key = key;
-            this.value = value;
-            this.left = null;
-            this.right = null;
-            this.height = 1;
-        }
-    }
-
     private Node root;
     private int size;
 
@@ -140,4 +124,21 @@ public class AvlTree<K extends Comparable<K>, V> {
             return node;
         }
     }
+
+    private class Node {
+        private K key;
+        private V value;
+        private Node left;
+        private Node right;
+        private int height;
+
+        public Node(K key, V value) {
+            this.key = key;
+            this.value = value;
+            this.left = null;
+            this.right = null;
+            this.height = 1;
+        }
+    }
+
 }

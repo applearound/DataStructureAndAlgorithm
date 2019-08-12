@@ -3,10 +3,24 @@ package me.zyz.dsal.collection.list;
 /**
  * @author yz
  */
-public interface List<E> {
+public interface List<E> extends Collection<E> {
+    @Override
     int size();
 
+    @Override
+    boolean isEmpty();
+
+    @Override
+    boolean contains(E e);
+
+    @Override
     void add(E e);
+
+    @Override
+    boolean remove(E e);
+
+    @Override
+    void clear();
 
     void add(int index, E e);
 
@@ -14,15 +28,9 @@ public interface List<E> {
 
     E get(int index);
 
-    boolean remove(E e);
-
     E remove(int index);
 
     int indexOf(E e);
 
     int lastIndexOf(E e);
-
-    public boolean contains(E e);
-
-    boolean isEmpty();
 }

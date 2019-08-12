@@ -108,6 +108,13 @@ public class ArrayList<E> implements List<E> {
     }
 
     @Override
+    public void clear() {
+        for (int to = size, i = size = 0; i < to; i++) {
+            innerArray[i] = null;
+        }
+    }
+
+    @Override
     public E remove(int index) {
         if (index >= size) {
             throw new IndexOutOfBoundsException(String.valueOf(index));

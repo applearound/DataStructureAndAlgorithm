@@ -3,14 +3,20 @@ package me.zyz.dsal.collection.tree;
 /**
  * @author yezhou
  */
-public interface Tree {
+public interface Tree<K, V> {
     int size();
 
     boolean isEmpty();
 
-    interface Node<E> {
-        E value();
+    void add(K key, V value);
 
-        Node<E>[] children();
+    V get(K key);
+
+    boolean contains(K key);
+
+    interface Node<K, V> {
+        K key();
+
+        V value();
     }
 }

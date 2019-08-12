@@ -1,9 +1,11 @@
 package me.zyz.dsal.collection.list;
 
+import java.util.NoSuchElementException;
+
 /**
  * @author yezhou
  */
-public class LinkedList<E> implements List<E> {
+public class LinkedList<E> implements List<E>, Stack<E>, Queue<E> {
     private Node<E> head;
     private Node<E> tail;
     private int size;
@@ -20,16 +22,7 @@ public class LinkedList<E> implements List<E> {
 
     @Override
     public void add(E e) {
-        Node<E> oldTail = tail;
-        Node<E> newNode = new Node<>(e, oldTail, null);
-        tail = newNode;
-
-        if (oldTail == null) {
-            head = newNode;
-        } else {
-            oldTail.next = newNode;
-        }
-        size++;
+        addLast(e);
     }
 
     @Override
@@ -50,6 +43,30 @@ public class LinkedList<E> implements List<E> {
             previousNode.next = newNode;
         }
 
+        size++;
+    }
+
+    public void addFirst(E e) {
+        Node<E> h = head;
+        Node<E> newNode = new Node<>(e, null, head);
+        head = newNode;
+        if (h == null) {
+            tail = newNode;
+        } else {
+            h.previous = newNode;
+        }
+        size++;
+    }
+
+    public void addLast(E e) {
+        Node<E> t = tail;
+        Node<E> newNode = new Node<>(e, tail, null);
+        tail = newNode;
+        if (t == null) {
+            head = newNode;
+        } else {
+            t.next = newNode;
+        }
         size++;
     }
 
@@ -172,6 +189,66 @@ public class LinkedList<E> implements List<E> {
         return element;
     }
 
+    public E removeFirst() {
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+
+        E value = head.value;
+        Node<E> next = head.next;
+
+        head.next = null;
+        head.value = null;
+
+        head = next;
+        if (next == null) {
+            tail = null;
+        } else {
+            next.previous = null;
+        }
+
+        size--;
+
+        return value;
+    }
+
+    public E removeLast() {
+        if (tail == null) {
+            throw new NoSuchElementException();
+        }
+
+        E value = tail.value;
+        Node<E> previous = tail.previous;
+
+        tail.next = null;
+        tail.value = null;
+
+        tail = previous;
+        if (previous == null) {
+            head = null;
+        } else {
+            previous.next = null;
+        }
+        size--;
+
+        return value;
+    }
+
+    @Override
+    public void clear() {
+        for (Node<E> x = head; x != null; ) {
+            Node<E> next = x.next;
+            x.previous = null;
+            x.next = null;
+            x.value = null;
+
+            x = next;
+        }
+
+        head = tail = null;
+        size = 0;
+    }
+
     @Override
     public int indexOf(E e) {
         Node<E> currentNode = head;
@@ -252,6 +329,26 @@ public class LinkedList<E> implements List<E> {
             }
         }
         return indexCurrentNode;
+    }
+
+    @Override
+    public void enter(E e) {
+        addLast(e);
+    }
+
+    @Override
+    public E quit() {
+        return removeFirst();
+    }
+
+    @Override
+    public void push(E e) {
+        addFirst(e);
+    }
+
+    @Override
+    public E pop() {
+        return removeFirst();
     }
 
     private static class Node<E> {
