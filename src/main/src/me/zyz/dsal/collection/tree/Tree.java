@@ -19,4 +19,8 @@ public interface Tree<K, V> {
 
         V value();
     }
+
+    interface NodeOperation<N extends Node<K, V>, K, V> {
+        void operate(N node);
+    }
 }

@@ -7,7 +7,7 @@ import me.zyz.dsal.collection.tree.BstTree;
  */
 public class BstSet<E extends Comparable<E>> implements Set<E> {
 
-    private BstTree<E> bst;
+    private BstTree<E, Object> bst;
 
     public BstSet() {
         this.bst = new BstTree<>();
@@ -15,7 +15,7 @@ public class BstSet<E extends Comparable<E>> implements Set<E> {
 
     @Override
     public void add(E e) {
-        bst.add(e);
+        bst.add(e, null);
     }
 
     @Override
