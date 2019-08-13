@@ -1,16 +1,16 @@
 package me.zyz.dsal.collection.set;
 
-import me.zyz.dsal.collection.tree.BstTree;
+import me.zyz.dsal.collection.tree.LinkedBinarySearchTree;
 
 /**
  * @author yz
  */
 public class BstSet<E extends Comparable<E>> implements Set<E> {
 
-    private BstTree<E, Object> bst;
+    private LinkedBinarySearchTree<E, Object> bst;
 
     public BstSet() {
-        this.bst = new BstTree<>();
+        this.bst = new LinkedBinarySearchTree<>();
     }
 
     @Override
@@ -20,6 +20,7 @@ public class BstSet<E extends Comparable<E>> implements Set<E> {
 
     @Override
     public void remove(E e) {
+        bst.remove(e);
     }
 
     @Override

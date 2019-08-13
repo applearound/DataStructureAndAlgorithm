@@ -19,7 +19,7 @@ public class TextSearch {
         return -1;
     }
 
-    public static int kmpSearch(CharSequence text, CharSequence words) {
+    public static int betterRoughSearch(CharSequence text, CharSequence words) {
         int currentStartIndex = 0;
         while (currentStartIndex <= text.length() - words.length()) {
             if (text.charAt(currentStartIndex) != words.charAt(0)) {
