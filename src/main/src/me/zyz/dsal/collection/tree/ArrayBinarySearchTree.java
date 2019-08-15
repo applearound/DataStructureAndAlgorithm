@@ -1,14 +1,13 @@
 package me.zyz.dsal.collection.tree;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
 
 public class ArrayBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
-    private static final int INITIAL_SIZE = 1;
+    private static final int INITIAL_SIZE = 16;
     private final Comparator<K> comparator;
 
-    private ArrayBinaryNode[] innerArray;
+    private Object[] innerArray;
     private int size;
 
     public ArrayBinarySearchTree() {
@@ -16,7 +15,7 @@ public class ArrayBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
     }
 
     public ArrayBinarySearchTree(Comparator<K> comparator) {
-        this.innerArray = (ArrayBinaryNode[]) Array.newInstance(ArrayBinaryNode.class, INITIAL_SIZE);
+        this.innerArray = new Object[INITIAL_SIZE];
         this.size = 0;
         this.comparator = comparator;
     }
@@ -38,7 +37,7 @@ public class ArrayBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
     @Override
     public void add(K key, V value) {
         validateKeyValue(key, value);
-        if (size >= capacity() / 2) {
+        if (((size + 1) << 1) + 1 > capacity()) {
             resize();
         }
 
@@ -85,7 +84,10 @@ public class ArrayBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
     }
 
     private void resize() {
-        int newLength = innerArray.length + 2;
+        int newLength = innerArray.length + (innerArray.length >> 1);
+        if (innerArray.length == newLength) {
+            newLength = innerArray.length * 2;
+        }
         innerArray = Arrays.copyOf(innerArray, newLength);
     }
 
@@ -109,15 +111,15 @@ public class ArrayBinarySearchTree<K, V> implements BinarySearchTree<K, V> {
     }
 
     private ArrayBinaryNode node(int index) {
-        return innerArray[index];
+        return (ArrayBinaryNode) innerArray[index];
     }
 
     private ArrayBinaryNode leftNode(int index) {
-        return innerArray[leftNodeIndex(index)];
+        return (ArrayBinaryNode) innerArray[leftNodeIndex(index)];
     }
 
     private ArrayBinaryNode rightNode(int index) {
-        return innerArray[rightNodeIndex(index)];
+        return (ArrayBinaryNode) innerArray[rightNodeIndex(index)];
     }
 
     private class ArrayBinaryNode {
