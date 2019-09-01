@@ -54,7 +54,4 @@ public class SelectionArraySort<E extends Comparable<E>> extends AbstractArraySo
             arr[length - i - 1] = maxValue;
         }
     }
-
-    public static void main(String[] args) {
-    }
 }

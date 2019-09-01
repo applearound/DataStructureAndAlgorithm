@@ -27,23 +27,27 @@ public class LinkedList<E> implements List<E>, Stack<E>, Queue<E> {
 
     @Override
     public void add(int index, E e) {
-        if (index < 0 || index >= size) {
+        if (index < 0 || index > size) {
             throw new IndexOutOfBoundsException(String.valueOf(index));
         }
 
-        Node<E> indexCurrentNode = node(index);
-        Node<E> previousNode = indexCurrentNode.previous;
-
-        Node<E> newNode = new Node<>(e, indexCurrentNode.previous, indexCurrentNode);
-
-        indexCurrentNode.previous = newNode;
-        if (previousNode == null) {
-            head = newNode;
+        if (index == size) {
+            addLast(e);
         } else {
-            previousNode.next = newNode;
-        }
+            Node<E> indexCurrentNode = node(index);
+            Node<E> previousNode = indexCurrentNode.previous;
 
-        size++;
+            Node<E> newNode = new Node<>(e, indexCurrentNode.previous, indexCurrentNode);
+
+            indexCurrentNode.previous = newNode;
+            if (previousNode == null) {
+                head = newNode;
+            } else {
+                previousNode.next = newNode;
+            }
+
+            size++;
+        }
     }
 
     public void addFirst(E e) {

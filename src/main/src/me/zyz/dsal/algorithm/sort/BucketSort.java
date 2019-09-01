@@ -41,9 +41,4 @@ public class BucketSort implements Sort<Integer> {
             System.out.println(integer);
         }
     }
-
-    public static void main(String[] args) {
-        Integer[] arr = {45, 23, 12};
-        new BucketSort().sort(arr);
-    }
 }

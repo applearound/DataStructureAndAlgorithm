@@ -1,6 +1,7 @@
 package me.zyz.dsal.algorithm.sort;
 
 import java.lang.reflect.Array;
+import java.util.Arrays;
 
 /**
  * @author yz
@@ -9,7 +10,7 @@ public class MergeArraySort<E extends Comparable<E>> extends AbstractArraySort<E
 
     @Override
     public void sort(E[] arr) {
-        recursionSort(arr, 0, arr.length - 1);
+        recursionSort(arr, 0, arr.length - 1, (E[]) Array.newInstance(arr.getClass().getComponentType(), arr.length));
     }
 
     /**
@@ -20,7 +21,7 @@ public class MergeArraySort<E extends Comparable<E>> extends AbstractArraySort<E
      * @param l   下界（包含）
      * @param h   上届（包含）
      */
-    private void recursionSort(E[] arr, int l, int h) {
+    private void recursionSort(E[] arr, int l, int h, E[] aux) {
         // 当a[l...h]区间足够小时，可以使用其他排序方法以便获得更好的性能
         if (h - l < 16) {
             insertionSort(arr, l, h);
@@ -29,12 +30,12 @@ public class MergeArraySort<E extends Comparable<E>> extends AbstractArraySort<E
 
         // 当 l 和 h 较大时，(l + h) / 2 可能会产生溢出导致不希望的结果
         int mid = l + (h - l) / 2;
-        recursionSort(arr, l, mid);
-        recursionSort(arr, mid + 1, h);
+        recursionSort(arr, l, mid, aux);
+        recursionSort(arr, mid + 1, h, aux);
 
         // 当arr[mid] <= arr[mid + 1]时，由于递归的特性，arr[l..h]完全有序，不需要进行归并
         if (arr[mid].compareTo(arr[mid + 1]) > 0) {
-            merge(arr, l, mid, h);
+            merge(arr, l, mid, h, aux);
         }
     }
 
@@ -46,7 +47,7 @@ public class MergeArraySort<E extends Comparable<E>> extends AbstractArraySort<E
     public void nonRecursionSort(E[] arr, int n) {
         for (int sz = 1; sz <= n; sz += sz) {
             for (int i = 0; i + sz < n; i += sz + sz) {
-                merge(arr, i, i + sz - 1, Math.min(i + sz + sz - 1, n - 1));
+                merge(arr, i, i + sz - 1, Math.min(i + sz + sz - 1, n - 1), Arrays.copyOf(arr, arr.length));
             }
         }
     }
@@ -59,13 +60,9 @@ public class MergeArraySort<E extends Comparable<E>> extends AbstractArraySort<E
      * @param mid 下届数组的上届（包含）
      * @param h   上届（包含）
      */
-    private void merge(E[] arr, int l, int mid, int h) {
-        E[] aux = (E[]) Array.newInstance(arr.getClass().getComponentType(), h - l + 1);
-
+    private void merge(E[] arr, int l, int mid, int h, E[] aux) {
         // 初始化辅助数组aux
-        for (int i = l; i <= h; ++i) {
-            aux[i - l] = arr[i];
-        }
+        System.arraycopy(arr, l, aux, l, h - l + 1);
 
         int i = l;
         int j = mid + 1;
@@ -76,25 +73,21 @@ public class MergeArraySort<E extends Comparable<E>> extends AbstractArraySort<E
 
             // 如果i指针已经超过mid，则说明[l...mid]已经遍历完毕
             if (i > mid) {
-                arr[k] = aux[j - l];
-                j++;
+                arr[k] = aux[j++];
                 continue;
             }
 
             // 如果j指针已经超过h，则说明[mid+1...h]已经遍历完毕
             if (j > h) {
-                arr[k] = aux[i - l];
-                i++;
+                arr[k] = aux[i++];
                 continue;
             }
 
             // 比较两个数组对应位置下标，填入k
-            if (aux[i - l].compareTo(aux[j - l]) <= 0) {
-                arr[k] = aux[i - l];
-                i++;
+            if (aux[i].compareTo(aux[j]) <= 0) {
+                arr[k] = aux[i++];
             } else {
-                arr[k] = aux[j - l];
-                j++;
+                arr[k] = aux[j++];
             }
         }
     }

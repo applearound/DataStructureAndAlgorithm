@@ -33,7 +33,4 @@ public class InsertionArraySort<E extends Comparable<E>> extends AbstractArraySo
             arr[j + 1] = value;
         }
     }
-
-    public static void main(String[] args) {
-    }
 }
