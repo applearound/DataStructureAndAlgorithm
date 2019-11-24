@@ -1,10 +1,15 @@
 package me.zyz.dsal.collection.tree;
 
 
+import java.util.Comparator;
+import java.util.Objects;
+
 /**
  * @author yz
  */
-public class AvlTree<K extends Comparable<K>, V> {
+public class AvlTree<K, V> {
+    private Comparator<K> comparator;
+
     private Node root;
     private int size;
 
@@ -13,7 +18,7 @@ public class AvlTree<K extends Comparable<K>, V> {
         this.size = 0;
     }
 
-    public int getSize() {
+    public int size() {
         return size;
     }
 
@@ -34,11 +39,23 @@ public class AvlTree<K extends Comparable<K>, V> {
     }
 
     public boolean isEmpty() {
-        return getSize() == 0;
+        return size() == 0;
     }
 
     public void add(K key, V value) {
         root = add(root, key, value);
+    }
+
+    public V get(K key) {
+        Objects.requireNonNull(key);
+
+        return getNode(root, key).value;
+    }
+
+    public boolean contains(K key) {
+        Objects.requireNonNull(key);
+
+        return getNode(root, key) != null;
     }
 
     private Node add(Node node, K key, V value) {
@@ -47,7 +64,7 @@ public class AvlTree<K extends Comparable<K>, V> {
             return new Node(key, value);
         }
 
-        int compareNum = key.compareTo(node.key);
+        int compareNum = compare(key, node.key);
         if (compareNum < 0) {
             node.left = add(node.left, key, value);
         } else if (compareNum > 0) {
@@ -59,9 +76,6 @@ public class AvlTree<K extends Comparable<K>, V> {
         node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
 
         int balanceFactor = getBalanceFactor(node);
-        if (Math.abs(balanceFactor) > 1) {
-            System.out.println("unbalanced: " + balanceFactor);
-        }
 
         // LL 旋转
         if (balanceFactor > 1 && getBalanceFactor(node.left) >= 0) {
@@ -115,7 +129,7 @@ public class AvlTree<K extends Comparable<K>, V> {
             return node;
         }
 
-        int compareNum = key.compareTo(node.key);
+        int compareNum = compare(key, node.key);
         if (compareNum < 0) {
             return getNode(node.left, key);
         } else if (compareNum > 0) {
@@ -123,6 +137,10 @@ public class AvlTree<K extends Comparable<K>, V> {
         } else {
             return node;
         }
+    }
+
+    private int compare(K key1, K key2) {
+        return comparator == null ? ((Comparable<K>) key1).compareTo(key2) : comparator.compare(key1, key2);
     }
 
     private class Node {

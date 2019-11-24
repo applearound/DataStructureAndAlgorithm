@@ -7,11 +7,7 @@ import me.zyz.dsal.collection.tree.LinkedBinarySearchTree;
  */
 public class BstSet<E extends Comparable<E>> implements Set<E> {
 
-    private LinkedBinarySearchTree<E, Object> bst;
-
-    public BstSet() {
-        this.bst = new LinkedBinarySearchTree<>();
-    }
+    private LinkedBinarySearchTree<E, Object> bst = new LinkedBinarySearchTree<>();
 
     @Override
     public void add(E e) {

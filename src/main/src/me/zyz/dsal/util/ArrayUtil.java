@@ -4,6 +4,7 @@ package me.zyz.dsal.util;
  * @author yz
  */
 public class ArrayUtil {
+
     private ArrayUtil() {
     }
 
@@ -17,7 +18,7 @@ public class ArrayUtil {
         arr[index2] = temp;
     }
 
-    //TODO byte[] short[] int[] long[] char[] float[] double[]
+    // TODO byte[] short[] int[] long[] char[] float[] double[]
     public static <E extends Comparable<E>> boolean binSearch(E[] arr, E val) {
         return binSearch0(arr, val, 0, arr.length - 1);
     }
