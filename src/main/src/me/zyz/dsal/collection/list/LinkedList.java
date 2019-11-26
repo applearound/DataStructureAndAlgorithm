@@ -51,14 +51,22 @@ public class LinkedList<E> implements List<E>, Stack<E>, Queue<E> {
     }
 
     public void addFirst(E e) {
+        // 临时保存头节点
         Node<E> h = head;
+        // 生成新的节点
         Node<E> newNode = new Node<>(e, null, head);
+
+        // 因为是addFirst，所以头节点必然会被更改为新生成的节点
         head = newNode;
+        // h保存了原来老的头节点
+        // 如果之前LinkedList中没有任何元素，那么老的头节点必然为null，这两者是等价的，既然没有元素，tail也需要变
+        // 如果老头节点不为null，那么只需要更改老头节点的prev，变成新头节点就行
         if (h == null) {
             tail = newNode;
         } else {
             h.previous = newNode;
         }
+        // LinkedList的size增加
         size++;
     }
 

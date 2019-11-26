@@ -1,13 +1,13 @@
 package me.zyz.dsal.collection.set;
 
-import me.zyz.dsal.collection.tree.LinkedBinarySearchTree;
+import me.zyz.dsal.collection.tree.DefaultLinkedBinarySearchTree;
 
 /**
  * @author yz
  */
 public class BstSet<E extends Comparable<E>> implements Set<E> {
 
-    private LinkedBinarySearchTree<E, Object> bst = new LinkedBinarySearchTree<>();
+    private DefaultLinkedBinarySearchTree<E, Object> bst = new DefaultLinkedBinarySearchTree<>();
 
     @Override
     public void add(E e) {

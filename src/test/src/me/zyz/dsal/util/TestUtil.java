@@ -1,12 +1,16 @@
 package me.zyz.dsal.util;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zyz.dsal.algorithm.sort.Sort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.stream.IntStream;
 
+@Slf4j
 public class TestUtil {
     private Random random = new Random();
 
@@ -93,6 +97,6 @@ public class TestUtil {
     public <E extends Comparable<E>> void test(E[] arr, Sort<E> sort) {
         long start = System.nanoTime();
         sort.sort(arr);
-        System.out.println(sort.getClass().getSimpleName() + " 用时: " + (System.nanoTime() - start) / 1_000_000.0 + "ms ");
+        log.info(sort.getClass().getSimpleName() + " 用时: " + (System.nanoTime() - start) / 1_000_000.0 + "ms ");
     }
 }

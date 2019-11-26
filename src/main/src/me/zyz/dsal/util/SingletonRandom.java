@@ -7,14 +7,18 @@ import java.util.Random;
  */
 public class SingletonRandom {
 
-    private static volatile Random random;
+    private static Random random;
 
     private SingletonRandom() {
     }
 
+    private static class RandomHolder {
+        private static Random random = new Random();
+    }
+
     public static Random getInstance() {
         if (random == null) {
-            synchronized (SingletonRandom.random) {
+            synchronized (SingletonRandom.class) {
                 if (random == null) {
                     random = new Random();
                 }

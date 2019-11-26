@@ -1,6 +1,5 @@
 package me.zyz.dsal.collection.tree;
 
-
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -8,7 +7,7 @@ import java.util.Objects;
  * @author yz
  */
 public class AvlTree<K, V> {
-    private Comparator<K> comparator;
+    private final Comparator<? super K> comparator;
 
     private Node root;
     private int size;
@@ -16,13 +15,14 @@ public class AvlTree<K, V> {
     public AvlTree() {
         this.root = null;
         this.size = 0;
+        this.comparator = null;
     }
 
     public int size() {
         return size;
     }
 
-    private int getHeight(Node node) {
+    private int height(Node node) {
         if (node == null) {
             return 0;
         }
@@ -30,12 +30,12 @@ public class AvlTree<K, V> {
         return node.height;
     }
 
-    private int getBalanceFactor(Node node) {
+    private int balanceFactor(Node node) {
         if (node == null) {
             return 0;
         }
 
-        return getHeight(node.left) - getHeight(node.right);
+        return height(node.left) - height(node.right);
     }
 
     public boolean isEmpty() {
@@ -44,60 +44,64 @@ public class AvlTree<K, V> {
 
     public void add(K key, V value) {
         root = add(root, key, value);
+        size++;
     }
 
     public V get(K key) {
         Objects.requireNonNull(key);
 
-        return getNode(root, key).value;
+        return node(root, key).value;
     }
 
     public boolean contains(K key) {
         Objects.requireNonNull(key);
 
-        return getNode(root, key) != null;
+        return node(root, key) != null;
     }
 
-    private Node add(Node node, K key, V value) {
-        if (node == null) {
-            ++size;
+    private Node add(Node root, K key, V value) {
+        if (root == null) {
             return new Node(key, value);
         }
 
-        int compareNum = compare(key, node.key);
+        int compareNum = compare(key, root.key);
         if (compareNum < 0) {
-            node.left = add(node.left, key, value);
+            root.left = add(root.left, key, value);
         } else if (compareNum > 0) {
-            node.right = add(node.right, key, value);
-        } else {
-            node.value = value;
+            root.right = add(root.right, key, value);
         }
 
-        node.height = Math.max(getHeight(node.left), getHeight(node.right)) + 1;
+        root.height = Math.max(height(root.left), height(root.right)) + 1;
 
-        int balanceFactor = getBalanceFactor(node);
+        int balanceFactor = balanceFactor(root);
 
-        // LL 旋转
-        if (balanceFactor > 1 && getBalanceFactor(node.left) >= 0) {
-            return rightRotate(node);
-        }
-        // RR 旋转
-        if (balanceFactor < -1 && getBalanceFactor(node.right) <= 0) {
-            return leftRotate(node);
-        }
-        // LR 旋转
-        if (balanceFactor > 1 && getBalanceFactor(node.left) < 0) {
-            node.left = leftRotate(node.left);
-            return rightRotate(node);
-        }
+        if (balanceFactor > 1) {
+            int leftBalanceFactor = balanceFactor(root.left);
 
-        // RL 旋转
-        if (balanceFactor > 1 && getBalanceFactor(node.right) > 0) {
-            node.right = rightRotate(node.right);
-            return leftRotate(node);
+            if (leftBalanceFactor >= 0) {
+                // LL 旋转
+                return rightRotate(root);
+            } else {
+                // LR 旋转
+                root.left = leftRotate(root.left);
+                return rightRotate(root);
+            }
         }
 
-        return node;
+        if (balanceFactor < -1) {
+            int rightBalanceFactor = balanceFactor(root.right);
+
+            if (rightBalanceFactor <= 0) {
+                // RR 旋转
+                return leftRotate(root);
+            } else {
+                // RL 旋转
+                root.right = rightRotate(root.right);
+                return leftRotate(root);
+            }
+        }
+
+        return root;
     }
 
     private Node rightRotate(Node root) {
@@ -106,6 +110,9 @@ public class AvlTree<K, V> {
 
         newRoot.right = root;
         root.left = tree;
+
+        root.height = Math.max(height(root.left), height(root.right)) + 1;
+        newRoot.height = Math.max(height(newRoot.left), height(newRoot.right)) + 1;
 
         return newRoot;
     }
@@ -117,23 +124,22 @@ public class AvlTree<K, V> {
         newRoot.left = root;
         root.right = tree;
 
+        root.height = Math.max(height(root.left), height(root.right)) + 1;
+        newRoot.height = Math.max(height(newRoot.left), height(newRoot.right)) + 1;
+
         return newRoot;
     }
 
-    private Node getNode(Node node, K key) {
+    private Node node(Node node, K key) {
         if (node == null) {
             return null;
         }
 
-        if (key.equals(node.key)) {
-            return node;
-        }
-
         int compareNum = compare(key, node.key);
         if (compareNum < 0) {
-            return getNode(node.left, key);
+            return node(node.left, key);
         } else if (compareNum > 0) {
-            return getNode(node.right, key);
+            return node(node.right, key);
         } else {
             return node;
         }
@@ -150,12 +156,20 @@ public class AvlTree<K, V> {
         private Node right;
         private int height;
 
-        public Node(K key, V value) {
+        private Node(K key, V value) {
             this.key = key;
             this.value = value;
             this.left = null;
             this.right = null;
             this.height = 1;
         }
+    }
+
+    public static void main(String[] args) {
+        AvlTree<Integer, Integer> avlTree = new AvlTree<>();
+        for (int i = 0; i < 5; i++) {
+            avlTree.add(i, i);
+        }
+        System.out.println(avlTree.root.key);
     }
 }

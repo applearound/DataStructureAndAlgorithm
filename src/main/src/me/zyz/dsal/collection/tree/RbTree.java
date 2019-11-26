@@ -16,7 +16,7 @@ public class RbTree<K, V> {
     public static final boolean RED = true;
     public static final boolean BLACK = false;
 
-    private Comparator<K> comparator;
+    private final Comparator<K> comparator;
 
     private Node<K, V> root;
     private int size;
@@ -24,6 +24,7 @@ public class RbTree<K, V> {
     public RbTree() {
         this.root = null;
         this.size = 0;
+        this.comparator = null;
     }
 
     public int size() {
@@ -122,15 +123,11 @@ public class RbTree<K, V> {
     }
 
     private boolean isRed(Node node) {
-        if (node == null) {
-            return false;
-        } else {
-            return node.isRed();
-        }
+        return node != null && node.isRed();
     }
 
     private boolean isBlack(Node node) {
-        return !isRed(node);
+        return node == null || node.isBlack();
     }
 
     private int compareKey(K key1, K key2) {
@@ -140,10 +137,11 @@ public class RbTree<K, V> {
     private static class Node<K, V> {
         private K key;
         private V value;
-        private Node<K, V> left, right;
+        private Node<K, V> left;
+        private Node<K, V> right;
         private boolean color;
 
-        public Node(K key, V value) {
+        private Node(K key, V value) {
             this.key = key;
             this.value = value;
             this.left = this.right = null;
@@ -155,7 +153,7 @@ public class RbTree<K, V> {
         }
 
         private boolean isBlack() {
-            return !isRed();
+            return color == BLACK;
         }
     }
 }
