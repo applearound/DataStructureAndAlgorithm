@@ -1,8 +1,5 @@
 package me.zyz.dsal.collection.tree;
 
-import java.util.Comparator;
-import java.util.Objects;
-
 /**
  * 1. 每个节点不是红节点就是黑节点
  * 2. 根节点是黑节点
@@ -12,30 +9,9 @@ import java.util.Objects;
  *
  * @author zyz
  */
-public class RbTree<K, V> {
+public class RbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, RbTree.RbNode<K, V>> {
     public static final boolean RED = true;
     public static final boolean BLACK = false;
-
-    private final Comparator<K> comparator;
-
-    private Node<K, V> root;
-    private int size;
-
-    public RbTree() {
-        this.root = null;
-        this.size = 0;
-        this.comparator = null;
-    }
-
-    public int size() {
-        return size;
-    }
-
-    public V get(K key) {
-        Objects.requireNonNull(key);
-
-        return get0(root, key).value;
-    }
 
     public void add(K key, V value) {
         if (key == null) {
@@ -46,57 +22,36 @@ public class RbTree<K, V> {
         size++;
     }
 
-    public boolean contains(K key) {
-        Objects.requireNonNull(key);
-
-        return get0(root, key) != null;
-    }
-
-    private Node<K, V> add0(Node<K, V> root, K key, V value) {
+    private RbNode<K, V> add0(RbNode<K, V> root, K key, V value) {
         if (root == null) {
-            return new Node<>(key, value);
+            return new RbNode<>(key, value);
         }
 
-        int i = compareKey(key, root.key);
+        int i = compareKey(key, root.key());
         if (i < 0) {
-            root.left = add0(root.left, key, value);
+            root.setLeft(add0(root.left(), key, value));
         } else if (i > 0) {
-            root.right = add0(root.right, key, value);
+            root.setRight(add0(root.right(), key, value));
         }
 
-        if (isRed(root.right) && isBlack(root.left)) {
+        if (isRed(root.right()) && isBlack(root.left())) {
             root = leftRotate(root);
         }
-        if (isRed(root.left) && isRed(root.left.left)) {
+        if (isRed(root.left()) && isRed(root.left().left())) {
             root = rightRotate(root);
         }
-        if (isRed(root.left) && isRed(root.right)) {
+        if (isRed(root.left()) && isRed(root.right())) {
             flipColors(root);
         }
 
         return root;
     }
 
-    private Node<K, V> get0(Node<K, V> root, K key) {
-        if (root == null) {
-            return null;
-        }
+    private RbNode<K, V> leftRotate(RbNode<K, V> root) {
+        RbNode<K, V> x = root.right();
 
-        int i = compareKey(key, root.key);
-        if (i < 0) {
-            return get0(root.left, key);
-        } else if (i > 0) {
-            return get0(root.right, key);
-        } else {
-            return root;
-        }
-    }
-
-    private Node<K, V> leftRotate(Node<K, V> root) {
-        Node<K, V> x = root.right;
-
-        root.right = x.left;
-        x.left = root;
+        root.setRight(x.left());
+        x.setLeft(root);
 
         x.color = root.color;
         root.color = RED;
@@ -104,11 +59,11 @@ public class RbTree<K, V> {
         return x;
     }
 
-    private Node<K, V> rightRotate(Node<K, V> root) {
-        Node<K, V> x = root.left;
+    private RbNode<K, V> rightRotate(RbNode<K, V> root) {
+        RbNode<K, V> x = root.left();
 
-        root.left = x.right;
-        x.right = root;
+        root.setLeft(x.right());
+        x.setRight(root);
 
         x.color = root.color;
         root.color = RED;
@@ -116,44 +71,38 @@ public class RbTree<K, V> {
         return x;
     }
 
-    private void flipColors(Node<K, V> node) {
+    private void flipColors(RbNode<K, V> node) {
         node.color = RED;
-        node.left.color = BLACK;
-        node.right.color = BLACK;
+        node.left().setColor(BLACK);
+        node.right().setColor(BLACK);
     }
 
-    private boolean isRed(Node node) {
+    private boolean isRed(RbNode node) {
         return node != null && node.isRed();
     }
 
-    private boolean isBlack(Node node) {
+    private boolean isBlack(RbNode node) {
         return node == null || node.isBlack();
     }
 
-    private int compareKey(K key1, K key2) {
-        return comparator == null ? ((Comparable<K>) key1).compareTo(key2) : comparator.compare(key1, key2);
-    }
-
-    private static class Node<K, V> {
-        private K key;
-        private V value;
-        private Node<K, V> left;
-        private Node<K, V> right;
+    static class RbNode<K, V> extends AbstractBinaryNode<K, V, RbNode<K, V>> {
         private boolean color;
 
-        private Node(K key, V value) {
-            this.key = key;
-            this.value = value;
-            this.left = this.right = null;
+        RbNode(K key, V value) {
+            super(key, value);
             this.color = RED;
         }
 
-        private boolean isRed() {
+        boolean isRed() {
             return color == RED;
         }
 
-        private boolean isBlack() {
+        boolean isBlack() {
             return color == BLACK;
+        }
+
+        void setColor(boolean color) {
+            this.color = color;
         }
     }
 }

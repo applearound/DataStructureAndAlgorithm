@@ -2,8 +2,6 @@ package me.zyz.dsal.util;
 
 import lombok.extern.slf4j.Slf4j;
 import me.zyz.dsal.algorithm.sort.Sort;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Random;

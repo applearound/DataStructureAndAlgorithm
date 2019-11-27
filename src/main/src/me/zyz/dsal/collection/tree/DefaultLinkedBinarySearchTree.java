@@ -1,41 +1,14 @@
 package me.zyz.dsal.collection.tree;
 
-import java.util.*;
-
 /**
  * @author yz
  */
-public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySearchTree<K, V> {
-//    private DefaultBinaryNode<K, V> root;
-    private int size;
-
-    @Override
-    DefaultBinaryNode<K, V> root() {
-        return this.root;
-    }
-
-    public DefaultLinkedBinarySearchTree() {
-        this(null);
-    }
-
-    private DefaultLinkedBinarySearchTree(Comparator<K> comparator) {
-        super(comparator);
-        this.size = 0;
-    }
-
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return size == 0;
-    }
+public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, DefaultLinkedBinarySearchTree.DefaultBinaryNode<K, V>> {
 
     @Override
     public void add(K key, V value) {
         validateKey(key);
+
         DefaultBinaryNode<K, V> newNode = new DefaultBinaryNode<>(key, value);
         if (root == null) {
             root = newNode;
@@ -56,33 +29,33 @@ public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySea
             return addingNode;
         }
 
-        int compareNumber = compare(addingNode.key(), root.key());
+        int compareNumber = compareKey(addingNode.key(), root.key());
         if (compareNumber < 0) {
-            root.left = add0(root.left, addingNode);
+            root.setLeft(add0(root.left(), addingNode));
         } else if (compareNumber > 0) {
-            root.right = add0(root.right, addingNode);
+            root.setRight(add0(root.right(), addingNode));
         }
 
         return root;
     }
 
     private void add1(DefaultBinaryNode<K, V> root, DefaultBinaryNode<K, V> addingNode) {
-        int compareNumber = compare(addingNode.key(), root.key());
+        int compareNumber = compareKey(addingNode.key(), root.key());
 
         if (compareNumber < 0) {
-            if (((AbstractBinaryNode<K, V>) root).left() == null) {
-                root.left = addingNode;
+            if (root.left() == null) {
+                root.setLeft(addingNode);
                 return;
             }
 
-            add1(root.left, addingNode);
+            add1(root.left(), addingNode);
         } else if (compareNumber > 0) {
-            if (((AbstractBinaryNode<K, V>) root).right() == null) {
-                root.right = addingNode;
+            if (root.right() == null) {
+                root.setRight(addingNode);
                 return;
             }
 
-            add1(root.right, addingNode);
+            add1(root.right(), addingNode);
         }
     }
 
@@ -96,13 +69,13 @@ public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySea
     }
 
     private DefaultBinaryNode<K, V> removeMin0(DefaultBinaryNode<K, V> node) {
-        if (((AbstractBinaryNode<K, V>) node).left() == null) {
-            DefaultBinaryNode<K, V> rightNode = node.right;
-            node.right = null;
+        if (node.left() == null) {
+            DefaultBinaryNode<K, V> rightNode = node.right();
+            node.clearRight();
             return rightNode;
         }
 
-        node.left = removeMin0(node.left);
+        node.setLeft(removeMin0(node.left()));
         return node;
     }
 
@@ -116,13 +89,13 @@ public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySea
     }
 
     private DefaultBinaryNode<K, V> removeMax0(DefaultBinaryNode<K, V> node) {
-        if (((AbstractBinaryNode<K, V>) node).right() == null) {
-            DefaultBinaryNode<K, V> leftNode = node.left;
-            node.left = null;
+        if (!node.hasRight()) {
+            DefaultBinaryNode<K, V> leftNode = node.left();
+            node.clearLeft();
             return leftNode;
         }
 
-        node.right = removeMax0(node.right);
+        node.setRight(removeMax0(node.right()));
         return node;
     }
 
@@ -140,41 +113,40 @@ public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySea
             return null;
         }
 
-        int compareNumber = compare(k, node.key());
+        int compareNumber = compareKey(k, node.key());
 
         if (compareNumber < 0) {
-            node.left = remove0(node.left, k);
+            node.setLeft(remove0(node.left(), k));
             return node;
         } else if (compareNumber > 0) {
-            node.right = remove0(node.right, k);
+            node.setRight(remove0(node.right(), k));
             return node;
         } else {
-            if (((AbstractBinaryNode<K, V>) node).left() == null) {
-                DefaultBinaryNode<K, V> rightNode = node.right;
-                node.right = null;
+            if (node.left() == null) {
+                DefaultBinaryNode<K, V> rightNode = node.right();
+                node.clearRight();
                 return rightNode;
             }
 
-            if (((AbstractBinaryNode<K, V>) node).right() == null) {
-                DefaultBinaryNode<K, V> leftNode = node.left;
-                node.left = null;
+            if (node.right() == null) {
+                DefaultBinaryNode<K, V> leftNode = node.left();
+                node.clearLeft();
                 return leftNode;
             }
 
-            DefaultBinaryNode<K, V> successor = minimumNode(node.right);
-            successor.right = removeMin0(node.right());
-            successor.left = node.left;
+            DefaultBinaryNode<K, V> successor = minimumNode(node.right());
+            successor.setRight(removeMin0(node.right()));
+            successor.setLeft(node.left());
 
-            node.left = null;
-            node.right = null;
+            node.clearLeft();
+            node.clearRight();
 
             return successor;
         }
     }
 
 
-
-    private static class DefaultBinaryNode<K, V> extends AbstractBinaryNode<K, V, DefaultBinaryNode<K, V>> {
+    static class DefaultBinaryNode<K, V> extends AbstractBinaryNode<K, V, DefaultBinaryNode<K, V>> {
         DefaultBinaryNode(K key, V value) {
             super(key, value);
         }

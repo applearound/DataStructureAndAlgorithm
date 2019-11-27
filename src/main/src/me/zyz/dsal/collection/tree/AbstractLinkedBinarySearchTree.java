@@ -8,9 +8,10 @@ import java.util.*;
  * @author yezhou
  */
 @Slf4j
-public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLinkedBinarySearchTree.AbstractBinaryNode<K, V, N>> implements BinarySearchTree<K, V, N> {
+public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBinaryNode<K, V, N>> implements BinarySearchTree<K, V, N> {
     private final Comparator<K> comparator;
     N root;
+    int size;
 
     AbstractLinkedBinarySearchTree() {
         this(null, null);
@@ -31,6 +32,16 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
 
     K validateKey(K key) {
         return Objects.requireNonNull(key, "Key cannot be null");
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     void preOrder() {
@@ -86,10 +97,10 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
             N currentNode = levelOrderQueue.remove();
             log.info("Key: {}, Value: {}", currentNode.key(), currentNode.value());
 
-            if (currentNode.left() != null) {
+            if (currentNode.hasLeft()) {
                 levelOrderQueue.add(currentNode.left());
             }
-            if (currentNode.right() != null) {
+            if (currentNode.hasRight()) {
                 levelOrderQueue.add(currentNode.right());
             }
         }
@@ -105,11 +116,11 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
         while (!preOrderStack.isEmpty()) {
             N currentNode = preOrderStack.pop();
 
-            if (currentNode.right() != null) {
+            if (currentNode.hasRight()) {
                 preOrderStack.push(currentNode.right());
             }
 
-            if (currentNode.left() != null) {
+            if (currentNode.hasLeft()) {
                 preOrderStack.push(currentNode.left());
             }
 
@@ -150,7 +161,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
         postOrderStack.push(root);
         while (!postOrderStack.isEmpty()) {
             cur = postOrderStack.peek();
-            if ((cur.left() == null && cur.right() == null) ||
+            if ((!cur.hasLeft() && !cur.hasRight()) ||
                     (pre != null && (pre == cur.left() || pre == cur.right()))) {
                 postOrderStack.pop();
 
@@ -158,10 +169,10 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
 
                 pre = cur;
             } else {
-                if (cur.right() != null) {
+                if (cur.hasRight()) {
                     postOrderStack.push(cur.right());
                 }
-                if (cur.left() != null) {
+                if (cur.hasLeft()) {
                     postOrderStack.push(cur.left());
                 }
             }
@@ -182,7 +193,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
 //            if (accessed.add(head)) {
 //            }
 
-            if (head.left() != null && set.add(head.left())) {
+            if (head.hasLeft() && set.add(head.left())) {
                 stack.push(head.left());
                 continue;
             }
@@ -191,7 +202,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
 //            if (accessed.add(head)) {
 //            }
 
-            if (head.right() != null && set.add(head.right())) {
+            if (head.hasRight() && set.add(head.right())) {
                 stack.push(head.right());
                 continue;
             }
@@ -229,7 +240,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
             return null;
         }
 
-        if (node.left() == null) {
+        if (!node.hasLeft()) {
             return node;
         }
 
@@ -241,7 +252,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
             return null;
         }
 
-        if (node.right() == null) {
+        if (!node.hasRight()) {
             return node;
         }
 
@@ -267,7 +278,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
             return null;
         }
 
-        int compareNumber = compare(k, root.key());
+        int compareNumber = compareKey(k, root.key());
         if (compareNumber < 0) {
             return getNode(root.left(), k);
         } else if (compareNumber > 0) {
@@ -277,50 +288,8 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLin
         }
     }
 
-    int compare(K k1, K k2) {
+    int compareKey(K k1, K k2) {
         return comparator == null ? ((Comparable<K>) k1).compareTo(k2) :
                 comparator.compare(k1, k2);
-    }
-
-    abstract static class AbstractBinaryNode<K, V, N extends AbstractBinaryNode<K, V, N>> implements BinaryNode<K, V, N> {
-        private K key;
-        private V value;
-        private N left;
-        private N right;
-
-        AbstractBinaryNode(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        @Override
-        public K key() {
-            return this.key;
-        }
-
-        @Override
-        public V value() {
-            return this.value;
-        }
-
-        @Override
-        public N left() {
-            return this.left;
-        }
-
-        @Override
-        public N right() {
-            return this.right;
-        }
-
-        @Override
-        public void setLeft(N node) {
-            this.left = node;
-        }
-
-        @Override
-        public void setRight(N node) {
-            this.right = node;
-        }
     }
 }
