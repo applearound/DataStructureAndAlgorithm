@@ -8,79 +8,70 @@ import java.util.*;
  * @author yezhou
  */
 @Slf4j
-public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBinarySearchTree<K, V> {
+public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractLinkedBinarySearchTree.AbstractBinaryNode<K, V, N>> implements BinarySearchTree<K, V, N> {
     private final Comparator<K> comparator;
+    N root;
 
-    DefaultBinaryNode<K, V> root;
+    AbstractLinkedBinarySearchTree() {
+        this(null, null);
+    }
 
     AbstractLinkedBinarySearchTree(Comparator<K> comparator) {
         this(null, comparator);
     }
 
-    AbstractLinkedBinarySearchTree(DefaultBinaryNode<K, V> root) {
+    AbstractLinkedBinarySearchTree(N root) {
         this(root, null);
     }
 
-    AbstractLinkedBinarySearchTree(DefaultBinaryNode<K, V> root, Comparator<K> comparator) {
+    AbstractLinkedBinarySearchTree(N root, Comparator<K> comparator) {
         this.root = root;
         this.comparator = comparator;
     }
 
-    DefaultBinaryNode<K, V> leftNode(DefaultBinaryNode<K, V> node) {
-        return node.left();
-    }
-
-    void setLeft(DefaultBinaryNode<K, V> node, DefaultBinaryNode<K, V> newLeft) {
-        node.left(newLeft);
-    }
-
-    DefaultBinaryNode<K, V> rightNode(DefaultBinaryNode<K, V> node) {
-        return node.right();
-    }
-
-    void setRight(DefaultBinaryNode<K, V> node, DefaultBinaryNode<K, V> newRight) {
-        node.right(newRight);
+    K validateKey(K key) {
+        return Objects.requireNonNull(key, "Key cannot be null");
     }
 
     void preOrder() {
         preOrder0(root);
     }
 
-    void preOrder0(DefaultBinaryNode<K, V> root) {
+    private void preOrder0(N root) {
         if (root == null) {
             return;
         }
 
         log.info("Key: {}, Value: {}", root.key(), root.value());
-        preOrder0(leftNode(root));
-        preOrder0(rightNode(root));
+        preOrder0(root.left());
+        preOrder0(root.right());
     }
 
     void inOrder() {
         inOrder0(root);
     }
 
-    void inOrder0(DefaultBinaryNode<K, V> root) {
+    private void inOrder0(N root) {
         if (root == null) {
             return;
         }
 
-        inOrder0(leftNode(root));
+        inOrder0(root.left());
         log.info("Key: {}, Value: {}", root.key(), root.value());
-        inOrder0(rightNode(root));
+        inOrder0(root.right());
     }
 
     void postOrder() {
         postOrder0(root);
     }
 
-    void postOrder0(DefaultBinaryNode<K, V> root) {
+    private void postOrder0(N root) {
         if (root == null) {
             return;
         }
 
-        postOrder0(leftNode(root));
-        postOrder0(rightNode(root));
+        postOrder0(root.left());
+        postOrder0(root.right());
         log.info("Key: {}, Value: {}", root.key(), root.value());
     }
 
@@ -88,18 +79,18 @@ public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBina
         levelOrder0(root);
     }
 
-    void levelOrder0(DefaultBinaryNode<K, V> root) {
-        Queue<DefaultBinaryNode<K, V>> levelOrderQueue = new LinkedList<>();
+    private void levelOrder0(N root) {
+        Queue<N> levelOrderQueue = new LinkedList<>();
         levelOrderQueue.add(root);
         while (!levelOrderQueue.isEmpty()) {
-            DefaultBinaryNode<K, V> currentNode = levelOrderQueue.remove();
-            log.info("Key: {}, Value: {}", root.key(), root.value());
+            N currentNode = levelOrderQueue.remove();
+            log.info("Key: {}, Value: {}", currentNode.key(), currentNode.value());
 
-            if (leftNode(currentNode) != null) {
-                levelOrderQueue.add(leftNode(currentNode));
+            if (currentNode.left() != null) {
+                levelOrderQueue.add(currentNode.left());
             }
-            if (rightNode(currentNode) != null) {
-                levelOrderQueue.add(rightNode(currentNode));
+            if (currentNode.right() != null) {
+                levelOrderQueue.add(currentNode.right());
             }
         }
     }
@@ -108,18 +99,18 @@ public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBina
         preOrderNR0(root);
     }
 
-    void preOrderNR0(DefaultBinaryNode<K, V> root) {
-        Deque<DefaultBinaryNode<K, V>> preOrderStack = new LinkedList<>();
+    private void preOrderNR0(N root) {
+        Deque<N> preOrderStack = new LinkedList<>();
         preOrderStack.push(root);
         while (!preOrderStack.isEmpty()) {
-            DefaultBinaryNode<K, V> currentNode = preOrderStack.pop();
+            N currentNode = preOrderStack.pop();
 
-            if (rightNode(currentNode) != null) {
-                preOrderStack.push(rightNode(currentNode));
+            if (currentNode.right() != null) {
+                preOrderStack.push(currentNode.right());
             }
 
-            if (leftNode(currentNode) != null) {
-                preOrderStack.push(leftNode(currentNode));
+            if (currentNode.left() != null) {
+                preOrderStack.push(currentNode.left());
             }
 
             log.info("Key: {}, Value: {}", currentNode.key(), currentNode.value());
@@ -130,68 +121,69 @@ public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBina
         inOrderNR0(root);
     }
 
-    void inOrderNR0(DefaultBinaryNode<K, V> root) {
-        Deque<DefaultBinaryNode<K, V>> inOrderStack = new LinkedList<>();
+    private void inOrderNR0(N root) {
+        Deque<N> inOrderStack = new LinkedList<>();
 
-        DefaultBinaryNode<K, V> currentNode = root;
+        N currentNode = root;
         while (!inOrderStack.isEmpty() || currentNode != null) {
             if (currentNode != null) {
                 inOrderStack.push(currentNode);
-                currentNode = leftNode(currentNode);
+                currentNode = currentNode.left();
             } else {
-                DefaultBinaryNode<K, V> node = inOrderStack.pop();
-                currentNode = rightNode(node);
+                N node = inOrderStack.pop();
+                log.info("Key: {}, Value: {}", node.key(), node.value());
 
-                log.info("Key: {}, Value: {}", currentNode.key(), currentNode.value());
+                currentNode = node.right();
             }
         }
     }
 
     void postOrderNR() {
-        preOrderNR0(root);
+        postOrderNR0(root);
     }
 
-    void postOrderNR0(DefaultBinaryNode<K, V> root) {
-        Deque<DefaultBinaryNode<K, V>> postOrderStack = new LinkedList<>();
-        DefaultBinaryNode<K, V> cur;
-        DefaultBinaryNode<K, V> pre = null;
+    private void postOrderNR0(N root) {
+        Deque<N> postOrderStack = new LinkedList<>();
+        N cur;
+        N pre = null;
 
         postOrderStack.push(root);
         while (!postOrderStack.isEmpty()) {
             cur = postOrderStack.peek();
-            if ((leftNode(cur) == null && rightNode(cur) == null) ||
-                    (pre != null && (pre == leftNode(cur) || pre == rightNode(cur)))) {
+            if ((cur.left() == null && cur.right() == null) ||
+                    (pre != null && (pre == cur.left() || pre == cur.right()))) {
                 postOrderStack.pop();
-                pre = cur;
 
-                log.info("Key: {}, Value: {}", root.key(), root.value());
+                log.info("Key: {}, Value: {}", cur.key(), cur.value());
+
+                pre = cur;
             } else {
-                if (rightNode(cur) != null) {
-                    postOrderStack.push(rightNode(cur));
+                if (cur.right() != null) {
+                    postOrderStack.push(cur.right());
                 }
-                if (leftNode(cur) != null) {
-                    postOrderStack.push(leftNode(cur));
+                if (cur.left() != null) {
+                    postOrderStack.push(cur.left());
                 }
             }
         }
     }
 
-    private void anyOrderNoRecursionBase(DefaultBinaryNode<K, V> node) {
-        Deque<DefaultBinaryNode<K, V>> stack = new LinkedList<>();
-        Set<DefaultBinaryNode<K, V>> set = new HashSet<>();
-        Set<DefaultBinaryNode<K, V>> accessed = new HashSet<>();
+    private void anyOrderNoRecursionBase(N node) {
+        Deque<N> stack = new LinkedList<>();
+        Set<N> set = new HashSet<>();
+        Set<N> accessed = new HashSet<>();
 
         stack.push(node);
 
         while (!stack.isEmpty()) {
-            DefaultBinaryNode<K, V> head = stack.peek();
+            N head = stack.peek();
 
 //            pre
 //            if (accessed.add(head)) {
 //            }
 
-            if (leftNode(head) != null && set.add(leftNode(head))) {
-                stack.push(leftNode(head));
+            if (head.left() != null && set.add(head.left())) {
+                stack.push(head.left());
                 continue;
             }
 
@@ -199,8 +191,8 @@ public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBina
 //            if (accessed.add(head)) {
 //            }
 
-            if (rightNode(head) != null && set.add(rightNode(head))) {
-                stack.push(rightNode(head));
+            if (head.right() != null && set.add(head.right())) {
+                stack.push(head.right());
                 continue;
             }
 
@@ -213,7 +205,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBina
     }
 
     public K minimum() {
-        DefaultBinaryNode<K, V> minimumNode = minimumNode(root);
+        N minimumNode = minimumNode(root);
 
         if (minimumNode == null) {
             throw new NoSuchElementException();
@@ -223,7 +215,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBina
     }
 
     public K maximum() {
-        DefaultBinaryNode<K, V> maximumNode = maximumNode(root);
+        N maximumNode = maximumNode(root);
 
         if (maximumNode == null) {
             throw new NoSuchElementException();
@@ -232,37 +224,37 @@ public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBina
         return maximumNode.key();
     }
 
-    DefaultBinaryNode<K, V> minimumNode(DefaultBinaryNode<K, V> node) {
+    N minimumNode(N node) {
         if (node == null) {
             return null;
         }
 
-        if (leftNode(node) == null) {
+        if (node.left() == null) {
             return node;
         }
 
-        return minimumNode(leftNode(node));
+        return minimumNode(node.left());
     }
 
-    DefaultBinaryNode<K, V> maximumNode(DefaultBinaryNode<K, V> node) {
+    N maximumNode(N node) {
         if (node == null) {
             return null;
         }
 
-        if (rightNode(node) == null) {
+        if (node.right() == null) {
             return node;
         }
 
-        return maximumNode(rightNode(node));
+        return maximumNode(node.right());
     }
 
     @Override
-    public V get(K key) {
-        DefaultBinaryNode<K, V> node = getNode(root, key);
+    public V findValue(K key) {
+        N node = getNode(root, key);
         if (node == null) {
             throw new NoSuchElementException();
         }
-        return node.value;
+        return node.value();
     }
 
     @Override
@@ -270,16 +262,16 @@ public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBina
         return getNode(root, key) != null;
     }
 
-    private DefaultBinaryNode<K, V> getNode(DefaultBinaryNode<K, V> root, K k) {
+    private N getNode(N root, K k) {
         if (root == null) {
             return null;
         }
 
         int compareNumber = compare(k, root.key());
         if (compareNumber < 0) {
-            return getNode(leftNode(root), k);
+            return getNode(root.left(), k);
         } else if (compareNumber > 0) {
-            return getNode(rightNode(root), k);
+            return getNode(root.right(), k);
         } else {
             return root;
         }
@@ -290,45 +282,45 @@ public abstract class AbstractLinkedBinarySearchTree<K, V> implements LinkedBina
                 comparator.compare(k1, k2);
     }
 
-    static class DefaultBinaryNode<K, V> implements BinaryNode<K, V> {
+    abstract static class AbstractBinaryNode<K, V, N extends AbstractBinaryNode<K, V, N>> implements BinaryNode<K, V, N> {
         private K key;
         private V value;
-        private DefaultBinaryNode<K, V> left;
-        private DefaultBinaryNode<K, V> right;
+        private N left;
+        private N right;
 
-        DefaultBinaryNode(K key, V value) {
+        AbstractBinaryNode(K key, V value) {
             this.key = key;
             this.value = value;
-            this.left = null;
-            this.right = null;
         }
 
         @Override
         public K key() {
-            return key;
+            return this.key;
         }
 
         @Override
         public V value() {
-            return value;
+            return this.value;
         }
 
         @Override
-        public DefaultBinaryNode<K, V> left() {
-            return left;
+        public N left() {
+            return this.left;
         }
 
         @Override
-        public DefaultBinaryNode<K, V> right() {
-            return right;
+        public N right() {
+            return this.right;
         }
 
-        public void left(DefaultBinaryNode<K, V> newLeft) {
-            this.left = newLeft;
+        @Override
+        public void setLeft(N node) {
+            this.left = node;
         }
 
-        public void right(DefaultBinaryNode<K, V> newRight) {
-            this.right = newRight;
+        @Override
+        public void setRight(N node) {
+            this.right = node;
         }
     }
 }

@@ -6,14 +6,20 @@ import java.util.*;
  * @author yz
  */
 public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySearchTree<K, V> {
+//    private DefaultBinaryNode<K, V> root;
     private int size;
+
+    @Override
+    DefaultBinaryNode<K, V> root() {
+        return this.root;
+    }
 
     public DefaultLinkedBinarySearchTree() {
         this(null);
     }
 
-    public DefaultLinkedBinarySearchTree(Comparator<K> comparator) {
-        super(null, comparator);
+    private DefaultLinkedBinarySearchTree(Comparator<K> comparator) {
+        super(comparator);
         this.size = 0;
     }
 
@@ -52,9 +58,9 @@ public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySea
 
         int compareNumber = compare(addingNode.key(), root.key());
         if (compareNumber < 0) {
-            setLeft(root, add0(leftNode(root), addingNode));
+            root.left = add0(root.left, addingNode);
         } else if (compareNumber > 0) {
-            setRight(root, add0(rightNode(root), addingNode));
+            root.right = add0(root.right, addingNode);
         }
 
         return root;
@@ -64,19 +70,19 @@ public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySea
         int compareNumber = compare(addingNode.key(), root.key());
 
         if (compareNumber < 0) {
-            if (leftNode(root) == null) {
-                setLeft(root, addingNode);
+            if (((AbstractBinaryNode<K, V>) root).left() == null) {
+                root.left = addingNode;
                 return;
             }
 
-            add1(leftNode(root), addingNode);
+            add1(root.left, addingNode);
         } else if (compareNumber > 0) {
-            if (rightNode(root) == null) {
-                setRight(root, addingNode);
+            if (((AbstractBinaryNode<K, V>) root).right() == null) {
+                root.right = addingNode;
                 return;
             }
 
-            add1(rightNode(root), addingNode);
+            add1(root.right, addingNode);
         }
     }
 
@@ -90,13 +96,13 @@ public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySea
     }
 
     private DefaultBinaryNode<K, V> removeMin0(DefaultBinaryNode<K, V> node) {
-        if (leftNode(node) == null) {
-            DefaultBinaryNode<K, V> rightNode = rightNode(node);
-            setRight(node, null);
+        if (((AbstractBinaryNode<K, V>) node).left() == null) {
+            DefaultBinaryNode<K, V> rightNode = node.right;
+            node.right = null;
             return rightNode;
         }
 
-        setLeft(node, removeMin0(leftNode(node)));
+        node.left = removeMin0(node.left);
         return node;
     }
 
@@ -110,13 +116,13 @@ public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySea
     }
 
     private DefaultBinaryNode<K, V> removeMax0(DefaultBinaryNode<K, V> node) {
-        if (rightNode(node) == null) {
-            DefaultBinaryNode<K, V> leftNode = leftNode(node);
-            setLeft(node, null);
+        if (((AbstractBinaryNode<K, V>) node).right() == null) {
+            DefaultBinaryNode<K, V> leftNode = node.left;
+            node.left = null;
             return leftNode;
         }
 
-        setRight(node, removeMax0(rightNode(node)));
+        node.right = removeMax0(node.right);
         return node;
     }
 
@@ -137,37 +143,41 @@ public class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBinarySea
         int compareNumber = compare(k, node.key());
 
         if (compareNumber < 0) {
-            setLeft(node, remove0(leftNode(node), k));
+            node.left = remove0(node.left, k);
             return node;
         } else if (compareNumber > 0) {
-            setRight(node, remove0(rightNode(node), k));
+            node.right = remove0(node.right, k);
             return node;
         } else {
-            if (leftNode(node) == null) {
-                DefaultBinaryNode<K, V> rightNode = rightNode(node);
-                setRight(node, null);
+            if (((AbstractBinaryNode<K, V>) node).left() == null) {
+                DefaultBinaryNode<K, V> rightNode = node.right;
+                node.right = null;
                 return rightNode;
             }
 
-            if (rightNode(node) == null) {
-                DefaultBinaryNode<K, V> leftNode = leftNode(node);
-                setLeft(node, null);
+            if (((AbstractBinaryNode<K, V>) node).right() == null) {
+                DefaultBinaryNode<K, V> leftNode = node.left;
+                node.left = null;
                 return leftNode;
             }
 
-            DefaultBinaryNode<K, V> successor = minimumNode(rightNode(node));
-            setRight(successor, removeMin0(rightNode(node)));
-            setLeft(successor, leftNode(node));
+            DefaultBinaryNode<K, V> successor = minimumNode(node.right);
+            successor.right = removeMin0(node.right());
+            successor.left = node.left;
 
-            setLeft(node, null);
-            setRight(node, null);
+            node.left = null;
+            node.right = null;
 
             return successor;
         }
     }
 
-    private K validateKey(K key) {
-        return Objects.requireNonNull(key, "Key cannot be null");
+
+
+    private static class DefaultBinaryNode<K, V> extends AbstractBinaryNode<K, V, DefaultBinaryNode<K, V>> {
+        DefaultBinaryNode(K key, V value) {
+            super(key, value);
+        }
     }
 
     public static void main(String[] args) {
