@@ -24,14 +24,14 @@ public class SetTest {
         long endTime = 0L;
 
         startTime = System.nanoTime();
-        for (int i = 0; i < 20000000; i++) {
+        for (int i = 0; i < 50000000; i++) {
             avlSet.add(i);
         }
         endTime = System.nanoTime();
         log.info("AVL 插入性能：{} s", (endTime - startTime) / 1_000_000_000.0);
 
         startTime = System.nanoTime();
-        for (int i = 0; i < 20000000; i++) {
+        for (int i = 0; i < 50000000; i++) {
             if (!avlSet.contains(i)) {
                 throw new IllegalStateException();
             }
@@ -47,14 +47,14 @@ public class SetTest {
         long endTime = 0L;
 
         startTime = System.nanoTime();
-        for (int i = 0; i < 20000000; i++) {
+        for (int i = 0; i < 50000000; i++) {
             rbSet.add(i);
         }
         endTime = System.nanoTime();
         log.info("RBTree 插入性能：{} s", (endTime - startTime) / 1_000_000_000.0);
 
         startTime = System.nanoTime();
-        for (int i = 0; i < 20000000; i++) {
+        for (int i = 0; i < 50000000; i++) {
             if (!rbSet.contains(i)) {
                 throw new IllegalStateException();
             }

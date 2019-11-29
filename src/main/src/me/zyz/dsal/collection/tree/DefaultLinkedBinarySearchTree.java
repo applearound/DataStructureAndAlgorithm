@@ -60,7 +60,7 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
     }
 
     public K removeMin() {
-        K ret = minimum();
+        K ret = minimumKey();
 
         removeMin0(root);
         size--;
@@ -71,7 +71,7 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
     private DefaultBinaryNode<K, V> removeMin0(DefaultBinaryNode<K, V> node) {
         if (node.left() == null) {
             DefaultBinaryNode<K, V> rightNode = node.right();
-            node.clearRight();
+            node.purgeRight();
             return rightNode;
         }
 
@@ -80,7 +80,7 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
     }
 
     public K removeMax() {
-        K ret = maximum();
+        K ret = maximumKey();
 
         removeMax0(root);
         size--;
@@ -91,7 +91,7 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
     private DefaultBinaryNode<K, V> removeMax0(DefaultBinaryNode<K, V> node) {
         if (!node.hasRight()) {
             DefaultBinaryNode<K, V> leftNode = node.left();
-            node.clearLeft();
+            node.purgeLeft();
             return leftNode;
         }
 
@@ -122,15 +122,15 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
             node.setRight(remove0(node.right(), k));
             return node;
         } else {
-            if (node.left() == null) {
+            if (!node.hasLeft()) {
                 DefaultBinaryNode<K, V> rightNode = node.right();
-                node.clearRight();
+                node.purgeRight();
                 return rightNode;
             }
 
-            if (node.right() == null) {
+            if (!node.hasRight()) {
                 DefaultBinaryNode<K, V> leftNode = node.left();
-                node.clearLeft();
+                node.purgeLeft();
                 return leftNode;
             }
 
@@ -138,8 +138,8 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
             successor.setRight(removeMin0(node.right()));
             successor.setLeft(node.left());
 
-            node.clearLeft();
-            node.clearRight();
+            node.purgeLeft();
+            node.purgeRight();
 
             return successor;
         }

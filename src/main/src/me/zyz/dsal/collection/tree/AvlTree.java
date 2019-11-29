@@ -3,7 +3,7 @@ package me.zyz.dsal.collection.tree;
 /**
  * @author yz
  */
-public class AvlTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, AvlTree.AvlNode<K, V>> {
+public final class AvlTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, AvlTree.AvlNode<K, V>> {
 
     private int height(AvlNode<K, V> node) {
         if (node == null) {

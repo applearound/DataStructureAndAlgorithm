@@ -1,16 +1,20 @@
 package me.zyz.dsal.collection.tree;
 
 /**
- * @author yezhou
+ * @author yz
  */
 interface BinarySearchTree<K, V, N extends BinarySearchTree.BinaryNode<K, V, N>> {
     int size();
 
-    boolean isEmpty();
+    default boolean isEmpty() {
+        return size() == 0;
+    }
 
     void add(K key, V value);
 
     V findValue(K key);
+
+    V getValue(K key);
 
     boolean contains(K key);
 
@@ -19,20 +23,58 @@ interface BinarySearchTree<K, V, N extends BinarySearchTree.BinaryNode<K, V, N>>
 
         V value();
 
+        void setKey(K key);
+
+        void setValue(V value);
+
         N left();
 
         N right();
 
-        boolean hasLeft();
+        void setLeft(N left);
 
-        boolean hasRight();
+        void setRight(N right);
 
-        void setLeft(N node);
+        default boolean hasLeft() {
+            return left() != null;
+        }
 
-        N clearLeft();
+        default boolean hasRight() {
+            return right() != null;
+        }
 
-        void setRight(N node);
+        default boolean noLeft() {
+            return !hasLeft();
+        }
 
-        N clearRight();
+        default boolean noRight() {
+            return !hasRight();
+        }
+
+        default void purgeLeft() {
+            setLeft(null);
+        }
+
+        default N clearLeft() {
+            N oldLeft = left();
+            purgeLeft();
+            return oldLeft;
+        }
+
+        default void purgeRight() {
+            setRight(null);
+        }
+
+        default N clearRight() {
+            N oldRight = right();
+            purgeRight();
+            return oldRight;
+        }
+
+        default void swapChildren() {
+            N temp = left();
+            setLeft(right());
+            setRight(temp);
+        }
     }
 }

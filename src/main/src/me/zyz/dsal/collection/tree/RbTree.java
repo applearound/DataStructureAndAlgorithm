@@ -7,12 +7,13 @@ package me.zyz.dsal.collection.tree;
  * 4. 如果一个节点是红节点，那它的孩子一定是黑节点
  * 5. 从任一节点出发通向任意叶子节点的简单路径，经过的黑节点数量相同
  *
- * @author zyz
+ * @author yz
  */
-public class RbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, RbTree.RbNode<K, V>> {
+public final class RbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, RbTree.RbNode<K, V>> {
     public static final boolean RED = true;
     public static final boolean BLACK = false;
 
+    @Override
     public void add(K key, V value) {
         if (key == null) {
             throw new IllegalArgumentException("key");
@@ -77,11 +78,11 @@ public class RbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, RbTree.Rb
         node.right().setColor(BLACK);
     }
 
-    private boolean isRed(RbNode node) {
+    private boolean isRed(RbNode<K, V> node) {
         return node != null && node.isRed();
     }
 
-    private boolean isBlack(RbNode node) {
+    private boolean isBlack(RbNode<K, V> node) {
         return node == null || node.isBlack();
     }
 

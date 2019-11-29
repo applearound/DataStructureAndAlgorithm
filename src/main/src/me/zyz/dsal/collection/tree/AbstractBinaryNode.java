@@ -16,59 +16,41 @@ public abstract class AbstractBinaryNode<K, V, N extends AbstractBinaryNode<K, V
 
     @Override
     public K key() {
-        return this.key;
+        return key;
     }
 
     @Override
     public V value() {
-        return this.value;
+        return value;
+    }
+
+    @Override
+    public void setKey(K key) {
+        this.key = key;
+    }
+
+    @Override
+    public void setValue(V value) {
+        this.value = value;
     }
 
     @Override
     public N left() {
-        return this.left;
-    }
-
-    @Override
-    public N right() {
-        return this.right;
-    }
-
-    @Override
-    public void setLeft(N node) {
-        this.left = node;
-    }
-
-    @Override
-    public void setRight(N node) {
-        this.right = node;
-    }
-
-    @Override
-    public N clearLeft() {
-        N left = this.left;
-
-        this.left = null;
-
         return left;
     }
 
     @Override
-    public N clearRight() {
-        N right = this.right;
-
-        this.right = null;
-
+    public N right() {
         return right;
     }
 
     @Override
-    public boolean hasLeft() {
-        return left != null;
+    public void setLeft(N left) {
+        this.left = left;
     }
 
     @Override
-    public boolean hasRight() {
-        return right != null;
+    public void setRight(N right) {
+        this.right = right;
     }
 }

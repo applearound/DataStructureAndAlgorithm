@@ -10,23 +10,17 @@ import java.util.*;
 @Slf4j
 public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBinaryNode<K, V, N>> implements BinarySearchTree<K, V, N> {
     private final Comparator<K> comparator;
-    N root;
-    int size;
+    protected N root;
+    protected int size;
 
-    AbstractLinkedBinarySearchTree() {
-        this(null, null);
+    protected AbstractLinkedBinarySearchTree() {
+        this(null);
     }
 
-    AbstractLinkedBinarySearchTree(Comparator<K> comparator) {
-        this(null, comparator);
-    }
+    protected AbstractLinkedBinarySearchTree(Comparator<K> comparator) {
+        this.root = null;
+        this.size = 0;
 
-    AbstractLinkedBinarySearchTree(N root) {
-        this(root, null);
-    }
-
-    AbstractLinkedBinarySearchTree(N root, Comparator<K> comparator) {
-        this.root = root;
         this.comparator = comparator;
     }
 
@@ -40,8 +34,27 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
+    public V findValue(K key) {
+        N node = searchNode(root, key);
+        if (node == null) {
+            return null;
+        } else {
+            return node.value();
+        }
+    }
+
+    @Override
+    public V getValue(K key) {
+        N node = searchNode(root, key);
+        if (node == null) {
+            throw new NoSuchElementException();
+        }
+        return node.value();
+    }
+
+    @Override
+    public boolean contains(K key) {
+        return searchNode(root, key) != null;
     }
 
     void preOrder() {
@@ -161,7 +174,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
         postOrderStack.push(root);
         while (!postOrderStack.isEmpty()) {
             cur = postOrderStack.peek();
-            if ((!cur.hasLeft() && !cur.hasRight()) ||
+            if ((cur.noLeft() && cur.noRight()) ||
                     (pre != null && (pre == cur.left() || pre == cur.right()))) {
                 postOrderStack.pop();
 
@@ -215,81 +228,67 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
         }
     }
 
-    public K minimum() {
+    public K minimumKey() {
         N minimumNode = minimumNode(root);
 
         if (minimumNode == null) {
-            throw new NoSuchElementException();
+            return null;
+        } else {
+            return minimumNode.key();
         }
-
-        return minimumNode.key();
     }
 
-    public K maximum() {
+    public K maximumKey() {
         N maximumNode = maximumNode(root);
 
         if (maximumNode == null) {
-            throw new NoSuchElementException();
+            return null;
+        } else {
+            return maximumNode.key();
         }
-
-        return maximumNode.key();
     }
 
-    N minimumNode(N node) {
-        if (node == null) {
+    N minimumNode(N root) {
+        if (root == null) {
             return null;
         }
 
-        if (!node.hasLeft()) {
-            return node;
+        if (root.noLeft()) {
+            return root;
         }
 
-        return minimumNode(node.left());
+        return minimumNode(root.left());
     }
 
-    N maximumNode(N node) {
-        if (node == null) {
+    N maximumNode(N root) {
+        if (root == null) {
             return null;
         }
 
-        if (!node.hasRight()) {
-            return node;
+        if (root.noRight()) {
+            return root;
         }
 
-        return maximumNode(node.right());
+        return maximumNode(root.right());
     }
 
-    @Override
-    public V findValue(K key) {
-        N node = getNode(root, key);
-        if (node == null) {
-            throw new NoSuchElementException();
-        }
-        return node.value();
+    int compareKey(K k1, K k2) {
+        return comparator == null ? ((Comparable<K>) k1).compareTo(k2) :
+                comparator.compare(k1, k2);
     }
 
-    @Override
-    public boolean contains(K key) {
-        return getNode(root, key) != null;
-    }
-
-    private N getNode(N root, K k) {
+    private N searchNode(N root, K k) {
         if (root == null) {
             return null;
         }
 
         int compareNumber = compareKey(k, root.key());
         if (compareNumber < 0) {
-            return getNode(root.left(), k);
+            return searchNode(root.left(), k);
         } else if (compareNumber > 0) {
-            return getNode(root.right(), k);
+            return searchNode(root.right(), k);
         } else {
             return root;
         }
-    }
-
-    int compareKey(K k1, K k2) {
-        return comparator == null ? ((Comparable<K>) k1).compareTo(k2) :
-                comparator.compare(k1, k2);
     }
 }
