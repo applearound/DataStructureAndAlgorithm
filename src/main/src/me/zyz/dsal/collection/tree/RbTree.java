@@ -1,5 +1,6 @@
 package me.zyz.dsal.collection.tree;
 
+
 /**
  * 1. 每个节点不是红节点就是黑节点
  * 2. 根节点是黑节点
@@ -12,78 +13,127 @@ package me.zyz.dsal.collection.tree;
 public final class RbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, RbTree.RbNode<K, V>> {
     public static final boolean RED = true;
     public static final boolean BLACK = false;
+    private final RbNode<K, V> NIL;
+
+    {
+        NIL = new RbNode<>(null, null);
+        NIL.setColor(BLACK);
+    }
+
+    public RbTree() {
+        root = NIL;
+    }
 
     @Override
     public void add(K key, V value) {
-        if (key == null) {
-            throw new IllegalArgumentException("key");
-        }
-        root = add0(root, key, value);
-        root.color = BLACK;
+        add0(new RbNode<>(validateKey(key), value));
         size++;
     }
 
-    private RbNode<K, V> add0(RbNode<K, V> root, K key, V value) {
-        if (root == null) {
-            return new RbNode<>(key, value);
+    private void add0(RbNode<K, V> node) {
+        RbNode<K, V> trueParent = NIL;
+        RbNode<K, V> tempNode = root;
+        while (tempNode != NIL) {
+            trueParent = tempNode;
+            if (compareKey(node.key(), tempNode.key()) < 0) {
+                tempNode = tempNode.left();
+            } else {
+                tempNode = tempNode.right();
+            }
         }
 
-        int i = compareKey(key, root.key());
-        if (i < 0) {
-            root.setLeft(add0(root.left(), key, value));
-        } else if (i > 0) {
-            root.setRight(add0(root.right(), key, value));
+        node.setParent(trueParent);
+        if (trueParent == NIL) {
+            root = node;
+        } else if (compareKey(node.key(), trueParent.key()) < 0) {
+            trueParent.setLeft(node);
+        } else {
+            trueParent.setRight(node);
         }
 
-        if (isRed(root.right()) && isBlack(root.left())) {
-            root = leftRotate(root);
+        node.setLeft(NIL);
+        node.setRight(NIL);
+        node.setColor(RED);
+
+        fix(node);
+    }
+
+    private void fix(RbNode<K, V> node) {
+        while (node.parent().isRed()) {
+            if (node.parent() == node.parent().parent().left()) {
+                RbNode<K, V> y = node.parent().parent().right();
+                if (y.isRed()) {
+                    node.parent().setColor(BLACK);
+                    y.setColor(BLACK);
+                    node.parent().parent().setColor(RED);
+                    node = node.parent().parent();
+                } else if (node == node.parent().right()) {
+                    node = node.parent();
+                    leftRotate(node);
+                } else {
+                    node.parent().setColor(BLACK);
+                    node.parent().parent().setColor(RED);
+                    rightRotate(node.parent().parent());
+                }
+            } else {
+                RbNode<K, V> y = node.parent().parent().left();
+                if (y.isRed()) {
+                    node.parent().setColor(BLACK);
+                    y.setColor(BLACK);
+                    node.parent().parent().setColor(RED);
+                    node = node.parent().parent();
+                } else if (node == node.parent().left()) {
+                    node = node.parent();
+                    rightRotate(node);
+                } else {
+                    node.parent().setColor(BLACK);
+                    node.parent().parent().setColor(RED);
+                    leftRotate(node.parent().parent());
+                }
+            }
         }
-        if (isRed(root.left()) && isRed(root.left().left())) {
-            root = rightRotate(root);
+        root.setColor(BLACK);
+    }
+
+    private void leftRotate(RbNode<K, V> node) {
+        RbNode<K, V> nodeRightChild = node.right();
+        node.setRight(nodeRightChild.left());
+
+        if (nodeRightChild.hasLeft()) {
+            nodeRightChild.left().setParent(node);
         }
-        if (isRed(root.left()) && isRed(root.right())) {
-            flipColors(root);
+
+        nodeRightChild.setParent(node.parent());
+        if (node.parent() == NIL) {
+            root = nodeRightChild;
+        } else if (node == node.parent().left()) {
+            node.parent().setLeft(nodeRightChild);
+        } else {
+            node.parent().setRight(nodeRightChild);
+        }
+        nodeRightChild.setLeft(node);
+        node.setParent(nodeRightChild);
+    }
+
+    private void rightRotate(RbNode<K, V> node) {
+        RbNode<K, V> nodeLeftChild = node.left();
+        node.setLeft(nodeLeftChild.right());
+
+        if (nodeLeftChild.hasRight()) {
+            nodeLeftChild.setParent(node);
         }
 
-        return root;
-    }
+        nodeLeftChild.setParent(node.parent());
+        if (node.parent() == NIL) {
+            root = nodeLeftChild;
+        } else if (node == node.parent().left()) {
+            node.parent().setLeft(nodeLeftChild);
+        } else {
+            node.parent().setRight(nodeLeftChild);
+        }
 
-    private RbNode<K, V> leftRotate(RbNode<K, V> root) {
-        RbNode<K, V> x = root.right();
-
-        root.setRight(x.left());
-        x.setLeft(root);
-
-        x.color = root.color;
-        root.color = RED;
-
-        return x;
-    }
-
-    private RbNode<K, V> rightRotate(RbNode<K, V> root) {
-        RbNode<K, V> x = root.left();
-
-        root.setLeft(x.right());
-        x.setRight(root);
-
-        x.color = root.color;
-        root.color = RED;
-
-        return x;
-    }
-
-    private void flipColors(RbNode<K, V> node) {
-        node.color = RED;
-        node.left().setColor(BLACK);
-        node.right().setColor(BLACK);
-    }
-
-    private boolean isRed(RbNode<K, V> node) {
-        return node != null && node.isRed();
-    }
-
-    private boolean isBlack(RbNode<K, V> node) {
-        return node == null || node.isBlack();
+        nodeLeftChild.setRight(node);
+        node.setParent(nodeLeftChild);
     }
 
     static class RbNode<K, V> extends AbstractBinaryNode<K, V, RbNode<K, V>> {

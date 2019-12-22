@@ -122,13 +122,13 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
             node.setRight(remove0(node.right(), k));
             return node;
         } else {
-            if (!node.hasLeft()) {
+            if (node.noLeft()) {
                 DefaultBinaryNode<K, V> rightNode = node.right();
                 node.purgeRight();
                 return rightNode;
             }
 
-            if (!node.hasRight()) {
+            if (node.noRight()) {
                 DefaultBinaryNode<K, V> leftNode = node.left();
                 node.purgeLeft();
                 return leftNode;
@@ -138,8 +138,7 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
             successor.setRight(removeMin0(node.right()));
             successor.setLeft(node.left());
 
-            node.purgeLeft();
-            node.purgeRight();
+            node.clearAllRef();
 
             return successor;
         }
