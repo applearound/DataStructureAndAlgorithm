@@ -12,20 +12,25 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
     private final Comparator<K> comparator;
     protected N root;
     protected int size;
+    protected final N nil = null;
 
     protected AbstractLinkedBinarySearchTree() {
         this(null);
     }
 
     protected AbstractLinkedBinarySearchTree(Comparator<K> comparator) {
-        this.root = null;
+        this.root = nil();
         this.size = 0;
 
         this.comparator = comparator;
     }
 
     K validateKey(K key) {
-        return Objects.requireNonNull(key, "Key cannot be null");
+        return Objects.requireNonNull(key, "key");
+    }
+
+    N nil() {
+        return null;
     }
 
     @Override
@@ -36,17 +41,14 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
     @Override
     public V findValue(K key) {
         N node = searchNode(root, key);
-        if (node == null) {
-            return null;
-        } else {
-            return node.value();
-        }
+
+        return node == nil() ? null : node.value();
     }
 
     @Override
     public V getValue(K key) {
         N node = searchNode(root, key);
-        if (node == null) {
+        if (node == nil()) {
             throw new NoSuchElementException();
         }
         return node.value();
@@ -54,7 +56,22 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
 
     @Override
     public boolean contains(K key) {
-        return searchNode(root, key) != null;
+        return contains0(root, key);
+    }
+
+    private boolean contains0(N root, K key) {
+        if (root == nil()) {
+            return false;
+        }
+
+        int compareNumber = compareKey(key, root.key());
+        if (compareNumber < 0) {
+            return contains0(root.left(), key);
+        } else if (compareNumber > 0) {
+            return contains0(root.right(), key);
+        } else {
+            return true;
+        }
     }
 
     void preOrder() {
@@ -62,7 +79,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
     }
 
     private void preOrder0(N root) {
-        if (root == null) {
+        if (root == nil()) {
             return;
         }
 
@@ -76,7 +93,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
     }
 
     private void inOrder0(N root) {
-        if (root == null) {
+        if (root == nil()) {
             return;
         }
 
@@ -90,7 +107,7 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
     }
 
     private void postOrder0(N root) {
-        if (root == null) {
+        if (root == nil()) {
             return;
         }
 
@@ -119,11 +136,11 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
         }
     }
 
-    void preOrderNR() {
-        preOrderNR0(root);
+    void preOrderNr() {
+        preOrderNr0(root);
     }
 
-    private void preOrderNR0(N root) {
+    private void preOrderNr0(N root) {
         Deque<N> preOrderStack = new LinkedList<>();
         preOrderStack.push(root);
         while (!preOrderStack.isEmpty()) {
@@ -141,16 +158,16 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
         }
     }
 
-    void inOrderNR() {
-        inOrderNR0(root);
+    void inOrderNr() {
+        inOrderNr0(root);
     }
 
-    private void inOrderNR0(N root) {
+    private void inOrderNr0(N root) {
         Deque<N> inOrderStack = new LinkedList<>();
 
         N currentNode = root;
-        while (!inOrderStack.isEmpty() || currentNode != null) {
-            if (currentNode != null) {
+        while (!inOrderStack.isEmpty() || currentNode != nil()) {
+            if (currentNode != nil()) {
                 inOrderStack.push(currentNode);
                 currentNode = currentNode.left();
             } else {
@@ -162,20 +179,20 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
         }
     }
 
-    void postOrderNR() {
-        postOrderNR0(root);
+    void postOrderNr() {
+        postOrderNr0(root);
     }
 
-    private void postOrderNR0(N root) {
+    private void postOrderNr0(N root) {
         Deque<N> postOrderStack = new LinkedList<>();
         N cur;
-        N pre = null;
+        N pre = nil();
 
         postOrderStack.push(root);
         while (!postOrderStack.isEmpty()) {
             cur = postOrderStack.peek();
             if ((cur.noLeft() && cur.noRight()) ||
-                    (pre != null && (pre == cur.left() || pre == cur.right()))) {
+                    (pre != nil() && (pre == cur.left() || pre == cur.right()))) {
                 postOrderStack.pop();
 
                 log.info("Key: {}, Value: {}", cur.key(), cur.value());
@@ -231,45 +248,36 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
     public K minimumKey() {
         N minimumNode = minimumNode(root);
 
-        if (minimumNode == null) {
-            return null;
-        } else {
-            return minimumNode.key();
-        }
+        return minimumNode == nil() ? null : minimumNode.key();
     }
 
     public K maximumKey() {
         N maximumNode = maximumNode(root);
-
-        if (maximumNode == null) {
-            return null;
-        } else {
-            return maximumNode.key();
-        }
+        return maximumNode == nil() ? null : maximumNode.key();
     }
 
     N minimumNode(N root) {
-        if (root == null) {
-            return null;
+        N minNode = nil();
+
+        N n = root;
+        while (n != nil()) {
+            minNode = n;
+            n = n.left();
         }
 
-        if (root.noLeft()) {
-            return root;
-        }
-
-        return minimumNode(root.left());
+        return minNode;
     }
 
     N maximumNode(N root) {
-        if (root == null) {
-            return null;
+        N maxNode = nil();
+
+        N n = root;
+        while (n != nil()) {
+            maxNode = n;
+            n = n.right();
         }
 
-        if (root.noRight()) {
-            return root;
-        }
-
-        return maximumNode(root.right());
+        return maxNode;
     }
 
     int compareKey(K k1, K k2) {
@@ -278,8 +286,8 @@ public abstract class AbstractLinkedBinarySearchTree<K, V, N extends AbstractBin
     }
 
     private N searchNode(N root, K k) {
-        if (root == null) {
-            return null;
+        if (root == nil()) {
+            return nil();
         }
 
         int compareNumber = compareKey(k, root.key());

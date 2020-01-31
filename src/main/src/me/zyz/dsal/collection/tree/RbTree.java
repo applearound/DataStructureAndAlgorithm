@@ -13,82 +13,134 @@ package me.zyz.dsal.collection.tree;
 public final class RbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, RbTree.RbNode<K, V>> {
     public static final boolean RED = true;
     public static final boolean BLACK = false;
-    private final RbNode<K, V> NIL;
-
-    {
-        NIL = new RbNode<>(null, null);
-        NIL.setColor(BLACK);
-    }
+    private final RbNode<K, V> nil;
 
     public RbTree() {
-        root = NIL;
+        nil = new RbNode<>(null, null);
+        nil.setLeft(nil);
+        nil.setRight(nil);
+        nil.setParent(nil);
+        nil.setColor(BLACK);
+
+        root = nil;
     }
 
     @Override
     public void add(K key, V value) {
-        add0(new RbNode<>(validateKey(key), value));
+        add0(validateKey(key), value);
         size++;
     }
 
-    private void add0(RbNode<K, V> node) {
-        RbNode<K, V> trueParent = NIL;
+    private void add0(K key, V value) {
+        RbNode<K, V> trueParent = nil;
         RbNode<K, V> tempNode = root;
-        while (tempNode != NIL) {
+        while (tempNode != nil) {
             trueParent = tempNode;
-            if (compareKey(node.key(), tempNode.key()) < 0) {
+            int compareNum = compareKey(key, tempNode.key());
+            if (compareNum < 0) {
                 tempNode = tempNode.left();
-            } else {
+            } else if (compareNum > 0) {
                 tempNode = tempNode.right();
+            } else {
+                tempNode.setValue(value);
+                return;
             }
         }
 
-        node.setParent(trueParent);
-        if (trueParent == NIL) {
-            root = node;
-        } else if (compareKey(node.key(), trueParent.key()) < 0) {
-            trueParent.setLeft(node);
+        RbNode<K, V> newNode = new RbNode<>(key, value);
+        newNode.setParent(trueParent);
+        if (trueParent == nil) {
+            root = newNode;
+        } else if (compareKey(newNode.key(), trueParent.key()) < 0) {
+            trueParent.setLeft(newNode);
         } else {
-            trueParent.setRight(node);
+            trueParent.setRight(newNode);
         }
 
-        node.setLeft(NIL);
-        node.setRight(NIL);
-        node.setColor(RED);
+        newNode.setLeft(nil);
+        newNode.setRight(nil);
+        newNode.setColor(RED);
 
-        fix(node);
+        insertFix(newNode);
     }
 
-    private void fix(RbNode<K, V> node) {
+    private void delete0(RbNode<K, V> z) {
+        RbNode<K, V> y = z;
+        boolean yOriginalColor = y.color();
+
+        RbNode<K, V> x;
+        if (z.left() == nil) {
+            x = z.right();
+            transplant(z, z.right());
+        } else if (z.right() == nil) {
+            x = z.left();
+            transplant(z, z.left());
+        } else {
+            y = minimumNode(z.right());
+            x = y.right();
+            if (y.parent() == z) {
+                x.setParent(y);
+            } else {
+                transplant(y, y.right());
+                y.setRight(z.right());
+                y.right().setParent(y);
+            }
+            transplant(z, y);
+            y.setLeft(z.left());
+            y.left().setParent(y);
+            y.setColor(z.color());
+        }
+        if (yOriginalColor == BLACK) {
+            deleteFix(x);
+        }
+    }
+
+    private void deleteFix(RbNode<K, V> x) {
+
+    }
+
+    private void transplant(RbNode<K, V> u, RbNode<K, V> v) {
+        if (u.parent() == nil) {
+            root = v;
+        } else if (u == u.parent().left()) {
+            u.parent().setLeft(v);
+        } else {
+            u.parent().setRight(v);
+        }
+        v.setParent(u.parent());
+    }
+
+    private void insertFix(RbNode<K, V> node) {
         while (node.parent().isRed()) {
-            if (node.parent() == node.parent().parent().left()) {
-                RbNode<K, V> y = node.parent().parent().right();
-                if (y.isRed()) {
-                    node.parent().setColor(BLACK);
-                    y.setColor(BLACK);
-                    node.parent().parent().setColor(RED);
-                    node = node.parent().parent();
-                } else if (node == node.parent().right()) {
-                    node = node.parent();
+            RbNode<K, V> parent = node.parent();
+            RbNode<K, V> grandParent = parent.parent();
+            if (parent == grandParent.left()) {
+                if (grandParent.right().isRed()) {
+                    parent.setColor(BLACK);
+                    grandParent.right().setColor(BLACK);
+                    grandParent.setColor(RED);
+                    node = grandParent;
+                } else if (node == parent.right()) {
+                    node = parent;
                     leftRotate(node);
                 } else {
-                    node.parent().setColor(BLACK);
-                    node.parent().parent().setColor(RED);
-                    rightRotate(node.parent().parent());
+                    parent.setColor(BLACK);
+                    grandParent.setColor(RED);
+                    rightRotate(grandParent);
                 }
             } else {
-                RbNode<K, V> y = node.parent().parent().left();
-                if (y.isRed()) {
-                    node.parent().setColor(BLACK);
-                    y.setColor(BLACK);
-                    node.parent().parent().setColor(RED);
-                    node = node.parent().parent();
-                } else if (node == node.parent().left()) {
-                    node = node.parent();
+                if (grandParent.left().isRed()) {
+                    parent.setColor(BLACK);
+                    grandParent.left().setColor(BLACK);
+                    grandParent.setColor(RED);
+                    node = grandParent;
+                } else if (node == parent.left()) {
+                    node = parent;
                     rightRotate(node);
                 } else {
-                    node.parent().setColor(BLACK);
-                    node.parent().parent().setColor(RED);
-                    leftRotate(node.parent().parent());
+                    parent.setColor(BLACK);
+                    grandParent.setColor(RED);
+                    leftRotate(grandParent);
                 }
             }
         }
@@ -96,44 +148,49 @@ public final class RbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, RbT
     }
 
     private void leftRotate(RbNode<K, V> node) {
-        RbNode<K, V> nodeRightChild = node.right();
-        node.setRight(nodeRightChild.left());
+        RbNode<K, V> rightChildNode = node.right();
+        node.setRight(rightChildNode.left());
 
-        if (nodeRightChild.hasLeft()) {
-            nodeRightChild.left().setParent(node);
+        if (rightChildNode.hasLeft()) {
+            rightChildNode.left().setParent(node);
         }
 
-        nodeRightChild.setParent(node.parent());
-        if (node.parent() == NIL) {
-            root = nodeRightChild;
+        rightChildNode.setParent(node.parent());
+        if (node.parent() == nil) {
+            root = rightChildNode;
         } else if (node == node.parent().left()) {
-            node.parent().setLeft(nodeRightChild);
+            node.parent().setLeft(rightChildNode);
         } else {
-            node.parent().setRight(nodeRightChild);
+            node.parent().setRight(rightChildNode);
         }
-        nodeRightChild.setLeft(node);
-        node.setParent(nodeRightChild);
+        rightChildNode.setLeft(node);
+        node.setParent(rightChildNode);
     }
 
     private void rightRotate(RbNode<K, V> node) {
-        RbNode<K, V> nodeLeftChild = node.left();
-        node.setLeft(nodeLeftChild.right());
+        RbNode<K, V> leftChildNode = node.left();
+        node.setLeft(leftChildNode.right());
 
-        if (nodeLeftChild.hasRight()) {
-            nodeLeftChild.setParent(node);
+        if (leftChildNode.hasRight()) {
+            leftChildNode.right().setParent(node);
         }
 
-        nodeLeftChild.setParent(node.parent());
-        if (node.parent() == NIL) {
-            root = nodeLeftChild;
+        leftChildNode.setParent(node.parent());
+        if (node.parent() == nil) {
+            root = leftChildNode;
         } else if (node == node.parent().left()) {
-            node.parent().setLeft(nodeLeftChild);
+            node.parent().setLeft(leftChildNode);
         } else {
-            node.parent().setRight(nodeLeftChild);
+            node.parent().setRight(leftChildNode);
         }
 
-        nodeLeftChild.setRight(node);
-        node.setParent(nodeLeftChild);
+        leftChildNode.setRight(node);
+        node.setParent(leftChildNode);
+    }
+
+    @Override
+    RbNode<K, V> nil() {
+        return nil;
     }
 
     static class RbNode<K, V> extends AbstractBinaryNode<K, V, RbNode<K, V>> {
@@ -142,6 +199,10 @@ public final class RbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, RbT
         RbNode(K key, V value) {
             super(key, value);
             this.color = RED;
+        }
+
+        boolean color() {
+            return color;
         }
 
         boolean isRed() {

@@ -9,16 +9,13 @@ package me.zyz.dsal.collection.tree;
  *
  * @author zyz
  */
-public class BiasRbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, BiasRbTree.RbNode<K, V>> {
+public class LeftLeaningRbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, LeftLeaningRbTree.RbNode<K, V>> {
     public static final boolean RED = true;
     public static final boolean BLACK = false;
 
     @Override
     public void add(K key, V value) {
-        if (key == null) {
-            throw new IllegalArgumentException("key");
-        }
-        root = add0(root, key, value);
+        root = add0(root, validateKey(key), value);
         root.color = BLACK;
         size++;
     }
@@ -33,6 +30,8 @@ public class BiasRbTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, BiasR
             root.setLeft(add0(root.left(), key, value));
         } else if (i > 0) {
             root.setRight(add0(root.right(), key, value));
+        } else {
+            root.setValue(value);
         }
 
         if (isRed(root.right()) && isBlack(root.left())) {

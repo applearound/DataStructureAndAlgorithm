@@ -9,54 +9,55 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
     public void add(K key, V value) {
         validateKey(key);
 
-        DefaultBinaryNode<K, V> newNode = new DefaultBinaryNode<>(key, value);
         if (root == null) {
-            root = newNode;
+            root = new DefaultBinaryNode<>(key, value);
         } else {
-            add1(root, newNode);
+            add1(root, key, value);
         }
         size++;
     }
 
-    public void anotherAdd(K key, V value) {
-        validateKey(key);
-        root = add0(root, new DefaultBinaryNode<>(key, value));
-        size++;
-    }
-
-    private DefaultBinaryNode<K, V> add0(DefaultBinaryNode<K, V> root, DefaultBinaryNode<K, V> addingNode) {
-        if (root == null) {
-            return addingNode;
-        }
-
-        int compareNumber = compareKey(addingNode.key(), root.key());
-        if (compareNumber < 0) {
-            root.setLeft(add0(root.left(), addingNode));
-        } else if (compareNumber > 0) {
-            root.setRight(add0(root.right(), addingNode));
-        }
-
-        return root;
-    }
-
-    private void add1(DefaultBinaryNode<K, V> root, DefaultBinaryNode<K, V> addingNode) {
-        int compareNumber = compareKey(addingNode.key(), root.key());
+    private void add1(DefaultBinaryNode<K, V> root, K key, V value) {
+        int compareNumber = compareKey(key, root.key());
 
         if (compareNumber < 0) {
             if (root.left() == null) {
-                root.setLeft(addingNode);
+                root.setLeft(new DefaultBinaryNode<>(key, value));
                 return;
             }
-
-            add1(root.left(), addingNode);
+            add1(root.left(), key, value);
         } else if (compareNumber > 0) {
             if (root.right() == null) {
-                root.setRight(addingNode);
+                root.setRight(new DefaultBinaryNode<>(key, value));
                 return;
             }
 
-            add1(root.right(), addingNode);
+            add1(root.right(), key, value);
+        } else {
+            root.setValue(value);
         }
+    }
+
+    public void anotherAdd(K key, V value) {
+        root = add0(root, validateKey(key), value);
+        size++;
+    }
+
+    private DefaultBinaryNode<K, V> add0(DefaultBinaryNode<K, V> root, K key, V value) {
+        if (root == null) {
+            return new DefaultBinaryNode<>(key, value);
+        }
+
+        int compareNum = compareKey(key, root.key());
+        if (compareNum < 0) {
+            root.setLeft(add0(root.left(), key, value));
+        } else if (compareNum > 0) {
+            root.setRight(add0(root.right(), key, value));
+        } else {
+            root.setValue(value);
+        }
+
+        return root;
     }
 
     public K removeMin() {
@@ -160,11 +161,11 @@ public final class DefaultLinkedBinarySearchTree<K, V> extends AbstractLinkedBin
         defaultLinkedBinarySearchTree.add(5, 5);
         defaultLinkedBinarySearchTree.add(4, 4);
 
-        defaultLinkedBinarySearchTree.preOrderNR();
+        defaultLinkedBinarySearchTree.preOrderNr();
         System.out.println();
-        defaultLinkedBinarySearchTree.inOrderNR();
+        defaultLinkedBinarySearchTree.inOrderNr();
         System.out.println();
-        defaultLinkedBinarySearchTree.postOrderNR();
+        defaultLinkedBinarySearchTree.postOrderNr();
         System.out.println();
         defaultLinkedBinarySearchTree.levelOrder();
     }

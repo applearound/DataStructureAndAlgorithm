@@ -1,32 +1,34 @@
 package me.zyz.dsal.collection.set;
 
 import me.zyz.dsal.collection.tree.RbTree;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class RbSet<E> implements Set<E> {
-    private RbTree<E, Object> innerRbTree = new RbTree<>();
+
+    private RbTree<E, Object> rbTree = new RbTree<>();
 
     @Override
     public void add(E e) {
-        innerRbTree.add(e, null);
+        rbTree.add(e, null);
     }
 
     @Override
     public void remove(E e) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public boolean contains(E e) {
-        return innerRbTree.contains(e);
+        return rbTree.contains(e);
     }
 
     @Override
     public int size() {
-        return innerRbTree.size();
+        return rbTree.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return innerRbTree.isEmpty();
+        return rbTree.isEmpty();
     }
 }

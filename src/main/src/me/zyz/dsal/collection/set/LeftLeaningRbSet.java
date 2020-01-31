@@ -1,17 +1,17 @@
 package me.zyz.dsal.collection.set;
 
-import me.zyz.dsal.collection.tree.BiasRbTree;
+import me.zyz.dsal.collection.tree.LeftLeaningRbTree;
 
 /**
  * @author zyz
  */
-public class BiasRbSet<E> implements Set<E> {
+public class LeftLeaningRbSet<E> implements Set<E> {
 
-    private BiasRbTree<E, Object> biasRbTree = new BiasRbTree<>();
+    private LeftLeaningRbTree<E, Object> leftLeaningRbTree = new LeftLeaningRbTree<>();
 
     @Override
     public void add(E e) {
-        biasRbTree.add(e, null);
+        leftLeaningRbTree.add(e, null);
     }
 
     @Override
@@ -21,16 +21,16 @@ public class BiasRbSet<E> implements Set<E> {
 
     @Override
     public boolean contains(E e) {
-        return biasRbTree.contains(e);
+        return leftLeaningRbTree.contains(e);
     }
 
     @Override
     public int size() {
-        return biasRbTree.size();
+        return leftLeaningRbTree.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return biasRbTree.size() == 0;
+        return leftLeaningRbTree.size() == 0;
     }
 }

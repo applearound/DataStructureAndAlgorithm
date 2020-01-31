@@ -1,104 +1,124 @@
 package me.zyz.dsal.collection.tree;
 
 /**
- * @author yz
+ * @author yezhou
  */
-public final class AvlTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, AvlTree.AvlNode<K, V>> {
+public class AvlTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, AvlTree.AvlNode<K, V>> {
 
-    private int height(AvlNode<K, V> node) {
-        if (node == null) {
-            return 0;
-        }
-
-        return node.height();
-    }
-
-    private int balanceFactor(AvlNode<K, V> node) {
-        if (node == null) {
-            return 0;
-        }
-
-        return height(node.left()) - height(node.right());
+    public AvlTree() {
+        root = null;
     }
 
     @Override
     public void add(K key, V value) {
-        root = add(root, key, value);
+        add0(validateKey(key), value);
         size++;
     }
 
-    private AvlNode<K, V> add(AvlNode<K, V> root, K key, V value) {
-        if (root == null) {
-            return new AvlNode<>(key, value);
-        }
-
-        int compareNum = compareKey(key, root.key());
-        if (compareNum < 0) {
-            root.setLeft(add(root.left(), key, value));
-        } else if (compareNum > 0) {
-            root.setRight(add(root.right(), key, value));
-        }
-
-        root.setHeight(Math.max(height(root.left()), height(root.right())) + 1);
-
-        int balanceFactor = balanceFactor(root);
-
-        if (balanceFactor > 1) {
-            int leftBalanceFactor = balanceFactor(root.left());
-
-            if (leftBalanceFactor >= 0) {
-                // LL 旋转
-                return rightRotate(root);
+    private void add0(K key, V value) {
+        AvlNode<K, V> trueParent = null;
+        AvlNode<K, V> tempNode = root;
+        while (tempNode != null) {
+            trueParent = tempNode;
+            int compareNum = compareKey(key, tempNode.key());
+            if (compareNum < 0) {
+                tempNode = tempNode.left();
+            } else if (compareNum > 0) {
+                tempNode = tempNode.right();
             } else {
-                // LR 旋转
-                root.setLeft(leftRotate(root.left()));
-                return rightRotate(root);
+                tempNode.setValue(value);
+                return;
             }
         }
 
-        if (balanceFactor < -1) {
-            int rightBalanceFactor = balanceFactor(root.right());
-
-            if (rightBalanceFactor <= 0) {
-                // RR 旋转
-                return leftRotate(root);
-            } else {
-                // RL 旋转
-                root.setRight(rightRotate(root.right()));
-                return leftRotate(root);
-            }
+        AvlNode<K, V> newNode = new AvlNode<>(key, value);
+        newNode.setParent(trueParent);
+        if (trueParent == null) {
+            root = newNode;
+        } else if (compareKey(newNode.key(), trueParent.key()) < 0) {
+            trueParent.setLeft(newNode);
+        } else {
+            trueParent.setRight(newNode);
         }
 
-        return root;
+        newNode.setLeft(null);
+        newNode.setRight(null);
+        newNode.setHeight(1);
+
+        AvlNode<K, V> parent = newNode.parent();
+        while (parent != null) {
+            if (!parent.updateHeight()) {
+                break;
+            }
+
+            int balanceFactor = parent.balanceFactor();
+            if (balanceFactor == 2) {
+                if (parent.left().balanceFactor() == -1) {
+                    leftRotate(parent.left());
+                }
+                rightRotate(parent);
+                break;
+            } else if (balanceFactor == -2) {
+                if (parent.right().balanceFactor() == 1) {
+                    rightRotate(parent.right());
+                }
+                leftRotate(parent);
+                break;
+            }
+
+            parent = parent.parent();
+        }
     }
 
-    private AvlNode<K, V> rightRotate(AvlNode<K, V> root) {
-        AvlNode<K, V> newRoot = root.left();
-        AvlNode<K, V> tree = newRoot.right();
+    private void rightRotate(AvlNode<K, V> oldRoot) {
+        AvlNode<K, V> newRoot = oldRoot.left();
+        oldRoot.setLeft(newRoot.right());
+        if (newRoot.hasRight()) {
+            newRoot.right().setParent(oldRoot);
+        }
 
-        newRoot.setRight(root);
-        root.setLeft(tree);
+        AvlNode<K, V> parent = oldRoot.parent();
+        newRoot.setParent(parent);
+        if (parent == null) {
+            root = newRoot;
+        } else if (oldRoot == parent.left()) {
+            parent.setLeft(newRoot);
+        } else {
+            parent.setRight(newRoot);
+        }
 
-        root.height = Math.max(height(root.left()), height(root.right())) + 1;
-        newRoot.height = Math.max(height(newRoot.left()), height(newRoot.right())) + 1;
+        newRoot.setRight(oldRoot);
+        oldRoot.setParent(newRoot);
 
-        return newRoot;
+        oldRoot.updateHeight();
+        newRoot.updateHeight();
     }
 
-    private AvlNode<K, V> leftRotate(AvlNode<K, V> root) {
-        AvlNode<K, V> newRoot = root.right();
-        AvlNode<K, V> tree = newRoot.left();
+    private void leftRotate(AvlNode<K, V> oldRoot) {
+        AvlNode<K, V> newRoot = oldRoot.right();
+        oldRoot.setRight(newRoot.left());
+        if (newRoot.hasLeft()) {
+            newRoot.left().setParent(oldRoot);
+        }
 
-        newRoot.setLeft(root);
-        root.setRight(tree);
+        AvlNode<K, V> parent = oldRoot.parent();
+        newRoot.setParent(parent);
+        if (parent == null) {
+            root = newRoot;
+        } else if (oldRoot == parent.left()) {
+            parent.setLeft(newRoot);
+        } else {
+            parent.setRight(newRoot);
+        }
 
-        root.height = Math.max(height(root.left()), height(root.right())) + 1;
-        newRoot.height = Math.max(height(newRoot.left()), height(newRoot.right())) + 1;
+        newRoot.setLeft(oldRoot);
+        oldRoot.setParent(newRoot);
 
-        return newRoot;
+        oldRoot.updateHeight();
+        newRoot.updateHeight();
     }
 
-    static class AvlNode<K, V> extends AbstractBinaryNode<K, V, AvlNode<K, V>> {
+    static class AvlNode<K, V> extends AbstractBinaryNode<K, V, AvlTree.AvlNode<K, V>> {
         private int height;
 
         AvlNode(K key, V value) {
@@ -112,6 +132,19 @@ public final class AvlTree<K, V> extends AbstractLinkedBinarySearchTree<K, V, Av
 
         void setHeight(int height) {
             this.height = height;
+        }
+
+        int balanceFactor() {
+            int leftHeight = left() == null ? 0 : left().height();
+            int rightHeight = right() == null ? 0 : right().height();
+            return leftHeight - rightHeight;
+        }
+
+        boolean updateHeight() {
+            int oldHeight = height;
+            height = Math.max(left() == null ? 0 : left().height(), right() == null ? 0 : right().height()) + 1;
+
+            return oldHeight != height;
         }
     }
 }
