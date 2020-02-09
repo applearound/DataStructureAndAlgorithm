@@ -48,7 +48,65 @@ public class TextSearch {
         return -1;
     }
 
-    private CharSequence perfix(CharSequence text, int i) {
-        return text.subSequence(0, i - 1);
+    public static int kmpSearch(CharSequence text, CharSequence words) {
+        int[] supportArray = buildSupportArray(words);
+
+        int j = 0;
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) != words.charAt(j)) {
+                if (j != 0) {
+                    i--;
+                    j = supportArray[j - 1];
+                }
+
+                continue;
+            }
+            j++;
+            if (j == words.length()) {
+                return i - j + 1;
+            }
+        }
+
+        return -1;
     }
+
+    private static int[] buildSupportArray(CharSequence seq) {
+        int[] supportArray = new int[seq.length()];
+        supportArray[0] = 0;
+
+        int j = 0;
+        for (int i = 1; i < seq.length(); i++) {
+            if (seq.charAt(i) == seq.charAt(j)) {
+                supportArray[i + 1] = ++j;
+                continue;
+            }
+
+            while (j != 0) {
+                j = supportArray[j - 1];
+                if (seq.charAt(i) == seq.charAt(j)) {
+                    break;
+                }
+            }
+            supportArray[i + 1] = ++j;
+        }
+
+        return supportArray;
+    }
+
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            sb.append('a');
+        }
+        sb.append('b');
+
+//        long l = System.nanoTime();
+//        System.out.println(roughSearch(sb, "aaaaaaaaaaaaaaaab"));
+//        System.out.println((System.nanoTime() - l) / 1_000_000_000.0);
+
+        long l1 = System.nanoTime();
+        System.out.println(kmpSearch(sb, "abcaby"));
+        System.out.println((System.nanoTime() - l1) / 1_000_000_000.0);
+    }
+
 }

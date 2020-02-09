@@ -1,7 +1,6 @@
 package me.zyz.dsal.collection.set;
 
 import me.zyz.dsal.collection.tree.RbTree;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class RbSet<E> implements Set<E> {
 
@@ -14,7 +13,7 @@ public class RbSet<E> implements Set<E> {
 
     @Override
     public void remove(E e) {
-        throw new NotImplementedException();
+        throw new NullPointerException();
     }
 
     @Override
