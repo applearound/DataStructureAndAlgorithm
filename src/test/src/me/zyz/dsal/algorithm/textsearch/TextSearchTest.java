@@ -1,4 +1,4 @@
-package me.zyz.dsal.algorithm.kmp;
+package me.zyz.dsal.algorithm.textsearch;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,10 +21,10 @@ class TextSearchTest {
     public void kmpSearch() {
         String text = "121231234";
 
-        assertEquals(2, TextSearch.betterRoughSearch(text, "123"));
-        assertEquals(0, TextSearch.betterRoughSearch(text, "12"));
-        assertEquals(6, TextSearch.betterRoughSearch(text, "234"));
-        assertEquals(4, TextSearch.betterRoughSearch(text, "31"));
-        assertEquals(5, TextSearch.betterRoughSearch(text, "1234"));
+        assertEquals(2, TextSearch.kmpSearch(text, "123"));
+        assertEquals(0, TextSearch.kmpSearch(text, "12"));
+        assertEquals(6, TextSearch.kmpSearch(text, "234"));
+        assertEquals(4, TextSearch.kmpSearch(text, "31"));
+        assertEquals(5, TextSearch.kmpSearch(text, "1234"));
     }
 }
