@@ -67,7 +67,7 @@ public class InversionCounter {
     }
 
     public static void main(String[] args) {
-        Integer[] integers = {5, 4, 3, 1, 2};
+        Integer[] integers = {1, 2, 0};
         System.out.println(InversionCounter.count(integers));
         for (Integer integer : integers) {
             System.out.println(integer);
