@@ -1,5 +1,6 @@
 package me.zyz.dsal.sort;
 
+import lombok.extern.slf4j.Slf4j;
 import me.zyz.dsal.algorithm.sort.*;
 import me.zyz.dsal.util.TestUtil;
 import org.junit.jupiter.api.AfterEach;
@@ -9,61 +10,78 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class SortTest {
+@Slf4j
+class SortTest {
     private static TestUtil testUtil;
     private static Integer[] testIntegerListRawData;
 
     private Integer[] testIntegerListData;
 
     @BeforeAll
-    public static void setUpAll() {
+    static void setUpAll() {
         testUtil = TestUtil.getInstance();
         testIntegerListRawData = TestUtil.getInstance().randomIntegerArray(50000, 30000);
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         testIntegerListData = testIntegerListRawData.clone();
     }
 
     @AfterEach
-    public void isSorted() {
+    void isSorted() {
         assertTrue(testUtil.isSorted(testIntegerListRawData, testIntegerListData));
         testIntegerListData = null;
     }
 
     @Test
-    public void testBubbleArraySort() {
+    void testBubbleArraySort() {
         testUtil.test(testIntegerListData, new BubbleArraySort<>());
     }
 
     @Test
-    public void testSelectionArraySort() {
+    void testSelectionArraySort() {
         testUtil.test(testIntegerListData, new SelectionArraySort<>());
     }
 
     @Test
-    public void testInsertionArraySort() {
+    void testInsertionArraySort() {
         testUtil.test(testIntegerListData, new InsertionArraySort<>());
     }
 
     @Test
-    public void testShellArraySort() {
+    void testShellArraySort() {
         testUtil.test(testIntegerListData, new ShellArraySort<>());
     }
 
     @Test
-    public void testMergeArraySort() {
+    void testMergeArraySort() {
         testUtil.test(testIntegerListData, new MergeArraySort<>());
     }
 
     @Test
-    public void testHeapArraySort() {
+    void testHeapArraySort() {
         testUtil.test(testIntegerListData, new HeapArraySort<>());
     }
 
     @Test
-    public void testQuickArraySort() {
+    void testQuickArraySort() {
         testUtil.test(testIntegerListData, new QuickArraySort<>());
+    }
+
+    @Test
+    void testRadixSort() {
+        final long start = System.nanoTime();
+        new RadixSort().sort(testIntegerListData);
+        final long end = System.nanoTime();
+        log.info("RadixSort 用时: " + (end - start) / 1_000_000.0 + "ms ");
+    }
+
+    @Test
+    void testBucketSort() {
+        final long start = System.nanoTime();
+        new BucketSort().sort(testIntegerListData);
+        final long end = System.nanoTime();
+        log.info("BucketSort 用时: " + (end - start) / 1_000_000.0 + "ms ");
     }
 }

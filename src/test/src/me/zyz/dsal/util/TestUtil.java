@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 public class TestUtil {
-    private Random random = new Random();
+    private final Random random = new Random();
 
     private static final TestUtil TEST_UTIL = new TestUtil();
 
@@ -93,8 +93,9 @@ public class TestUtil {
     }
 
     public <E extends Comparable<E>> void test(E[] arr, Sort<E> sort) {
-        long start = System.nanoTime();
+        final long start = System.nanoTime();
         sort.sort(arr);
-        log.info(sort.getClass().getSimpleName() + " 用时: " + (System.nanoTime() - start) / 1_000_000.0 + "ms ");
+        final long end = System.nanoTime();
+        log.info(sort.getClass().getSimpleName() + " 用时: " + (end - start) / 1_000_000.0 + "ms ");
     }
 }

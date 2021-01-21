@@ -6,11 +6,11 @@ import java.util.LinkedList;
 /**
  * @author yz
  */
-public class BucketSort implements Sort<Integer> {
+public class BucketSort implements ISort<Integer> {
 
     @Override
     public void sort(Integer[] arr) {
-        Deque<Integer>[] deques = new Deque[10];
+        Deque<Integer>[] deques = new Deque[arr.length];
         for (int i = 0; i < deques.length; i++) {
             deques[i] = new LinkedList<>();
         }
@@ -35,10 +35,6 @@ public class BucketSort implements Sort<Integer> {
                     arr[j++] = deque.pop();
                 }
             }
-        }
-
-        for (Integer integer : arr) {
-            System.out.println(integer);
         }
     }
 }
