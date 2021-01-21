@@ -1,6 +1,9 @@
 package me.zyz.dsal.algorithm.sort;
 
-public class BubbleArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
+/**
+ * @author yezhou
+ */
+public class BubbleArraySort<E extends Comparable<E>> extends AbstractComparableArraySort<E> {
 
     @Override
     public void sort(E[] arr) {

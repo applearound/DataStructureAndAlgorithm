@@ -3,7 +3,7 @@ package me.zyz.dsal.algorithm.sort;
 /**
  * @author yezhou
  */
-public class RadixSort implements ISort<Integer> {
+public class RadixSort implements Sort<Integer> {
     private static final int RADIX = 10;
 
     @Override

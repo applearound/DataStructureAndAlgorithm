@@ -1,12 +1,12 @@
 package me.zyz.dsal.algorithm.sort;
 
 /**
- * @param <E> 元素类型
+ * @param <E> 数组元素类型
  * @author yezhou
  */
-public interface Sort<E extends Comparable<E>> {
+public interface Sort<E> {
     /**
-     * 将传入的数组进行排序
+     * 将传出的数组进行排序
      *
      * @param arr 待排序数组
      */

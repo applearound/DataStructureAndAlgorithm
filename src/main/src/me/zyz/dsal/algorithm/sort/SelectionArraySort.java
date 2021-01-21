@@ -3,7 +3,7 @@ package me.zyz.dsal.algorithm.sort;
 /**
  * @author yezhou
  */
-public class SelectionArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
+public class SelectionArraySort<E extends Comparable<E>> extends AbstractComparableArraySort<E> {
 
     @Override
     public void sort(E[] arr) {

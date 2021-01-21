@@ -1,6 +1,7 @@
 package me.zyz.dsal.util;
 
 import lombok.extern.slf4j.Slf4j;
+import me.zyz.dsal.algorithm.sort.ComparableSort;
 import me.zyz.dsal.algorithm.sort.Sort;
 
 import java.util.Map;
@@ -92,7 +93,7 @@ public class TestUtil {
         return true;
     }
 
-    public <E extends Comparable<E>> void test(E[] arr, Sort<E> sort) {
+    public <E> void test(E[] arr, Sort<E> sort) {
         final long start = System.nanoTime();
         sort.sort(arr);
         final long end = System.nanoTime();

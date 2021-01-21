@@ -6,7 +6,7 @@ import java.util.LinkedList;
 /**
  * @author yz
  */
-public class BucketSort implements ISort<Integer> {
+public class BucketSort implements Sort<Integer> {
 
     @Override
     public void sort(Integer[] arr) {

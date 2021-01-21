@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * @author yezhou
  */
-public class QuickArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
+public class QuickArraySort<E extends Comparable<E>> extends AbstractComparableArraySort<E> {
     public enum Partitions {
         /**
          * 分区类型

@@ -3,7 +3,7 @@ package me.zyz.dsal.algorithm.sort;
 /**
  * @author yezhou
  */
-public class ShellArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
+public class ShellArraySort<E extends Comparable<E>> extends AbstractComparableArraySort<E> {
 
     private static final int[] SEQUENCE = new int[]{1750, 701, 301, 132, 57, 23, 10, 4, 1};
 

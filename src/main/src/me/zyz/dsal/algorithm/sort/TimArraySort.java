@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * @author yezhou
  */
-public class TimArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
+public class TimArraySort<E extends Comparable<E>> extends AbstractComparableArraySort<E> {
     private static final int MIN_MERGE = 32;
 
     private Comparator<E> comparator;

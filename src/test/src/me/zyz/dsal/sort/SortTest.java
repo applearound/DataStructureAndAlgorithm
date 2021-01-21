@@ -71,17 +71,11 @@ class SortTest {
 
     @Test
     void testRadixSort() {
-        final long start = System.nanoTime();
-        new RadixSort().sort(testIntegerListData);
-        final long end = System.nanoTime();
-        log.info("RadixSort 用时: " + (end - start) / 1_000_000.0 + "ms ");
+        testUtil.test(testIntegerListData, new RadixSort());
     }
 
     @Test
     void testBucketSort() {
-        final long start = System.nanoTime();
-        new BucketSort().sort(testIntegerListData);
-        final long end = System.nanoTime();
-        log.info("BucketSort 用时: " + (end - start) / 1_000_000.0 + "ms ");
+        testUtil.test(testIntegerListData, new BucketSort());
     }
 }

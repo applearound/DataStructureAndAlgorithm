@@ -6,7 +6,7 @@ import java.util.Arrays;
 /**
  * @author yz
  */
-public class MergeArraySort<E extends Comparable<E>> extends AbstractArraySort<E> {
+public class MergeArraySort<E extends Comparable<E>> extends AbstractComparableArraySort<E> {
 
     @Override
     public void sort(E[] arr) {
