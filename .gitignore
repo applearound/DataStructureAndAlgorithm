@@ -1,9 +1,19 @@
-### Intellij IDEA
+### Intellij IDEA ###
 .idea
 *.iml
 
-### OS X
+### OS X ###
 .DS_Store
 
-### Maven
+### Java ###
+*.class
+*.jar
+*.war
+
+### Maven ###
 target/
+
+### Gradle ###
+build/
+
+!.mvn/wrapper/maven-wrapper.jar

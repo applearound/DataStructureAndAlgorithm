@@ -1,3 +1,3 @@
-# DataStructureAndAlgorithm
+# Data Structure And Algorithm
 
-Peasonal Project. Only for study.
+Personal Note.
