@@ -1,23 +1,54 @@
 package me.zyz.dsal.collection.list;
 
-import java.util.Arrays;
+import java.util.*;
 
-/**
- * @author yezhou
- */
 public class ArrayList<E> implements List<E> {
-    private static final int DEFAULT_INITIAL_CAPACITY = 5;
+    private static final int DEFAULT_CAPACITY = 8;
 
-    private Object[] innerArray;
     private int size;
+    private Object[] arr;
 
     public ArrayList() {
-        this(DEFAULT_INITIAL_CAPACITY);
+        this(DEFAULT_CAPACITY);
     }
 
-    public ArrayList(int capacity) {
-        this.innerArray = new Object[capacity];
+    public ArrayList(final int capacity) {
+        if (capacity < 0) {
+            throw new IllegalArgumentException("capacity must be positive");
+        }
+
+        this.arr = new Object[capacity];
         this.size = 0;
+    }
+
+    private int capacity() {
+        return arr.length;
+    }
+
+    private void checkIndex(final int index) {
+        if (index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private void checkIndexForAdd(final int index) {
+        if (index < 0 || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private void grow() {
+        final int oldCapacity = capacity();
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        if (newCapacity < 0) {
+            newCapacity = Integer.MAX_VALUE;
+        }
+
+        if (newCapacity == oldCapacity) {
+            throw new OutOfMemoryError();
+        }
+
+        arr = Arrays.copyOf(arr, newCapacity);
     }
 
     @Override
@@ -25,80 +56,22 @@ public class ArrayList<E> implements List<E> {
         return size;
     }
 
-    public int capacity() {
-        return innerArray.length;
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     @Override
-    public void add(E e) {
-        if (size == capacity()) {
-            grow();
-        }
-
-        innerArray[size] = e;
-        size++;
-    }
-
-    @Override
-    public void add(int index, E e) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException(String.valueOf(index));
-        }
-
-        if (size == capacity()) {
-            grow();
-        }
-
-        System.arraycopy(innerArray, index, innerArray, index + 1, size - index);
-        innerArray[index] = e;
-        size++;
-    }
-
-    @Override
-    public E set(int index, E e) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException(String.valueOf(index));
-        }
-
-        E oldValue = element(index);
-        innerArray[index] = e;
-        return oldValue;
-    }
-
-    @Override
-    public E get(int index) {
-        if (index >= size()) {
-            throw new IndexOutOfBoundsException(String.valueOf(index));
-        }
-
-        return element(index);
-    }
-
-    @Override
-    public boolean remove(E e) {
-        if (e == null) {
-            for (int i = 0; i < size; ++i) {
-                if (innerArray[i] == null) {
-                    int movingCount = size - i - 1;
-                    if (movingCount > 0) {
-                        System.arraycopy(innerArray, i + 1, innerArray, i, movingCount);
-                    }
-                    // 消除引用
-                    innerArray[--size] = null;
-
+    public boolean contains(final Object o) {
+        if (Objects.isNull(o)) {
+            for (int i = 0; i < size; i++) {
+                if (Objects.isNull(arr[i])) {
                     return true;
                 }
             }
         } else {
-            for (int i = 0; i < size; ++i) {
-                if (e.equals(innerArray[i])) {
-                    int movingCount = size - i - 1;
-                    if (movingCount > 0) {
-                        System.arraycopy(innerArray, i + 1, innerArray, i, movingCount);
-                    }
-                    // 消除引用
-                    innerArray[--size] = null;
-
+            for (int i = 0; i < size; i++) {
+                if (o.equals(arr[i])) {
                     return true;
                 }
             }
@@ -108,42 +81,216 @@ public class ArrayList<E> implements List<E> {
     }
 
     @Override
+    public Iterator<E> iterator() {
+        return null;
+    }
+
+    @Override
+    public Object[] toArray() {
+        return Arrays.copyOf(arr, size);
+    }
+
+    @Override
+    public <T> T[] toArray(final T[] a) {
+        Objects.requireNonNull(a);
+
+        if (a.length < size) {
+            return (T[]) Arrays.copyOf(arr, size, a.getClass());
+        }
+
+        System.arraycopy(arr, 0, a, 0, size);
+
+        if (a.length > size) {
+            a[size] = null;
+        }
+
+        return a;
+    }
+
+    @Override
+    public boolean add(final E e) {
+        if (capacity() == size) {
+            grow();
+        }
+
+        arr[size++] = e;
+
+        return true;
+    }
+
+    @Override
+    public boolean remove(final Object o) {
+        if (Objects.isNull(o)) {
+            for (int i = 0; i < size; i++) {
+                if (Objects.isNull(arr[i])) {
+                    System.arraycopy(arr, i + 1, arr, i, size - i - 1);
+                    size -= 1;
+                    return true;
+                }
+            }
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (o.equals(arr[i])) {
+                    System.arraycopy(arr, i + 1, arr, i, size - i - 1);
+                    size -= 1;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(final Collection<?> c) {
+        Objects.requireNonNull(c);
+
+        for (final Object o : c) {
+            if (!contains(o)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean addAll(final Collection<? extends E> c) {
+        Objects.requireNonNull(c);
+
+        if (c.isEmpty()) {
+            return false;
+        }
+
+        for (final E e : c) {
+            add(e);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean addAll(final int index, final Collection<? extends E> c) {
+        checkIndexForAdd(index);
+        Objects.requireNonNull(c);
+
+        if (c.isEmpty()) {
+            return false;
+        }
+
+        //TODO
+        for (final E e : c) {
+            add(e);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean removeAll(final Collection<?> c) {
+        Objects.requireNonNull(c);
+
+        if (c.isEmpty()) {
+            return false;
+        }
+
+        boolean isRemoved = false;
+        for (final Object o : c) {
+            if (remove(o)) {
+                isRemoved = true;
+            }
+        }
+
+        return isRemoved;
+    }
+
+    @Override
+    public boolean retainAll(final Collection<?> c) {
+        Objects.requireNonNull(c);
+
+        if (c.isEmpty()) {
+            return false;
+        }
+
+        int idx = 0;
+        int i = 0;
+        while (i < size) {
+            if (c.contains(arr[i])) {
+                arr[idx++] = arr[i];
+            }
+            i += 1;
+        }
+
+        for (int j = idx; j < size; j++) {
+            arr[j] = null;
+        }
+
+        size = idx;
+
+        return idx != i;
+    }
+
+    @Override
     public void clear() {
-        for (int to = size, i = size = 0; i < to; i++) {
-            innerArray[i] = null;
-        }
+        arr = new Object[0];
+        size = 0;
     }
 
     @Override
-    public E remove(int index) {
-        if (index >= size) {
-            throw new IndexOutOfBoundsException(String.valueOf(index));
-        }
+    public E get(final int index) {
+        checkIndex(index);
 
-        E removingElement = element(index);
-        int movingCount = size - index - 1;
-
-        // 减少 arraycopy 的调用，比如删除的正好是最后一个元素
-        if (movingCount > 0) {
-            System.arraycopy(innerArray, index + 1, innerArray, index, movingCount);
-        }
-        // 消除引用
-        innerArray[--size] = null;
-
-        return removingElement;
+        return (E) arr[index];
     }
 
     @Override
-    public int indexOf(E e) {
-        if (e == null) {
-            for (int i = 0; i < size; ++i) {
-                if (innerArray[i] == null) {
+    public E set(final int index, final E element) {
+        checkIndex(index);
+
+        final E oldValue = (E) arr[index];
+
+        arr[index] = element;
+
+        return oldValue;
+    }
+
+    @Override
+    public void add(final int index, final E element) {
+        checkIndexForAdd(index);
+
+        if (size == capacity()) {
+            grow();
+        }
+
+        System.arraycopy(arr, index, arr, index + 1, size - index);
+        arr[index] = element;
+        size += 1;
+    }
+
+    @Override
+    public E remove(final int index) {
+        checkIndex(index);
+
+        final E oldValue = (E) arr[index];
+
+        System.arraycopy(arr, index + 1, arr, index, size - index - 1);
+
+        size -= 1;
+
+        return oldValue;
+    }
+
+    @Override
+    public int indexOf(final Object o) {
+        if (Objects.isNull(o)) {
+            for (int i = 0; i < size; i++) {
+                if (Objects.isNull(arr[i])) {
                     return i;
                 }
-             }
+            }
         } else {
-            for (int i = 0; i < size; ++i) {
-                if (e.equals(innerArray[i])) {
+            for (int i = 0; i < size; i++) {
+                if (o.equals(arr[i])) {
                     return i;
                 }
             }
@@ -153,16 +300,16 @@ public class ArrayList<E> implements List<E> {
     }
 
     @Override
-    public int lastIndexOf(E e) {
-        if (e == null) {
-            for (int i = size - 1; i >= 0; --i) {
-                if (innerArray[i] == null) {
+    public int lastIndexOf(Object o) {
+        if (Objects.isNull(o)) {
+            for (int i = size - 1; i >= 0; i--) {
+                if (Objects.isNull(arr[i])) {
                     return i;
                 }
             }
         } else {
-            for (int i = size - 1; i >= 0; --i) {
-                if (e.equals(innerArray[i])) {
+            for (int i = size - 1; i >= 0; i--) {
+                if (o.equals(arr[i])) {
                     return i;
                 }
             }
@@ -172,23 +319,17 @@ public class ArrayList<E> implements List<E> {
     }
 
     @Override
-    public boolean contains(E e) {
-        return indexOf(e) >= 0;
+    public ListIterator<E> listIterator() {
+        return null;
     }
 
     @Override
-    public boolean isEmpty() {
-        return size == 0;
+    public ListIterator<E> listIterator(int index) {
+        return null;
     }
 
-    private void grow() {
-        //TODO 数据溢出
-        int oldCapacity = innerArray.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
-        innerArray = Arrays.copyOf(innerArray, newCapacity);
-    }
-
-    private E element(int index) {
-        return (E) innerArray[index];
+    @Override
+    public List<E> subList(int fromIndex, int toIndex) {
+        return null;
     }
 }

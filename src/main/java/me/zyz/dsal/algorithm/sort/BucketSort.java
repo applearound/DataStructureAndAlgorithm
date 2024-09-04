@@ -44,7 +44,6 @@ public class BucketSort implements ArraySort {
 
     @Override
     public void sort(short[] array) {
-
     }
 
     @Override
@@ -59,7 +58,6 @@ public class BucketSort implements ArraySort {
 
     @Override
     public void sort(long[] array) {
-
     }
 
     @Override

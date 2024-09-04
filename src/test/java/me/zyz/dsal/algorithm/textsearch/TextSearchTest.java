@@ -2,6 +2,8 @@ package me.zyz.dsal.algorithm.textsearch;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class TextSearchTest {
 
     @Test

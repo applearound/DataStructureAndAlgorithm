@@ -7,14 +7,14 @@ import java.net.URL;
 import java.util.Objects;
 
 @Slf4j
-class AdjMatrixTest {
+class AdjacencyListTest {
     @Test
     void test() {
         final URL resource = this.getClass().getClassLoader().getResource("graph.txt");
 
         assert Objects.nonNull(resource);
 
-        final AdjMatrix adjMatrix = new AdjMatrix(resource.getPath());
-        log.debug("matrix {}", adjMatrix);
+        final AdjacencyList adjacencyList = new AdjacencyList(resource.getPath());
+        log.debug("adjacencyList {}", adjacencyList);
     }
 }

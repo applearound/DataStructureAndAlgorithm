@@ -101,4 +101,25 @@ public final class MathUtil {
         }
         return Math.multiplyExact(b, a / gcd(a, b));
     }
+
+    static int x = 0;
+    static int y = 0;
+
+    public static void main(String[] args) throws InterruptedException {
+        var t1 = new Thread(() -> {
+            x = 1;
+            System.out.println(y);
+        });
+
+        var t2 = new Thread(() -> {
+            y = 1;
+            System.out.println(x);
+        });
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+    }
 }
