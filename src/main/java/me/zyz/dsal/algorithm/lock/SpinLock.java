@@ -4,7 +4,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class SpinLock {
     private static final long UNLOCKED = 0;
-    // private static final long LOCKED   = 1;
 
     private final AtomicLong lock;
 
@@ -16,12 +15,15 @@ public class SpinLock {
         return lock.get() == Thread.currentThread().threadId();
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     public void lock() {
         if (holding()) {
             throw new IllegalMonitorStateException("重复获取锁");
         }
 
-        while (!lock.compareAndSet(UNLOCKED, Thread.currentThread().threadId())) ;
+        while (!lock.compareAndSet(UNLOCKED, Thread.currentThread().threadId())) {
+            // do nothing, just spin
+        }
     }
 
     public void unlock() {
