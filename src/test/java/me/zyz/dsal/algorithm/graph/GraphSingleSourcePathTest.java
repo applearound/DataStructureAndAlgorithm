@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.net.URL;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @Slf4j
 class GraphSingleSourcePathTest {
     @Test

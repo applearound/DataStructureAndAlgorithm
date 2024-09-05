@@ -4,7 +4,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class HanoiMachine {
+public class HanoiMachine implements Hanoi {
     // 栈
     private final Frame[] stack;
 
@@ -57,6 +57,7 @@ public class HanoiMachine {
         return !isEmpty();
     }
 
+    @Override
     public int move() {
         while (isNotEmpty()) {
             final Frame topFrame = peekTop();

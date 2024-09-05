@@ -1,25 +1,34 @@
 package me.zyz.dsal.hanoi;
 
 import lombok.extern.slf4j.Slf4j;
+import me.zyz.dsal.algorithm.hanoi.Hanoi;
 import me.zyz.dsal.algorithm.hanoi.HanoiClassic;
 import me.zyz.dsal.algorithm.hanoi.HanoiMachine;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class HanoiTest {
-    @Test
-    void testClassic() {
-        final HanoiClassic hanoiClassic = new HanoiClassic();
 
-        final int count = hanoiClassic.move(3, "A", "B", "C");
-        log.info("共需要移动 {} 次", count);
+    static Stream<Arguments> hanoiProvider() {
+        return Stream.of(
+                Arguments.of(new HanoiClassic(3, "A", "C", "B"), 7),
+                Arguments.of(new HanoiMachine(3, "A", "C", "B"), 7)
+        );
     }
 
-    @Test
-    void testHanoiMachine() {
-        final HanoiMachine hanoiMachine = new HanoiMachine(3, "A", "B", "C");
+    @ParameterizedTest
+    @MethodSource("hanoiProvider")
+    void testHanoi(final Hanoi hanoi, final int moveCount) {
+        final int count = hanoi.move();
 
-        final int count = hanoiMachine.move();
-        log.info("共需要移动 {} 次", count);
+        log.info("{} 测试类共需要移动 {} 次", hanoi.getClass().getSimpleName(), count);
+
+        assertEquals(moveCount, count);
     }
 }

@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.VarHandle;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @Slf4j
 class SpinLockTest {
     int noLockValue = 0;

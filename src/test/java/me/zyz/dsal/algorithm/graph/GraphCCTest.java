@@ -8,8 +8,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @Slf4j
 class GraphCCTest {
     @Test

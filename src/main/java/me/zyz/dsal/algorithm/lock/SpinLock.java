@@ -1,22 +1,19 @@
 package me.zyz.dsal.algorithm.lock;
 
-import java.lang.invoke.VarHandle;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SpinLock {
     private static final long UNLOCKED = 0;
-    private static final long LOCKED   = 1;
+    // private static final long LOCKED   = 1;
 
     private final AtomicLong lock;
-    private       long       lockThread;
 
     public SpinLock() {
-        this.lock       = new AtomicLong(UNLOCKED);
-        this.lockThread = 0L;
+        this.lock = new AtomicLong(UNLOCKED);
     }
 
     private boolean holding() {
-        return lock.get() == LOCKED && lockThread == Thread.currentThread().threadId();
+        return lock.get() == Thread.currentThread().threadId();
     }
 
     public void lock() {
@@ -24,19 +21,13 @@ public class SpinLock {
             throw new IllegalMonitorStateException("重复获取锁");
         }
 
-        while (!lock.compareAndSet(UNLOCKED, LOCKED)) ;
-
-        lockThread = Thread.currentThread().threadId();
+        while (!lock.compareAndSet(UNLOCKED, Thread.currentThread().threadId())) ;
     }
 
     public void unlock() {
         if (!holding()) {
             throw new IllegalMonitorStateException("非锁持有线程");
         }
-
-        lockThread = 0;
-
-        VarHandle.fullFence();
 
         lock.set(UNLOCKED);
     }
