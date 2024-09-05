@@ -1,7 +1,6 @@
-package me.zyz.dsal.lock;
+package me.zyz.dsal.algorithm.lock;
 
 import lombok.extern.slf4j.Slf4j;
-import me.zyz.dsal.algorithm.lock.SpinLock;
 import org.junit.jupiter.api.Test;
 
 @Slf4j

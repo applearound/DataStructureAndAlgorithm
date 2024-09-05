@@ -8,23 +8,27 @@ class TextSearchTest {
 
     @Test
     public void roughSearch() {
-        String text = "121231234";
+        final SubStringSearch searchMethod = new RoughSubStringSearch();
 
-        assertEquals(2, TextSearch.roughSearch(text, "123"));
-        assertEquals(0, TextSearch.roughSearch(text, "12"));
-        assertEquals(6, TextSearch.roughSearch(text, "234"));
-        assertEquals(4, TextSearch.roughSearch(text, "31"));
-        assertEquals(5, TextSearch.roughSearch(text, "1234"));
+        final String text = "121231234";
+
+        assertEquals(2, searchMethod.findFirst(text, "123"));
+        assertEquals(0, searchMethod.findFirst(text, "12"));
+        assertEquals(6, searchMethod.findFirst(text, "234"));
+        assertEquals(4, searchMethod.findFirst(text, "31"));
+        assertEquals(5, searchMethod.findFirst(text, "1234"));
     }
 
     @Test
     public void kmpSearch() {
-        String text = "121231234";
+        final SubStringSearch searchMethod = new KmpSubStringSearch();
 
-        assertEquals(2, TextSearch.kmpSearch(text, "123"));
-        assertEquals(0, TextSearch.kmpSearch(text, "12"));
-        assertEquals(6, TextSearch.kmpSearch(text, "234"));
-        assertEquals(4, TextSearch.kmpSearch(text, "31"));
-        assertEquals(5, TextSearch.kmpSearch(text, "1234"));
+        final String text = "121231234";
+
+        assertEquals(2, searchMethod.findFirst(text, "123"));
+        assertEquals(0, searchMethod.findFirst(text, "12"));
+        assertEquals(6, searchMethod.findFirst(text, "234"));
+        assertEquals(4, searchMethod.findFirst(text, "31"));
+        assertEquals(5, searchMethod.findFirst(text, "1234"));
     }
 }

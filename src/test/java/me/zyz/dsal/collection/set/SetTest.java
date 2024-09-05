@@ -1,7 +1,6 @@
-package me.zyz.dsal.set;
+package me.zyz.dsal.collection.set;
 
 import lombok.extern.slf4j.Slf4j;
-import me.zyz.dsal.collection.set.BstSet;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -4,8 +4,8 @@ package me.zyz.dsal.algorithm.nqueen;
  *
  */
 public class NQueen {
-    private final int size;
-    private final boolean[][] pan;
+    private final int         size;
+    private final boolean[][] board;
 
     private int count = 0;
 
@@ -13,8 +13,8 @@ public class NQueen {
         if (size <= 0) {
             throw new IllegalArgumentException("size");
         }
-        this.size = size;
-        this.pan = new boolean[size][size];
+        this.size  = size;
+        this.board = new boolean[size][size];
     }
 
     public int calculate() {
@@ -34,9 +34,9 @@ public class NQueen {
         boolean isSet = false;
         for (int j = 0; j < size; j++) {
             if (check(i, j)) {
-                pan[i][j] = true;
-                isSet = cal(i + 1);
-                pan[i][j] = false;
+                board[i][j] = true;
+                isSet       = cal(i + 1);
+                board[i][j] = false;
             }
         }
         return isSet;
@@ -48,13 +48,13 @@ public class NQueen {
 
     private boolean check(final int i, final int j) {
         for (int k = 0; k < size; k++) {
-            if (pan[i][k]) {
+            if (board[i][k]) {
                 return false;
             }
         }
 
         for (int k = 0; k < size; k++) {
-            if (pan[k][j]) {
+            if (board[k][j]) {
                 return false;
             }
         }
@@ -62,7 +62,7 @@ public class NQueen {
         int tempI = i;
         int tempJ = j;
         for (; checkInBound(tempI, tempJ); tempI--, tempJ--) {
-            if (pan[tempI][tempJ]) {
+            if (board[tempI][tempJ]) {
                 return false;
             }
         }
@@ -70,7 +70,7 @@ public class NQueen {
         tempI = i;
         tempJ = j;
         for (; checkInBound(tempI, tempJ); tempI++, tempJ++) {
-            if (pan[tempI][tempJ]) {
+            if (board[tempI][tempJ]) {
                 return false;
             }
         }
@@ -78,7 +78,7 @@ public class NQueen {
         tempI = i;
         tempJ = j;
         for (; checkInBound(tempI, tempJ); tempI++, tempJ--) {
-            if (pan[tempI][tempJ]) {
+            if (board[tempI][tempJ]) {
                 return false;
             }
         }
@@ -86,7 +86,7 @@ public class NQueen {
         tempI = i;
         tempJ = j;
         for (; checkInBound(tempI, tempJ); tempI--, tempJ++) {
-            if (pan[tempI][tempJ]) {
+            if (board[tempI][tempJ]) {
                 return false;
             }
         }

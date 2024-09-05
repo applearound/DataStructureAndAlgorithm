@@ -1,25 +1,23 @@
-package me.zyz.dsal.hanoi;
+package me.zyz.dsal.algorithm.hanoi;
 
 import lombok.extern.slf4j.Slf4j;
-import me.zyz.dsal.algorithm.hanoi.Hanoi;
-import me.zyz.dsal.algorithm.hanoi.HanoiClassic;
-import me.zyz.dsal.algorithm.hanoi.HanoiMachine;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
 class HanoiTest {
 
     static Stream<Arguments> hanoiProvider() {
-        return Stream.of(
-                Arguments.of(new HanoiClassic(3, "A", "C", "B"), 7),
-                Arguments.of(new HanoiMachine(3, "A", "C", "B"), 7)
-        );
+        return IntStream.range(1, 10)
+                .mapToObj(i ->
+                        Arguments.of(new HanoiClassic(i, "A", "C", "B"), (1 << i) - 1)
+                );
     }
 
     @ParameterizedTest

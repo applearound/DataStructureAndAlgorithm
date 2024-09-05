@@ -1,11 +1,16 @@
 package me.zyz.dsal.util;
 
+import java.security.SecureRandom;
 import java.util.Comparator;
 
 /**
  * @author yz
  */
 public class NnFinder {
+    private static final SecureRandom random = new SecureRandom();
+
+    private NnFinder() {
+    }
 
     /**
      * 寻找数组中第n大的元素
@@ -49,7 +54,7 @@ public class NnFinder {
     }
 
     private static <E extends Comparable<E>> int partition(E[] arr, int low, int high, Comparator<E> comparator) {
-        ArrayUtil.swap(arr, low, low + SingletonRandom.getInstance().nextInt(high - low + 1));
+        ArrayUtil.swap(arr, low, low + random.nextInt(high - low + 1));
         E pivot = arr[low];
 
         // [areaP:p][areaLP:<p][areaGP:>=p][areaUR:unread]

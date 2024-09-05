@@ -3,6 +3,8 @@ package me.zyz.dsal.util;
 import java.util.Arrays;
 
 /**
+ * 计算逆序对数量
+ *
  * @author yz
  */
 public class InversionCounter {
@@ -28,7 +30,7 @@ public class InversionCounter {
 
     private static <E extends Comparable<E>> int mergeCount(E[] arr, int low, int mid, int high) {
         int count = 0;
-        E[] aux = Arrays.copyOfRange(arr, low, high + 1);
+        E[] aux   = Arrays.copyOfRange(arr, low, high + 1);
 
         int i = low;
         int j = mid + 1;

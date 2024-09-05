@@ -1,6 +1,6 @@
 package me.zyz.dsal.util;
 
-import java.util.Objects;
+import lombok.NonNull;
 
 /**
  * @author yz
@@ -16,15 +16,13 @@ public final class ArrayUtil {
      * @param idx1  索引1
      * @param idx2  索引2
      */
-    public static void swap(final byte[] array, final int idx1, final int idx2) {
-        Objects.requireNonNull(array, "array");
-
+    public static void swap(@NonNull final byte[] array, final int idx1, final int idx2) {
         if (idx1 < 0 || idx1 >= array.length) {
-            throw new IndexOutOfBoundsException("idx1");
+            throw new IndexOutOfBoundsException(idx1);
         }
 
         if (idx2 < 0 || idx2 >= array.length) {
-            throw new IndexOutOfBoundsException("idx2");
+            throw new IndexOutOfBoundsException(idx2);
         }
 
         if (idx1 == idx2) {
@@ -43,15 +41,13 @@ public final class ArrayUtil {
      * @param idx1  索引1
      * @param idx2  索引2
      */
-    public static void swap(final short[] array, final int idx1, final int idx2) {
-        Objects.requireNonNull(array, "array");
-
+    public static void swap(@NonNull final short[] array, final int idx1, final int idx2) {
         if (idx1 < 0 || idx1 >= array.length) {
-            throw new IndexOutOfBoundsException("idx1");
+            throw new IndexOutOfBoundsException(idx1);
         }
 
         if (idx2 < 0 || idx2 >= array.length) {
-            throw new IndexOutOfBoundsException("idx2");
+            throw new IndexOutOfBoundsException(idx2);
         }
 
         if (idx1 == idx2) {
@@ -70,15 +66,13 @@ public final class ArrayUtil {
      * @param idx1  索引1
      * @param idx2  索引2
      */
-    public static void swap(final char[] array, final int idx1, final int idx2) {
-        Objects.requireNonNull(array, "array");
-
+    public static void swap(@NonNull final char[] array, final int idx1, final int idx2) {
         if (idx1 < 0 || idx1 >= array.length) {
-            throw new IndexOutOfBoundsException("idx1");
+            throw new IndexOutOfBoundsException(idx1);
         }
 
         if (idx2 < 0 || idx2 >= array.length) {
-            throw new IndexOutOfBoundsException("idx2");
+            throw new IndexOutOfBoundsException(idx2);
         }
 
         if (idx1 == idx2) {
@@ -97,15 +91,13 @@ public final class ArrayUtil {
      * @param idx1  索引1
      * @param idx2  索引2
      */
-    public static void swap(final int[] array, final int idx1, final int idx2) {
-        Objects.requireNonNull(array, "array");
-
+    public static void swap(@NonNull final int[] array, final int idx1, final int idx2) {
         if (idx1 < 0 || idx1 >= array.length) {
-            throw new IndexOutOfBoundsException("idx1");
+            throw new IndexOutOfBoundsException(idx1);
         }
 
         if (idx2 < 0 || idx2 >= array.length) {
-            throw new IndexOutOfBoundsException("idx2");
+            throw new IndexOutOfBoundsException(idx2);
         }
 
         if (idx1 == idx2) {
@@ -124,15 +116,13 @@ public final class ArrayUtil {
      * @param idx1  索引1
      * @param idx2  索引2
      */
-    public static void swap(final long[] array, final int idx1, final int idx2) {
-        Objects.requireNonNull(array, "array");
-
+    public static void swap(@NonNull final long[] array, final int idx1, final int idx2) {
         if (idx1 < 0 || idx1 >= array.length) {
-            throw new IndexOutOfBoundsException("idx1");
+            throw new IndexOutOfBoundsException(idx1);
         }
 
         if (idx2 < 0 || idx2 >= array.length) {
-            throw new IndexOutOfBoundsException("idx2");
+            throw new IndexOutOfBoundsException(idx2);
         }
 
         if (idx1 == idx2) {
@@ -151,15 +141,13 @@ public final class ArrayUtil {
      * @param idx1  索引1
      * @param idx2  索引2
      */
-    public static void swap(final float[] array, final int idx1, final int idx2) {
-        Objects.requireNonNull(array, "array");
-
+    public static void swap(@NonNull final float[] array, final int idx1, final int idx2) {
         if (idx1 < 0 || idx1 >= array.length) {
-            throw new IndexOutOfBoundsException("idx1");
+            throw new IndexOutOfBoundsException(idx1);
         }
 
         if (idx2 < 0 || idx2 >= array.length) {
-            throw new IndexOutOfBoundsException("idx2");
+            throw new IndexOutOfBoundsException(idx2);
         }
 
         if (idx1 == idx2) {
@@ -178,15 +166,13 @@ public final class ArrayUtil {
      * @param idx1  索引1
      * @param idx2  索引2
      */
-    public static void swap(final double[] array, final int idx1, final int idx2) {
-        Objects.requireNonNull(array, "array");
-
+    public static void swap(@NonNull final double[] array, final int idx1, final int idx2) {
         if (idx1 < 0 || idx1 >= array.length) {
-            throw new IndexOutOfBoundsException("idx1");
+            throw new IndexOutOfBoundsException(idx1);
         }
 
         if (idx2 < 0 || idx2 >= array.length) {
-            throw new IndexOutOfBoundsException("idx2");
+            throw new IndexOutOfBoundsException(idx2);
         }
 
         if (idx1 == idx2) {
@@ -205,15 +191,13 @@ public final class ArrayUtil {
      * @param idx1  索引1
      * @param idx2  索引2
      */
-    public static void swap(final boolean[] array, final int idx1, final int idx2) {
-        Objects.requireNonNull(array, "array");
-
+    public static void swap(@NonNull final boolean[] array, final int idx1, final int idx2) {
         if (idx1 < 0 || idx1 >= array.length) {
-            throw new IndexOutOfBoundsException("idx1");
+            throw new IndexOutOfBoundsException(idx1);
         }
 
         if (idx2 < 0 || idx2 >= array.length) {
-            throw new IndexOutOfBoundsException("idx2");
+            throw new IndexOutOfBoundsException(idx2);
         }
 
         if (idx1 == idx2) {
@@ -233,15 +217,13 @@ public final class ArrayUtil {
      * @param idx2  索引2
      * @param <E>   元素类型
      */
-    public static <E> void swap(final E[] array, final int idx1, final int idx2) {
-        Objects.requireNonNull(array, "array");
-
+    public static <E> void swap(@NonNull final E[] array, final int idx1, final int idx2) {
         if (idx1 < 0 || idx1 >= array.length) {
-            throw new IndexOutOfBoundsException("idx1");
+            throw new IndexOutOfBoundsException(idx1);
         }
 
         if (idx2 < 0 || idx2 >= array.length) {
-            throw new IndexOutOfBoundsException("idx2");
+            throw new IndexOutOfBoundsException(idx2);
         }
 
         if (idx1 == idx2) {
@@ -253,49 +235,36 @@ public final class ArrayUtil {
         array[idx2] = temp;
     }
 
-    public static int binSearch(final byte[] array, final byte val) {
-        checkBinSearchNull(array, val);
+    public static int binSearch(@NonNull final byte[] array, final byte val) {
         return binSearch0(array, val, 0, array.length - 1);
     }
 
-    public static int binSearch(final short[] array, final short val) {
-        checkBinSearchNull(array, val);
+    public static int binSearch(@NonNull final short[] array, final short val) {
         return binSearch0(array, val, 0, array.length - 1);
     }
 
-    public static int binSearch(final char[] array, final char val) {
-        checkBinSearchNull(array, val);
+    public static int binSearch(@NonNull final char[] array, final char val) {
         return binSearch0(array, val, 0, array.length - 1);
     }
 
-    public static int binSearch(final int[] array, final int val) {
-        checkBinSearchNull(array, val);
+    public static int binSearch(@NonNull final int[] array, final int val) {
         return binSearch0(array, val, 0, array.length - 1);
     }
 
-    public static int binSearch(final long[] array, final long val) {
-        checkBinSearchNull(array, val);
+    public static int binSearch(@NonNull final long[] array, final long val) {
         return binSearch0(array, val, 0, array.length - 1);
     }
 
-    public static int binSearch(final float[] array, final float val) {
-        checkBinSearchNull(array, val);
+    public static int binSearch(@NonNull final float[] array, final float val) {
         return binSearch0(array, val, 0, array.length - 1);
     }
 
-    public static int binSearch(final double[] array, final double val) {
-        checkBinSearchNull(array, val);
+    public static int binSearch(@NonNull final double[] array, final double val) {
         return binSearch0(array, val, 0, array.length - 1);
     }
 
-    public static <E extends Comparable<E>> int binSearch(final E[] array, final E val) {
-        checkBinSearchNull(array, val);
+    public static <E extends Comparable<E>> int binSearch(@NonNull final E[] array, @NonNull final E val) {
         return binSearch0(array, val, 0, array.length - 1);
-    }
-
-    private static void checkBinSearchNull(final Object array, final Object val) {
-        Objects.requireNonNull(array, "array");
-        Objects.requireNonNull(val, "val");
     }
 
     private static int binSearch0(final byte[] arr, final byte val, final int l, final int r) {
@@ -303,7 +272,7 @@ public final class ArrayUtil {
             return -1;
         }
 
-        final int midx = l + ((r - l) >> 1);
+        final int  midx = l + ((r - l) >> 1);
         final byte mval = arr[midx];
 
         final int cmp = val - mval;
@@ -321,7 +290,7 @@ public final class ArrayUtil {
             return -1;
         }
 
-        final int midx = l + ((r - l) >> 1);
+        final int   midx = l + ((r - l) >> 1);
         final short mval = arr[midx];
 
         final int cmp = val - mval;
@@ -339,7 +308,7 @@ public final class ArrayUtil {
             return -1;
         }
 
-        final int midx = l + ((r - l) >> 1);
+        final int  midx = l + ((r - l) >> 1);
         final char mval = arr[midx];
 
         final int cmp = val - mval;
@@ -360,7 +329,7 @@ public final class ArrayUtil {
         final int midx = l + ((r - l) >> 1);
         final int mval = arr[midx];
 
-        final int cmp = val < mval ? -1 : val == mval ? 0 : 1;
+        final int cmp = Integer.compare(val, mval);
         if (cmp < 0) {
             return binSearch0(arr, val, l, midx - 1);
         } else if (cmp > 0) {
@@ -375,10 +344,10 @@ public final class ArrayUtil {
             return -1;
         }
 
-        final int midx = l + ((r - l) >> 1);
+        final int  midx = l + ((r - l) >> 1);
         final long mval = arr[midx];
 
-        final int cmp = val < mval ? -1 : val == mval ? 0 : 1;
+        final int cmp = Long.compare(val, mval);
         if (cmp < 0) {
             return binSearch0(arr, val, l, midx - 1);
         } else if (cmp > 0) {
@@ -393,7 +362,7 @@ public final class ArrayUtil {
             return -1;
         }
 
-        final int midx = l + ((r - l) >> 1);
+        final int   midx = l + ((r - l) >> 1);
         final float mval = arr[midx];
 
         final int cmp = Float.compare(val, mval);
@@ -411,7 +380,7 @@ public final class ArrayUtil {
             return -1;
         }
 
-        final int midx = l + ((r - l) >> 1);
+        final int    midx = l + ((r - l) >> 1);
         final double mval = arr[midx];
 
         final int cmp = Double.compare(val, mval);
@@ -430,7 +399,7 @@ public final class ArrayUtil {
         }
 
         final int midx = l + ((r - l) >> 1);
-        final E mval = arr[midx];
+        final E   mval = arr[midx];
 
         int cmp = val.compareTo(mval);
         if (cmp < 0) {
@@ -442,9 +411,7 @@ public final class ArrayUtil {
         }
     }
 
-    public void sortBooleanArray(final boolean[] array) {
-        Objects.requireNonNull(array, "array");
-
+    public void sortBooleanArray(@NonNull final boolean[] array) {
         if (array.length <= 1) {
             return;
         }
@@ -452,9 +419,7 @@ public final class ArrayUtil {
         sortBooleanArray(array, 0, array.length - 1, true);
     }
 
-    public void sortBooleanArrayDescending(final boolean[] array) {
-        Objects.requireNonNull(array, "array");
-
+    public void sortBooleanArrayDescending(@NonNull final boolean[] array) {
         if (array.length <= 1) {
             return;
         }
@@ -462,19 +427,17 @@ public final class ArrayUtil {
         sortBooleanArray(array, 0, array.length - 1, false);
     }
 
-    public void sortBooleanArray(final boolean[] array, final int startIdx, final int endIdx) {
-        Objects.requireNonNull(array, "array");
-
+    public void sortBooleanArray(@NonNull final boolean[] array, final int startIdx, final int endIdx) {
         if (startIdx < 0 || startIdx >= array.length) {
-            throw new IndexOutOfBoundsException("startIdx");
+            throw new IndexOutOfBoundsException(startIdx);
         }
 
         if (endIdx < 0 || endIdx >= array.length) {
-            throw new IndexOutOfBoundsException("endIdx");
+            throw new IndexOutOfBoundsException(endIdx);
         }
 
         if (startIdx > endIdx) {
-            throw new IllegalArgumentException("startIdx should less than or equal to endIdx");
+            throw new IllegalArgumentException("start index greater than end index");
         }
 
         if (startIdx == endIdx) {
@@ -484,15 +447,13 @@ public final class ArrayUtil {
         sortBooleanArray(array, startIdx, endIdx, true);
     }
 
-    public void sortBooleanArrayDescending(final boolean[] array, final int startIdx, final int endIdx) {
-        Objects.requireNonNull(array, "array");
-
+    public void sortBooleanArrayDescending(@NonNull final boolean[] array, final int startIdx, final int endIdx) {
         if (startIdx < 0 || startIdx >= array.length) {
-            throw new IndexOutOfBoundsException("startIdx");
+            throw new IndexOutOfBoundsException(startIdx);
         }
 
         if (endIdx < 0 || endIdx >= array.length) {
-            throw new IndexOutOfBoundsException("endIdx");
+            throw new IndexOutOfBoundsException(endIdx);
         }
 
         if (startIdx > endIdx) {
@@ -506,16 +467,18 @@ public final class ArrayUtil {
         sortBooleanArray(array, startIdx, endIdx, false);
     }
 
-    private void sortBooleanArray(final boolean[] array, final int startIdx, final int endIdx, final boolean theBigger) {
-        for (int i = startIdx, count = 0; i <= endIdx; ++i) {
-            if (array[i] != theBigger) {
-                final int cIdx = startIdx + count;
-                array[cIdx] = !theBigger;
-                if (i != cIdx) {
-                    array[i] = theBigger;
-                }
-                ++count;
+    private void sortBooleanArray(final boolean[] array, final int begin, final int end, final boolean theBigger) {
+        for (int i = begin, count = 0; i <= end; ++i) {
+            if (array[i] == theBigger) {
+                continue;
             }
+
+            final int cIdx = begin + count;
+            array[cIdx] = !theBigger;
+            if (i != cIdx) {
+                array[i] = theBigger;
+            }
+            count++;
         }
     }
 }
