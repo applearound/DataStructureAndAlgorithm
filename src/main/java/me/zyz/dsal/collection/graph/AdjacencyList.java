@@ -9,24 +9,30 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class AdjacencyList {
-    private final int vertex;
-    private final int edge;
+    private final int            vertex;
+    private final int            edge;
     private final Set<Integer>[] adj;
 
+    /**
+     * Build graph from disk file
+     *
+     * @param filePath file path
+     */
     public AdjacencyList(final String filePath) {
-        try (final BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath))) {
+        try (final BufferedReader bufferedReader =
+                     new BufferedReader(new FileReader(filePath))) {
             final String firstLine = bufferedReader.readLine();
 
             try (final Scanner scanner = new Scanner(firstLine)) {
                 final int vertex = scanner.nextInt();
                 if (vertex < 0) {
-                    throw new RuntimeException("negative vertx");
+                    throw new IllegalArgumentException("vertx");
                 }
                 this.vertex = vertex;
 
                 final int edge = scanner.nextInt();
                 if (edge < 0) {
-                    throw new RuntimeException("negative edge");
+                    throw new IllegalArgumentException("edge");
                 }
                 this.edge = edge;
             }
@@ -41,14 +47,14 @@ public class AdjacencyList {
 
                 try (final Scanner scanner = new Scanner(edgeInfoLine)) {
                     final int vertexFrom = validate(scanner.nextInt());
-                    final int vertexTo = validate(scanner.nextInt());
+                    final int vertexTo   = validate(scanner.nextInt());
 
                     if (vertexFrom == vertexTo) {
-                        throw new IllegalArgumentException("Self loop");
+                        throw new IllegalArgumentException("self loop detected: " + vertexFrom);
                     }
 
                     if (adj[vertexFrom].contains(vertexTo)) {
-                        throw new IllegalArgumentException("Parallel");
+                        throw new IllegalArgumentException(String.format("parallel edge detected: %d to %d", vertexFrom, vertexTo));
                     }
 
                     adj[vertexFrom].add(vertexTo);
@@ -70,26 +76,61 @@ public class AdjacencyList {
         return vertex;
     }
 
+    /**
+     * Return if this graph contains vertex v
+     *
+     * @param v vertex
+     * @return true if this graph contains vertex v, else false
+     */
     public boolean contains(final int v) {
         return v >= 0 && v < vertex;
     }
 
+    /**
+     * Return the number of vertex
+     *
+     * @return the number of vertex
+     */
     public int vertex() {
         return vertex;
     }
 
+    /**
+     * Return the number of edge
+     *
+     * @return the number of edge
+     */
     public int edge() {
         return edge;
     }
 
+    /**
+     * Return if there is an edge from vertex from to vertex to
+     *
+     * @param from start vertex
+     * @param to   target vertex
+     * @return true if there is an edge from vertex from to vertex to, else false
+     */
     public boolean hasEdge(final int from, final int to) {
         return adj[validate(from)].contains(validate(to));
     }
 
+    /**
+     * Return the adjacent vertexes of vertex v
+     *
+     * @param v vertex
+     * @return the adjacent vertexes of vertex v
+     */
     public Set<Integer> adjList(final int v) {
         return Collections.unmodifiableSet(adj[validate(v)]);
     }
 
+    /**
+     * Return the degree of vertex v
+     *
+     * @param v vertex
+     * @return the degree of vertex v
+     */
     public int degree(final int v) {
         return adj[validate(v)].size();
     }
@@ -98,14 +139,10 @@ public class AdjacencyList {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
 
-        sb.append(String.format("V = %d, E = %d%n", vertex, edge));
+        sb.append(String.format("V = %d, E = %d\n", vertex, edge));
         for (int i = 0; i < vertex; i++) {
-            sb.append(String.format("%d : ", i));
-            adj[i].forEach(e -> {
-                sb.append(e);
-                sb.append(' ');
-            });
-            sb.deleteCharAt(sb.length() - 1);
+            sb.append(String.format("%d: ", i));
+            sb.append(String.join(" ", adj[i].stream().map(String::valueOf).toList()));
             sb.append('\n');
         }
 

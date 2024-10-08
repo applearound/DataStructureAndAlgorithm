@@ -1,9 +1,8 @@
 package me.zyz.dsal.collection.map;
 
-import java.util.Collection;
+import lombok.NonNull;
+
 import java.util.Comparator;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 1. 每个节点不是红节点就是黑节点
@@ -16,30 +15,50 @@ import java.util.Set;
  *
  * @author yz
  */
-public class RbTreeMap<K, V> implements Map<K, V> {
-    private static final Comparator DEFAULT_COMPARATOR = (final Object k1, final Object k2) -> ((Comparable) k1).compareTo(k2);
-
-    private static final boolean RED = true;
-    private static final boolean BLACK = false;
+public class RbTreeMap<K, V> {
+    private static final RbTreeColor RED   = RbTreeColor.RED;
+    private static final RbTreeColor BLACK = RbTreeColor.BLACK;
 
     private final Comparator<K> comparator;
-    private final RbTreeMapNode<K, V> nil;
 
     private RbTreeMapNode<K, V> root;
-    private int size;
+    private int                 size;
 
     public RbTreeMap() {
-        this(DEFAULT_COMPARATOR);
+        this.root       = null;
+        this.comparator = (final K k1, final K k2) -> ((Comparable<K>) k1).compareTo(k2);
     }
 
-    public RbTreeMap(Comparator<K> comparator) {
-        final RbTreeMapNode<K, V> sentinel = new RbTreeMapNode<>(null, null);
-        sentinel.color = BLACK;
-
-        this.nil = sentinel;
-        this.root = sentinel;
-
+    public RbTreeMap(@NonNull final Comparator<K> comparator) {
+        this.root       = null;
         this.comparator = comparator;
+    }
+
+    public V get(final K key) {
+        if (isEmpty()) {
+            return null;
+        }
+
+        final RbTreeMapNode<K, V> node = searchNode(root, key);
+
+        return node != null ? node.value : null;
+    }
+
+    public boolean put(final K key, final V value) {
+        throw new UnsupportedOperationException();
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return root == null;
+    }
+
+    public void clear() {
+        this.root = null;
+        this.size = 0;
     }
 
     private int compareKey(final K k1, final K k2) {
@@ -49,45 +68,54 @@ public class RbTreeMap<K, V> implements Map<K, V> {
     /**
      * 创建对应元素的红色孤立新结点
      *
-     * @param key   键，保证不为nil
+     * @param key   键，保证不为 null
      * @param value 值
      * @return 新结点
      */
     private RbTreeMapNode<K, V> newNode(final K key, final V value) {
         final RbTreeMapNode<K, V> newNode = new RbTreeMapNode<>(key, value);
-        newNode.parent = nil;
-        newNode.left = nil;
-        newNode.right = nil;
+
+        newNode.parent = null;
+        newNode.left   = null;
+        newNode.right  = null;
 
         return newNode;
     }
 
-    private boolean isNilNode(final RbTreeMapNode<K, V> node) {
-        return node == nil;
-    }
-
-    private boolean isLeftChild(final RbTreeMapNode<K, V> parent, final RbTreeMapNode<K, V> node) {
-        return parent.left == node;
-    }
-
     private boolean isLeftChild(final RbTreeMapNode<K, V> node) {
-        return isLeftChild(node.parent, node);
-    }
+        if (node.parent == null) {
+            return false;
+        }
 
-    private boolean isRightChild(final RbTreeMapNode<K, V> parent, final RbTreeMapNode<K, V> node) {
-        return parent.right == node;
+        assert node.parent.left == node || node.parent.right == node;
+
+        return node.parent.left == node;
     }
 
     private boolean isRightChild(final RbTreeMapNode<K, V> node) {
-        return isRightChild(node.parent, node);
+        if (node.parent == null) {
+            return false;
+        }
+
+        assert node.parent.left == node || node.parent.right == node;
+
+        return node.parent.right == node;
     }
 
     private boolean isBlack(final RbTreeMapNode<K, V> node) {
-        return isNilNode(node) || node.isBlack();
+        if (node == null) {
+            return true;
+        }
+
+        return node.isBlack();
     }
 
     private boolean isRed(final RbTreeMapNode<K, V> node) {
-        return !isNilNode(node) && node.isRed();
+        if (node == null) {
+            return false;
+        }
+
+        return node.isRed();
     }
 
     /**
@@ -97,12 +125,12 @@ public class RbTreeMap<K, V> implements Map<K, V> {
      * @return 最小值节点
      */
     private RbTreeMapNode<K, V> minimumNode(final RbTreeMapNode<K, V> root) {
-        RbTreeMapNode<K, V> minNode = nil;
+        RbTreeMapNode<K, V> minNode = null;
 
         RbTreeMapNode<K, V> n = root;
-        while (!isNilNode(n)) {
+        while (n != null) {
             minNode = n;
-            n = n.left;
+            n       = n.left;
         }
 
         return minNode;
@@ -115,12 +143,12 @@ public class RbTreeMap<K, V> implements Map<K, V> {
      * @return 最小值节点
      */
     private RbTreeMapNode<K, V> maximumNode(final RbTreeMapNode<K, V> root) {
-        RbTreeMapNode<K, V> maxNode = nil;
+        RbTreeMapNode<K, V> maxNode = null;
 
         RbTreeMapNode<K, V> n = root;
-        while (!isNilNode(n)) {
+        while (n != null) {
             maxNode = n;
-            n = n.right;
+            n       = n.right;
         }
 
         return maxNode;
@@ -128,7 +156,7 @@ public class RbTreeMap<K, V> implements Map<K, V> {
 
     private RbTreeMapNode<K, V> searchNode(final RbTreeMapNode<K, V> root, final K key) {
         RbTreeMapNode<K, V> tempNode = root;
-        while (!isNilNode(tempNode)) {
+        while (tempNode != null) {
             final int cmp = compareKey(key, tempNode.key);
             if (cmp < 0) {
                 tempNode = tempNode.left;
@@ -138,7 +166,7 @@ public class RbTreeMap<K, V> implements Map<K, V> {
                 return tempNode;
             }
         }
-        return nil;
+        return null;
     }
 
     /**
@@ -163,7 +191,7 @@ public class RbTreeMap<K, V> implements Map<K, V> {
 
         nodeRotate.right = rightLeftChild;
 
-        if (!isNilNode(rightLeftChild)) {
+        if (rightLeftChild != null) {
             rightLeftChild.parent = nodeRotate;
         }
         // 以上，旋转结点和b结点的父子关系处理完毕
@@ -172,17 +200,17 @@ public class RbTreeMap<K, V> implements Map<K, V> {
         final RbTreeMapNode<K, V> parent = nodeRotate.parent;
 
         rightChild.parent = parent;
-        if (isNilNode(parent)) {
+        if (parent == null) {
             // 如果parent为空，则y结点就是新的root
             root = rightChild;
-        } else if (isLeftChild(parent, nodeRotate)) {
+        } else if (isLeftChild(nodeRotate)) {
             // 否则，y结点是父结点的左或右孩子
             parent.left = rightChild;
         } else {
             parent.right = rightChild;
         }
         // 处理y节点和旋转结点的父子关系
-        rightChild.left = nodeRotate;
+        rightChild.left   = nodeRotate;
         nodeRotate.parent = rightChild;
     }
 
@@ -206,22 +234,22 @@ public class RbTreeMap<K, V> implements Map<K, V> {
 
         nodeRotate.left = leftRightChild;
 
-        if (!isNilNode(leftRightChild)) {
+        if (leftRightChild != null) {
             leftRightChild.parent = nodeRotate;
         }
 
         final RbTreeMapNode<K, V> parent = nodeRotate.parent;
 
         leftChild.parent = parent;
-        if (isNilNode(parent)) {
+        if (parent == null) {
             root = leftChild;
-        } else if (isLeftChild(parent, nodeRotate)) {
+        } else if (isLeftChild(nodeRotate)) {
             parent.left = leftChild;
         } else {
             parent.right = leftChild;
         }
 
-        leftChild.right = nodeRotate;
+        leftChild.right   = nodeRotate;
         nodeRotate.parent = leftChild;
     }
 
@@ -232,7 +260,7 @@ public class RbTreeMap<K, V> implements Map<K, V> {
      * @param toTransplant 移植的结点，可以为nil
      */
     private void transplant(final RbTreeMapNode<K, V> toRemove, final RbTreeMapNode<K, V> toTransplant) {
-        if (isNilNode(toRemove.parent)) {
+        if (toRemove.parent == null) {
             root = toTransplant;
         } else if (isLeftChild(toRemove)) {
             toRemove.parent.left = toTransplant;
@@ -260,8 +288,8 @@ public class RbTreeMap<K, V> implements Map<K, V> {
 
                 if (isRed(uncle)) {
                     // uncle是红必不为nil
-                    uncle.color = BLACK;
-                    parent.color = BLACK;
+                    uncle.color       = BLACK;
+                    parent.color      = BLACK;
                     grandParent.color = RED;
 
                     node = grandParent;
@@ -270,7 +298,7 @@ public class RbTreeMap<K, V> implements Map<K, V> {
 
                     leftRotate(node);
                 } else {
-                    parent.color = BLACK;
+                    parent.color      = BLACK;
                     grandParent.color = RED;
 
                     rightRotate(grandParent);
@@ -279,8 +307,8 @@ public class RbTreeMap<K, V> implements Map<K, V> {
                 final RbTreeMapNode<K, V> uncle = grandParent.left;
 
                 if (isRed(uncle)) {
-                    uncle.color = BLACK;
-                    parent.color = BLACK;
+                    uncle.color       = BLACK;
+                    parent.color      = BLACK;
                     grandParent.color = RED;
 
                     node = grandParent;
@@ -289,7 +317,7 @@ public class RbTreeMap<K, V> implements Map<K, V> {
 
                     rightRotate(node);
                 } else {
-                    parent.color = BLACK;
+                    parent.color      = BLACK;
                     grandParent.color = RED;
 
                     leftRotate(grandParent);
@@ -311,7 +339,7 @@ public class RbTreeMap<K, V> implements Map<K, V> {
 
                 // 如果兄弟是红结点，则必不为nil
                 if (isRed(siblingNode)) {
-                    x.parent.color = RED;
+                    x.parent.color    = RED;
                     siblingNode.color = BLACK;
 
                     leftRotate(x.parent);
@@ -321,18 +349,18 @@ public class RbTreeMap<K, V> implements Map<K, V> {
                 // 第一次进入时，兄弟节点必然存在
                 if (isBlack(siblingNode.left) && isBlack(siblingNode.right)) {
                     siblingNode.color = RED;
-                    x = x.parent;
+                    x                 = x.parent;
                 } else {
                     if (isBlack(siblingNode.right)) {
                         siblingNode.left.color = BLACK;
-                        siblingNode.color = RED;
+                        siblingNode.color      = RED;
 
                         rightRotate(siblingNode);
                         siblingNode = x.parent.right;
                     }
 
-                    x.parent.color = BLACK;
-                    siblingNode.color = x.parent.color;
+                    x.parent.color          = BLACK;
+                    siblingNode.color       = x.parent.color;
                     siblingNode.right.color = BLACK;
 
                     leftRotate(x.parent);
@@ -343,7 +371,7 @@ public class RbTreeMap<K, V> implements Map<K, V> {
                 RbTreeMapNode<K, V> botherNode = x.parent.left;
 
                 if (isRed(botherNode)) {
-                    x.parent.color = RED;
+                    x.parent.color   = RED;
                     botherNode.color = BLACK;
 
                     rightRotate(x.parent);
@@ -352,18 +380,18 @@ public class RbTreeMap<K, V> implements Map<K, V> {
 
                 if (isBlack(botherNode.left) && isBlack(botherNode.right)) {
                     botherNode.color = RED;
-                    x = x.parent;
+                    x                = x.parent;
                 } else {
                     if (isBlack(botherNode.left)) {
                         botherNode.right.color = BLACK;
-                        botherNode.color = RED;
+                        botherNode.color       = RED;
 
                         leftRotate(botherNode);
                         botherNode = x.parent.left;
                     }
 
-                    x.parent.color = BLACK;
-                    botherNode.color = x.parent.color;
+                    x.parent.color        = BLACK;
+                    botherNode.color      = x.parent.color;
                     botherNode.left.color = BLACK;
 
                     rightRotate(x.parent);
@@ -372,14 +400,14 @@ public class RbTreeMap<K, V> implements Map<K, V> {
                 }
             }
         }
-        if (!isNilNode(x)) {
+        if (x != null) {
             x.color = BLACK;
         }
     }
 
     private boolean add0(final K key, final V value) {
         if (isEmpty()) {
-            root = newNode(key, value);
+            root       = newNode(key, value);
             root.color = BLACK;
             return true;
         }
@@ -388,16 +416,16 @@ public class RbTreeMap<K, V> implements Map<K, V> {
         while (true) {
             final int cmp = compareKey(key, tempNode.key);
             if (cmp < 0) {
-                if (isNilNode(tempNode.left)) {
+                if (tempNode.left == null) {
                     final RbTreeMapNode<K, V> newNode = newNode(key, value);
-                    tempNode.left = newNode;
+                    tempNode.left  = newNode;
                     newNode.parent = tempNode;
                     insertFix(newNode);
                     return true;
                 }
                 tempNode = tempNode.left;
             } else if (cmp > 0) {
-                if (isNilNode(tempNode.right)) {
+                if (tempNode.right == null) {
                     final RbTreeMapNode<K, V> newNode = newNode(key, value);
                     tempNode.right = newNode;
                     newNode.parent = tempNode;
@@ -424,13 +452,13 @@ public class RbTreeMap<K, V> implements Map<K, V> {
         final RbTreeMapNode<K, V> realNodeToRemove;
         final RbTreeMapNode<K, V> toReplace;
 
-        if (isNilNode(preparedToRemove.left)) {
+        if (preparedToRemove.left == null) {
             // 左子树为空，用右子树代替
             realNodeToRemove = preparedToRemove;
 
             toReplace = realNodeToRemove.right;
             transplant(realNodeToRemove, realNodeToRemove.right);
-        } else if (isNilNode(preparedToRemove.right)) {
+        } else if (preparedToRemove.right == null) {
             // 右子树为空，用左子树代替
             realNodeToRemove = preparedToRemove;
 
@@ -449,14 +477,14 @@ public class RbTreeMap<K, V> implements Map<K, V> {
                 transplant(realNodeToRemove, toReplace);
 
                 preparedToRemove.right.parent = realNodeToRemove;
-                realNodeToRemove.right = preparedToRemove.right;
+                realNodeToRemove.right        = preparedToRemove.right;
             }
 
             transplant(preparedToRemove, realNodeToRemove);
 
             preparedToRemove.left.parent = realNodeToRemove;
 
-            realNodeToRemove.left = preparedToRemove.left;
+            realNodeToRemove.left  = preparedToRemove.left;
             realNodeToRemove.color = preparedToRemove.color;
         }
 
@@ -465,77 +493,16 @@ public class RbTreeMap<K, V> implements Map<K, V> {
         }
     }
 
-    @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return isNilNode(root);
-    }
-
-    @Override
-    public boolean containsKey(Object key) {
-        return false;
-    }
-
-    @Override
-    public boolean containsValue(Object value) {
-        return false;
-    }
-
-    @Override
-    public V get(Object key) {
-        return null;
-    }
-
-    @Override
-    public V put(K key, V value) {
-        return null;
-    }
-
-    @Override
-    public V remove(Object key) {
-        return null;
-    }
-
-    @Override
-    public void putAll(Map<? extends K, ? extends V> m) {
-
-    }
-
-    @Override
-    public void clear() {
-        this.root = nil;
-        this.size = 0;
-    }
-
-    @Override
-    public Set<K> keySet() {
-        return null;
-    }
-
-    @Override
-    public Collection<V> values() {
-        return null;
-    }
-
-    @Override
-    public Set<Entry<K, V>> entrySet() {
-        return null;
-    }
-
-    static final class RbTreeMapNode<K, V> {
-        private RbTreeMapNode<K, V> parent;
-        private RbTreeMapNode<K, V> left;
-        private RbTreeMapNode<K, V> right;
-        private final K key;
-        private V value;
-        private boolean color;
+    private static final class RbTreeMapNode<K, V> {
+        private       RbTreeMapNode<K, V> parent;
+        private       RbTreeMapNode<K, V> left;
+        private       RbTreeMapNode<K, V> right;
+        private final K                   key;
+        private       V                   value;
+        private       RbTreeColor         color;
 
         private RbTreeMapNode(final K key, final V value) {
-            this.key = key;
+            this.key   = key;
             this.value = value;
             this.color = RED;
         }
