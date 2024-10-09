@@ -8,15 +8,5 @@ import java.net.URL;
 
 @Slf4j
 class AdjacencyListTest {
-    @Test
-    void test() {
-        final URL resource =
-                ClassLoader.getSystemResource("graph.txt");
 
-        Assertions.assertNotNull(resource);
-
-        final AdjacencyList adjacencyList = new AdjacencyList(resource.getPath());
-
-        log.debug("adjacencyList:\n{}", adjacencyList);
-    }
 }

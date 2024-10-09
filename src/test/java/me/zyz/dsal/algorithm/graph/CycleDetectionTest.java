@@ -2,22 +2,26 @@ package me.zyz.dsal.algorithm.graph;
 
 import lombok.extern.slf4j.Slf4j;
 import me.zyz.dsal.collection.graph.AdjacencyList;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.net.URL;
-import java.util.Objects;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Slf4j
 class CycleDetectionTest {
     @Test
-    void hasCycle() {
-        final URL resource = this.getClass().getClassLoader().getResource("g2.txt");
+    void hasCycle() throws IOException {
+        try (final InputStream resourceStream = ClassLoader.getSystemResourceAsStream("g2.txt")) {
+            Assertions.assertNotNull(resourceStream);
 
-        assert Objects.nonNull(resource);
+            final AdjacencyList  adjacencyList  = AdjacencyList.fromInputStream(resourceStream);
+            final CycleDetection cycleDetection = new CycleDetection(adjacencyList);
 
-        final AdjacencyList adjacencyList = new AdjacencyList(resource.getPath());
-        final CycleDetection cycleDetection = new CycleDetection(adjacencyList);
-
-        log.debug("{}", cycleDetection.hasCycle());
+            log.debug("{}", cycleDetection.hasCycle());
+        } catch (final IOException e) {
+            log.error("Read graph file error.", e);
+            throw e;
+        }
     }
 }

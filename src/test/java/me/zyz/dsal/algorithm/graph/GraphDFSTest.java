@@ -2,34 +2,41 @@ package me.zyz.dsal.algorithm.graph;
 
 import lombok.extern.slf4j.Slf4j;
 import me.zyz.dsal.collection.graph.AdjacencyList;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.net.URL;
-import java.util.Objects;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Slf4j
 class GraphDFSTest {
     @Test
-    void order() {
-        final URL resource = this.getClass().getClassLoader().getResource("graph.txt");
+    void order() throws IOException {
+        try (final InputStream resourceStream = ClassLoader.getSystemResourceAsStream("graph.txt")) {
+            Assertions.assertNotNull(resourceStream);
 
-        assert Objects.nonNull(resource);
+            final AdjacencyList adjacencyList = AdjacencyList.fromInputStream(resourceStream);
+            final GraphDFS      graphDFS      = new GraphDFS(adjacencyList);
 
-        final AdjacencyList adjacencyList = new AdjacencyList(resource.getPath());
-        final GraphDFS graphDFS = new GraphDFS(adjacencyList);
-
-        log.debug("{}", graphDFS.order());
+            log.debug("{}", graphDFS.order());
+        } catch (final IOException e) {
+            log.error("Read graph file error.", e);
+            throw e;
+        }
     }
 
     @Test
-    void postOrder() {
-        final URL resource = this.getClass().getClassLoader().getResource("graph.txt");
+    void postOrder() throws IOException {
+        try (final InputStream resourceStream = ClassLoader.getSystemResourceAsStream("graph.txt")) {
+            Assertions.assertNotNull(resourceStream);
 
-        assert Objects.nonNull(resource);
+            final AdjacencyList adjacencyList = AdjacencyList.fromInputStream(resourceStream);
+            final GraphDFS      graphDFS      = new GraphDFS(adjacencyList);
 
-        final AdjacencyList adjacencyList = new AdjacencyList(resource.getPath());
-        final GraphDFS graphDFS = new GraphDFS(adjacencyList);
-
-        log.debug("{}", graphDFS.postOrder());
+            log.debug("{}", graphDFS.postOrder());
+        } catch (final IOException e) {
+            log.error("Read graph file error.", e);
+            throw e;
+        }
     }
 }

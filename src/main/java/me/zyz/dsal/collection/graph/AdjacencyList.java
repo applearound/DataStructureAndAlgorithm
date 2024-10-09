@@ -1,71 +1,94 @@
 package me.zyz.dsal.collection.graph;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Collections;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class AdjacencyList {
-    private final int            vertex;
-    private final int            edge;
+    private final int vertex;
+    private final int edge;
+
     private final Set<Integer>[] adj;
 
     /**
      * Build graph from disk file
      *
      * @param filePath file path
+     * @return graph
      */
-    public AdjacencyList(final String filePath) {
-        try (final BufferedReader bufferedReader =
-                     new BufferedReader(new FileReader(filePath))) {
-            final String firstLine = bufferedReader.readLine();
-
-            try (final Scanner scanner = new Scanner(firstLine)) {
-                final int vertex = scanner.nextInt();
-                if (vertex < 0) {
-                    throw new IllegalArgumentException("vertx");
-                }
-                this.vertex = vertex;
-
-                final int edge = scanner.nextInt();
-                if (edge < 0) {
-                    throw new IllegalArgumentException("edge");
-                }
-                this.edge = edge;
-            }
-
-            this.adj = new TreeSet[vertex];
-            for (int i = 0; i < vertex; i++) {
-                adj[i] = new TreeSet<>();
-            }
-
-            for (int i = 0; i < edge; i++) {
-                final String edgeInfoLine = bufferedReader.readLine();
-
-                try (final Scanner scanner = new Scanner(edgeInfoLine)) {
-                    final int vertexFrom = validate(scanner.nextInt());
-                    final int vertexTo   = validate(scanner.nextInt());
-
-                    if (vertexFrom == vertexTo) {
-                        throw new IllegalArgumentException("self loop detected: " + vertexFrom);
-                    }
-
-                    if (adj[vertexFrom].contains(vertexTo)) {
-                        throw new IllegalArgumentException(String.format("parallel edge detected: %d to %d", vertexFrom, vertexTo));
-                    }
-
-                    adj[vertexFrom].add(vertexTo);
-                    adj[vertexTo].add(vertexFrom);
-                }
-            }
-        } catch (final IOException e) {
-            throw new RuntimeException("Open File Failed", e);
-        } catch (final Exception e) {
-            throw new RuntimeException("Parse Failed", e);
+    public static AdjacencyList fromFile(final String filePath) throws IOException {
+        try (final FileInputStream inputStream = new FileInputStream(filePath)) {
+            return fromInputStream(inputStream);
         }
+    }
+
+    /**
+     * Build graph from input stream
+     *
+     * @param inputStream input stream
+     * @return graph
+     */
+    public static AdjacencyList fromInputStream(final InputStream inputStream) throws IOException {
+        int vertex;
+        int edge;
+
+        Set<Integer>[] adj;
+
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+        final String firstLine;
+        try {
+            firstLine = bufferedReader.readLine();
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        try (final Scanner scanner = new Scanner(firstLine)) {
+            vertex = scanner.nextInt();
+            if (vertex < 0) {
+                throw new IllegalArgumentException("vertx");
+            }
+
+            edge = scanner.nextInt();
+            if (edge < 0) {
+                throw new IllegalArgumentException("edge");
+            }
+        }
+
+        adj = new TreeSet[vertex];
+        for (int i = 0; i < vertex; i++) {
+            adj[i] = new TreeSet<>();
+        }
+
+        for (int i = 0; i < edge; i++) {
+            final String edgeInfoLine = bufferedReader.readLine();
+
+            try (final Scanner scanner = new Scanner(edgeInfoLine)) {
+                final int vertexFrom = scanner.nextInt();
+                final int vertexTo   = scanner.nextInt();
+
+                if (vertexFrom == vertexTo) {
+                    throw new IllegalArgumentException("self loop detected: " + vertexFrom);
+                }
+
+                if (adj[vertexFrom].contains(vertexTo)) {
+                    throw new IllegalArgumentException(String.format("parallel edge detected: %d to %d", vertexFrom, vertexTo));
+                }
+
+                adj[vertexFrom].add(vertexTo);
+                adj[vertexTo].add(vertexFrom);
+            }
+        }
+
+        return new AdjacencyList(vertex, edge, adj);
+    }
+
+    private AdjacencyList(final int vertex, final int edge, final Set<Integer>[] adj) {
+        this.vertex = vertex;
+        this.edge   = edge;
+        this.adj    = adj;
     }
 
     private int validate(final int vertex) {
